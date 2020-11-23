@@ -30,21 +30,21 @@ app.use(methodOverride('_method'));
 
 app.get('/', homePage);
 
-// client.connect()
-// .then(() => {
-console.log('Spun up the Databass');
-app.listen(PORT, () => {
-  console.log(`Server is working on ${PORT}`);
-})
-// })
-// .catch(err => {
-// console.log('Unable to connect, guess we are antisocial:', err);
-// });
+client.connect()
+  .then(() => {
+    console.log('Spun up the Databass');
+    app.listen(PORT, () => {
+      console.log(`Server is working on ${PORT}`);
+    })
+  })
+  .catch(err => {
+    console.log('Unable to connect, guess we are antisocial:', err);
+  });
 
 //FUNCTIONS
 
 
-let URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=40&ordering=name&page=${pageNum}`;
+let URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=40&ordering=name`;
 
 function homePage(req, res) {
 
@@ -64,7 +64,11 @@ function homePage(req, res) {
         giganticArray.push(data.body.next);
         homePage(req, res);
       }
-      else { res.send('DONE BRO!'); }
+      else {
+        res.send('DONE BRO!');
+        URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=40&ordering=name`;
+        pageNum = 1;
+      }
 
     })
 
@@ -72,10 +76,5 @@ function homePage(req, res) {
       console.log('Unable to acess RAWG games database. Or reached end of pages, you decide.');
       outOfPages = true;
     });
-
-}
-
-function roundAndRound(req, res, url, data) {
-  // giganticArray.push(data.body.next);
 
 }
