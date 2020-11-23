@@ -1,4 +1,7 @@
 'use strict'
+
+let pageNum = 1;
+let giganticArray = [];
 const express = require('express')
 const superagent = require('superagent');
 const dotenv = require('dotenv');
@@ -6,11 +9,13 @@ const cors = require('cors');
 const pg = require('pg');
 const { render } = require('ejs');
 const methodOverride = require('method-override');
-
+let fs = require('fs');
+fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
 
 dotenv.config();
 
 const app = express();
+console.log(process.env.PORT);
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
 const client = new pg.Client(DATABASE_URL);
@@ -25,46 +30,52 @@ app.use(methodOverride('_method'));
 
 app.get('/', homePage);
 
-client.connect()
-  .then(() => {
-    console.log('Spun up the Databass');
-    app.listen(PORT, () => {
-      console.log(`Server is working on ${PORT}`);
-    })
-  })
-  .catch(err => {
-    console.log('Unable to connect, guess we are antisocial:', err);
-  });
+// client.connect()
+// .then(() => {
+console.log('Spun up the Databass');
+app.listen(PORT, () => {
+  console.log(`Server is working on ${PORT}`);
+})
+// })
+// .catch(err => {
+// console.log('Unable to connect, guess we are antisocial:', err);
+// });
 
 //FUNCTIONS
 
 
+let URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=40&ordering=name&page=${pageNum}`;
 
 function homePage(req, res) {
-  let giganticArray = [];
+
   let outOfPages = false;
-  let pageNum = 1;
+
   const platformId = '105';
-  for (let i = 1; i < 3; i++) {
-    console.log(pageNum, giganticArray, outOfPages);
-    const URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=2&ordering=name&page=${pageNum}`;
-    console.log('page Number before', pageNum);
-    superagent(URL)
 
-      .then(data => {
-        // console.log('page Number', pageNum);
-        // console.log('data', data.body.results);
-        giganticArray.push('Blap');//data.body.results);
-        return data;
+  console.log('TimesLooped NotNull:', pageNum);
+  superagent(URL)
 
-      })
-      .then(console.log('gigantic array length giganticArray', giganticArray.length))
-      .then(data => res.send(data.body.results))
-      .catch(err => {
-        console.log('Unable to acess RAWG games database. Or reached end of pages, you decide.');
-        outOfPages = true;
-      });
-    pageNum++;
-  }
+    .then(data => {
+      if (data.body.next !== null) {
+        console.log('Content', data.body.next);
+        URL = data.body.next;
+        pageNum++;
+        fs.appendFile('garbage.txt', `${data.body.next}\t${giganticArray}\n`, (err => console.log('FILE ERROR', err)));
+        giganticArray.push(data.body.next);
+        homePage(req, res);
+      }
+      else { res.send('DONE BRO!'); }
+
+    })
+
+    .catch(err => {
+      console.log('Unable to acess RAWG games database. Or reached end of pages, you decide.');
+      outOfPages = true;
+    });
+
+}
+
+function roundAndRound(req, res, url, data) {
+  // giganticArray.push(data.body.next);
 
 }
