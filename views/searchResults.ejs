@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('./head') %>
+    </head>
+    <body>
+        <header>
+            <%- include('./goBackPartial') %>
+        </header>
+        <main>
+            <section><% something.forEach( game=> { %> 
+                <h2><%= game.title %></h2>
+                <form>
+                    <button>View Details</button>
+                </form>
+                <form>
+                    <button>Add to Inventory</button>
+                </form>
+                <% }) %>
+            </section>
+        </main>
+        <footer></footer>
+    </body>
+</html>

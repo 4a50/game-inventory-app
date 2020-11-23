@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('./head') %>
+    </head>
+    <body>
+        <header></header>
+        <main>
+            <form>
+                <button>View Inventory</button>
+            </form>
+            <form>
+                <button>Verification of Inventory</button>
+            </form>
+            <form>
+                <fieldset class="radioButton" \>
+                    <label for="title">Title:</label>
+                    <input type="radio" name="search" value="title" required>
+                </fieldset>
+                <fieldset class="radioButton" \>
+                    <label for="publisher">Publisher</label>
+                    <input type="radio" name="search" value="publisher" required>
+                </fieldset>
+                <fieldset class="radioButton" \>
+                    <label for="console">Console</label>
+                    <input type="radio" name="search" value="console" required>
+                </fieldset>
+                <fieldset class="radioButton" \>
+                    <label for="releaseDate">Release Date</label>
+                    <input type="radio" name="search" value="releaseDate" required>
+                </fieldset>
+                <input type="text" name="search" placeholder="Search" required/>
+                <button type="submit">Search</button>
+            </form>
+        </main>
+        <footer></footer>
+    </body>
+</html>

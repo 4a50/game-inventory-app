@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('./head') %>
+    </head>
+    <body>
+        <header>
+            <button>Add Game</button>
+            <%- include('./goBackPartial') %>
+        </header>
+        <main>
+            <div><% something.forEach( game => { %>
+                <form>
+                    <img><%= game.artwork %></img>
+                    <h4><%= game.title %></h4>
+                    <p><%= game.publisher %></p>
+                    <p><%= game.developer %></p>
+                    <p><%= game.releaseDate %></p>
+                    <p><%= game.category %></p>
+                    <a href=""><%= game.url %></a>
+                </form>
+                <form>
+                    <p><%= game.description %></p>
+                </form>
+                <% }) %>
+            </div>
+            <div>
+                <form action="/delete/<%= books.id %>?_method=DELETE" method="POST">
+                    <button type="submit">Delete from Inventory</button>
+                </form>
+            </div>
+        </main>
+        <footer></footer>
+    </body>
+</html>
