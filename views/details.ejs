@@ -23,7 +23,7 @@
                 <!-- <a href=""> detailData.url</a> -->
             </form>
             <form>
-                <%- detailData.description %>
+                <p><%= detailData.description %></p>
             </form>
         </div>
 
@@ -31,6 +31,9 @@
         <div>
             <form action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
                 <button type="submit">Delete from Inventory</button>
+            </form>
+            <form action="/update/<%= detailData.game_id%>" method="GET">
+                <button type="submit">Edit game</button>
             </form>
         </div>
     </main>
