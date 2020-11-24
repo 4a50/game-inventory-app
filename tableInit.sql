@@ -10,10 +10,10 @@ CREATE TABLE gameInventoryData (
   game_id INT,
   image_url VARCHAR(255),
   notes TEXT,
-  platform_id INT,
+  platform_id VARCHAR(255),
   platform_name VARCHAR (255),
   publisher VARCHAR(255),
-  release_data DATE,
+  release_date DATE,
   video_url VARCHAR(255)
 );
   

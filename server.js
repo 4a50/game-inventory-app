@@ -47,62 +47,86 @@ client.connect()
 //FUNCTIONS
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
+
+  let detURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
+
+  superagent(detURL)
+    .then(data => {
+      console.log(data.body)
+    });
+  // let info = data.body;
+  //     { name, description, }
+
+
+
+
+  //     return info;
+  //   });
 }
 
 
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id);
 
+  let platformString = '';
+  let platformId = '';
+  let genreString = '';
+  let developersString = '';
+  let publisherString = '';
 
-  let SQL = 'INSERT INTO gameInventoryData (title, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
+  let SQL = 'INSERT INTO gameinventorydata (title, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
   // let values = [//enter values here to access data from API example: req.body.title];
-  let secondURL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&search=${req.body.game_id}`;
+  let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
   console.log(secondURL);
   superagent(secondURL)
     .then(data => {
-      let platformString = '';
-      result.platforms.map(element => {
-        platformString += `${element.name}@`;
+      data.body.platforms.map(element => {
+        platformString += `${element.platform.name}@`;
+        platformId += `${element.platform.id}@`;
+      })
+      return data;
+    })
+    .then(data => {
+      data.body.genres.map(element => {
+        genreString += `${element.name}@`;
       });
-
-      let result = data.body.results[0];
-      values = [result.name, result.genre[0].name], 'unk', 'Itsa a game', -1, result.id, result.background_image, 'Insert Notes Here!', platformString, 
-
+      return data;
+    })
+    .then(data => {
+      data.body.developers.map(element => {
+        developersString += `${element.name}@`;
+      })
+      return data;
+    })
+    .then(data => {
+      data.body.publishers.map(element => {
+        publisherString += `${element.name}@`;
+      })
+      return data;
+    })
+    .then(data => {
+      let { name, description_raw, id, background_image, released, } = data.body;
+      let values = [name, genreString, 'userProvide', description_raw, -1, id, background_image, 'userNotes', platformId, platformString, publisherString, released, 'noSiteProvided'];
+      client.query(SQL, values)
+        .then(data => console.log('Shoved in the Databass!'))
+        .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
     });
-  // client.query (SQL, values)
-  //   .then(do something)
 }
 
 function homePage(req, res) {
   res.render('index');
 }
-
-
-// let URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=40&ordering=name`;
-// function searchCriteria(req, res) {
-
-//   homePage(req, res);
-// }
-
-
 function getSearchCriteria(req, res) {
-  //  const platformId = '105';
 
-
-  //What ever the user set from the front end.  For now we will hard code.
-  //Specific Game Title: (games, <name of game>)
 
   let { searchArea, searchCriteria } = req.body;
-
-  // let searchArea = 'games';
-  // let searchCriteria = 'castlevania';
 
   setURL(searchArea, searchCriteria);
   superagent(URL)
     .then(data => {
       let webPageValuesArray = [];
       data.body.results.map((element) => {
-        webPageValuesArray.push({ name: element.name, id: element.slug });
+        webPageValuesArray.push({ name: element.name, id: element.id });
       });
       console.log('webPageValues', webPageValuesArray);
       return webPageValuesArray;
