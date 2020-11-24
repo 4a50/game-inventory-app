@@ -32,6 +32,7 @@ app.get('/', homePage);
 app.post('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
+app.delete('/delete', deleteGame);
 
 client.connect()
   .then(() => {
@@ -212,3 +213,11 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   console.log('URL to Get:', URL);
 }
 
+function deleteGame (res, req) {
+  console.log('req.body', req.body);
+  let SQL = `DELETE FROM books WHERE id=${req.body.game_id};`;
+  client.query(SQL)
+    .then (data => console.log('data deleted', data))
+    .then (res.redirect('/viewInventory'))
+    .catch(console.log('Delete did not go according to plan...', err));
+}
