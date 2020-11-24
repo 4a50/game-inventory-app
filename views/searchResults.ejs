@@ -8,8 +8,9 @@
             <%- include('./goBackPartial') %>
         </header>
         <main>
-            <section><% something.forEach( game=> { %> 
+            <section><% searchResultsData.forEach( game=> { %> 
                 <h2><%= game.title %></h2>
+                <input type="hidden" name="gameTitle" value="<%=JSON.stringify(game)%>">
                 <form>
                     <button>View Details</button>
                 </form>
