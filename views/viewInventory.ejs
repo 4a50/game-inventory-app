@@ -1,26 +1,5 @@
 <!DOCTYPE html>
 <html>
-<<<<<<< HEAD
-    <head>
-        <%- include('./head') %>
-    </head>
-    <body>
-        <header>
-            <%- include('./goBackPartial') %>
-        </header>
-        <main><% something.forEach( game => { %>
-            <form action="" method="">
-                <h2><%= game.name %></h2>
-                <section>
-                    <button type="submit">View Details</button>
-                </section>
-            </form>
-            <form action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
-                <section>
-                    <button type="submit">Delete from Inventory</button>
-                </section>
-            </form>
-=======
 
 <head>
     <%- include('./headPartial') %>
@@ -35,12 +14,12 @@
             <h2><%= game.name %></h2>
             <section>
                 <button type="submit">View Details</button>
-            </section>
-            <section action="/delete/<%= game.game_id %>?_method=DELETE" method="POST">
-                <button type="submit">Delete from Inventory</button>
+        </form>
+        </section>
+        <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST">
+            <button type="submit">Delete from Inventory</button>
             </section>
         </form>
->>>>>>> 74e414dad1a544985446e3657f42efa046d87bc6
         <% }) %>
     </main>
     <footer><% include('./footerPartial') %></footer>

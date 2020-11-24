@@ -32,11 +32,8 @@ app.get('/', homePage);
 app.post('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
-<<<<<<< HEAD
-app.delete('/delete', deleteGame);
-=======
+app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
->>>>>>> 74e414dad1a544985446e3657f42efa046d87bc6
 
 client.connect()
   .then(() => {
@@ -60,9 +57,6 @@ function getInventory(req, res) {
     });
 
   function formatDbaseData(rowArray) {
-    console.log('rowArray', rowArray);
-
-
     rowArray.map(element => {
       element.platform_id = element.platform_id.replace('@', ' ');
       element.platform_name = element.platform_name.replace('@', ' ');
@@ -70,22 +64,6 @@ function getInventory(req, res) {
     });
     return { databaseDetails: rowArray };
   }
-  // {
-  //   "id": 1,
-  //   "title": "Ghostbusters",
-  //   "category": "Action@Shooter@Adventure",
-  //   "condition": "userProvide",
-  //   "description": "New DLC Available\nClassic Suit Pack\nBlast ghosts wearing this classic uniform and capture them them in a trap based on art from the original movie!\nAbout the GameHave you and your friends been experiencing paranormal activity? Grab your Proton Pack and join the Ghostbusters as you explore Manhattan, blasting ghosts, and trapping those runaway ghouls.\nThrilling Multiplayer Experience: Play alongside your friends as the Ghostbusters in the 2-4 player local co-op campaign!\nTerrifying Ghost Trapping: Battle new and classic Ghostbusters characters, including Slimer, Gertrude Eldridge, Sparky and many more!\nElectrifying Weapon Choices: Dynamically swap weapons during battle with unique options for each character.\nBlockbuster Film Extension: An original story that takes place after the events of the movie!\nGhostbusting fun for the whole family: Gamers of all ages and experience can dive right into the action.",
-  //   "game_count": -1,
-  //   "game_id": 2210,
-  //   "image_url": "https://media.rawg.io/media/games/627/627f581994a5d6ee2686742e0cc48a59.jpg",
-  //   "notes": "userNotes",
-  //   "platform_id": "4@1@18@14@",
-  //   "platform_name": "PC@Xbox One@PlayStation 4@Xbox 360",
-  //   "publisher": "Atari@Activision Blizzard",
-  //   "release_date": "2009-06-16T07:00:00.000Z",
-  //   "video_url": "noSiteProvided"
-  //   },
 
 
 
@@ -138,7 +116,7 @@ function getSearchCriteria(req, res) {
 
   let { searchArea, searchCriteria } = req.body;
 
-  setURL(searchArea, searchCriteria);
+  let URL = setURL(searchArea, searchCriteria);
   console.log('searchURL', URL);
   superagent(URL)
     .then(data => {
@@ -159,15 +137,18 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
 
   URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40${appendCriteria}`;
   console.log('URL to Get:', URL);
+  return URL;
 }
 
-function deleteGame (res, req) {
-  console.log('req.body', req.body);
-  let SQL = `DELETE FROM books WHERE id=${req.body.game_id};`;
+function deleteGame(req, res) {
+
+  console.log('FIRED! BAM! deleteGame', req.params.id);
+
+  let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
   client.query(SQL)
-    .then (data => console.log('data deleted', data))
-    .then (res.redirect('/viewInventory'))
-    .catch(console.log('Delete did not go according to plan...', err));
+    .then(data => console.log('data deleted', data))
+    .then(res.redirect('/inventory'))
+    .catch(err => console.log('Delete did not go according to plan...', err));
 }
 
 // data is from superagent result, search is either 'detail' or 'type' or 'db'
