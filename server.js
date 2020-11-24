@@ -1,7 +1,7 @@
 'use strict'
 
-let pageNum = 1;
-let giganticArray = [];
+// let pageNum = 1;
+// let giganticArray = [];
 const express = require('express')
 const superagent = require('superagent');
 const dotenv = require('dotenv');
@@ -32,8 +32,11 @@ app.get('/', homePage);
 app.post('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
+
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
+
+app.get('/update/:id', updateGame);
 
 client.connect()
   .then(() => {
@@ -84,6 +87,19 @@ function viewDetails(req, res) {
 
 }
 
+function updateGame(req, res){
+  console.log('this is the update game', req.params)
+  let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = req.params;
+  let SQL = `UPDATE gameinventorydata (name, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
+  let values = [name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer];
+  client.query(SQL, values)
+    .then (data => {
+      res.redirect('details', resultToObj(data, 'detail'));
+    })
+    .catch (err => console.error('Update game could not be completed', err))
+}
+
+// eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id);
 
@@ -96,6 +112,7 @@ function addGame(req, res) {
       return resultToObj(data, 'db');
     })
     .then(obj => {
+      // eslint-disable-next-line no-unused-vars
       let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = obj.detailData;
 
       let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform, publisher, release_date, 'noSiteProvided'];
@@ -103,7 +120,7 @@ function addGame(req, res) {
     })
     .then(values => {
       client.query(SQL, values)
-        .then(data => console.log('Shoved in the Databass!'))
+        .then( () => console.log('Shoved in the Databass!'))
         .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
     });
 }
@@ -123,7 +140,7 @@ function getSearchCriteria(req, res) {
       return resultToObj(data, 'search');
     })
     .then(obj => res.render('searchResults.ejs', obj))
-    .catch(err => console.log('Unable to access RAWG games database. Or reached end of pages, you decide.'));
+    .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
 }
 
 //All games for platform search: (platforms, id <= API console unique id.  Can pull from database)
@@ -135,9 +152,10 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   let appendCriteria = '';
   if (searchArea === 'date') { appendCriteria = `&dates=${searchDate}` }
 
-  URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40${appendCriteria}`;
+  let URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40${appendCriteria}`;
   console.log('URL to Get:', URL);
   return URL;
+
 }
 
 function deleteGame(req, res) {
@@ -165,8 +183,9 @@ function resultToObj(superAgentData, type = 'search') {
     });
     console.log('Array', array);
     return ({ searchResultsData: array });
-  };
+  }
 
+  // eslint-disable-next-line no-constant-condition
   if (type === 'detail' || 'db') {
     if (type === 'detail') {
       appendString = ', ';
