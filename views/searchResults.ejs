@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./headPartial') %>
+</head>
+
+<body>
+    <header>
+        <%- include('./goBackPartial') %>
+    </header>
+    <main>
+        <section><% searchResultsData.forEach( game=> { %>
+            <h2><%= game.name %></h2>
+            <form action="/details" method="POST">
+                <input type="hidden" name="game_id" value="<%=JSON.stringify(game.id)%>">
+                <button>View Details</button>
+            </form>
+            <form action="/addGame" method="POST">
+                <input type="hidden" name="game_id" value="<%=JSON.stringify(game.id)%>">
+                <button>Add to Inventory</button>
+            </form>
+
+
+            <% }) %>
+        </section>
+    </main>
+    <footer><% include('./footerPartial') %></footer>
+</body>
+
+</html>

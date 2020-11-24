@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('./head') %>
+    </head>
+    <body>
+        <header>
+            <button>View Results</button>
+            <%- include('./goBackPartial') %>
+        </header>
+        <main>
+            <div><% something.forEach( game => { %> 
+                <form>
+                    <input type="checkbox">Present</input>
+                    <p><%= game.name %></p>
+                </form>
+                <form>
+                    <button type="submit">Submit Results</button>
+                </form>
+                <% }) %>
+            </div>
+        </main>
+        <footer><% include('./footerPartial') %></footer>
+    </body>
+</html>

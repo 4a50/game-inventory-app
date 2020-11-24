@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./headPartial') %>
+</head>
+
+<body>
+    <header>
+        <button>Add Game</button>
+        <%- include('./goBackPartial') %>
+    </header>
+    <main>
+        <div>
+            <form>
+                <img src="<%= detailData.image_url %>"></img>
+                <h4><%= detailData.name %></h4>
+                <p><%= detailData.publisher %></p>
+                <p><%= detailData.developer %></p>
+                <p><%= detailData.release_date %></p>
+                <p><%= detailData.genre %></p>
+                <p><%= detailData.platform %></p>
+                <!-- <a href=""> detailData.url</a> -->
+            </form>
+            <form>
+                <%- detailData.description %>
+            </form>
+        </div>
+
+        <!-- detail loop goes here -->
+        <div>
+            <form action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
+                <button type="submit">Delete from Inventory</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+
+</html>
