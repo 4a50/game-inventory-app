@@ -32,6 +32,7 @@ app.get('/', homePage);
 app.post('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
+app.get('/inventory', getInventory);
 
 client.connect()
   .then(() => {
@@ -45,6 +46,47 @@ client.connect()
   });
 
 //FUNCTIONS
+function getInventory(req, res) {
+
+  let SQL = "SELECT * FROM gameinventorydata";
+
+  client.query(SQL)
+    .then(data => {
+      res.render('viewInventory', formatDbaseData(data.rows));
+    });
+
+  function formatDbaseData(rowArray) {
+    console.log('rowArray', rowArray);
+
+
+    rowArray.map(element => {
+      element.platform_id = element.platform_id.replace('@', ' ');
+      element.platform_name = element.platform_name.replace('@', ' ');
+      element.publisher = element.publisher.replace('@', ' ');
+    });
+    return { databaseDetails: rowArray };
+  }
+  // {
+  //   "id": 1,
+  //   "title": "Ghostbusters",
+  //   "category": "Action@Shooter@Adventure",
+  //   "condition": "userProvide",
+  //   "description": "New DLC Available\nClassic Suit Pack\nBlast ghosts wearing this classic uniform and capture them them in a trap based on art from the original movie!\nAbout the GameHave you and your friends been experiencing paranormal activity? Grab your Proton Pack and join the Ghostbusters as you explore Manhattan, blasting ghosts, and trapping those runaway ghouls.\nThrilling Multiplayer Experience: Play alongside your friends as the Ghostbusters in the 2-4 player local co-op campaign!\nTerrifying Ghost Trapping: Battle new and classic Ghostbusters characters, including Slimer, Gertrude Eldridge, Sparky and many more!\nElectrifying Weapon Choices: Dynamically swap weapons during battle with unique options for each character.\nBlockbuster Film Extension: An original story that takes place after the events of the movie!\nGhostbusting fun for the whole family: Gamers of all ages and experience can dive right into the action.",
+  //   "game_count": -1,
+  //   "game_id": 2210,
+  //   "image_url": "https://media.rawg.io/media/games/627/627f581994a5d6ee2686742e0cc48a59.jpg",
+  //   "notes": "userNotes",
+  //   "platform_id": "4@1@18@14@",
+  //   "platform_name": "PC@Xbox One@PlayStation 4@Xbox 360",
+  //   "publisher": "Atari@Activision Blizzard",
+  //   "release_date": "2009-06-16T07:00:00.000Z",
+  //   "video_url": "noSiteProvided"
+  //   },
+
+
+
+}
+
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
   //////
@@ -64,7 +106,7 @@ function viewDetails(req, res) {
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id);
 
-  let SQL = 'INSERT INTO gameinventorydata (title, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
+  let SQL = 'INSERT INTO gameinventorydata (name, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
   // let values = [//enter values here to access data from API example: req.body.title];
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
   console.log('Add Game URL', secondURL);
@@ -150,7 +192,7 @@ function resultToObj(superAgentData, type = 'search') {
     data.platforms.map(element => {
 
       platformString += `${element.platform.name}${appendString}`;
-      platformId += `${element.platform.id} ${appendString} `;
+      platformId += `${element.platform.id}${appendString}`;
     })
     platformString = platformString.slice(0, sliceAmount);
 
