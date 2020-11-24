@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('./head') %>
+    </head>
+    <body>
+        <header>
+            <%- include('./goBackPartial') %>
+        </header>
+        <main><% something.forEach( game => { %>
+            <form action="" method="">
+                <h2><%= game.title %></h2>
+                <section>
+                    <button type="submit">View Details</button>
+                </section>
+                <section action="/delete/<%= books.id %>?_method=DELETE" method="POST">
+                    <button type="submit">Delete from Inventory</button>
+                </section>
+            </form>
+        <% }) %>
+        </main>
+        <footer><% include('./footerPartial') %></footer>
+    </body>
+</html>

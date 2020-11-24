@@ -1,0 +1,11 @@
+button{
+    border-radius: 10px;
+}
+button:hover{
+    background-color: darkgray;
+    color: white;
+}
+form{
+    border: 1px black solid;
+    border-radius: 10px;
+}
