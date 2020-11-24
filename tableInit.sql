@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS gameInventoryData;
 
 CREATE TABLE gameInventoryData (
   id SERIAL PRIMARY KEY,
-  title VARCHAR(255),
+  name VARCHAR(255),
   category VARCHAR(255),
   condition VARCHAR(255),
   description TEXT,
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS apiData;
 
 CREATE TABLE apiData (
   id SERIAL PRIMARY KEY,
-  title VARCHAR(255),
+  name VARCHAR(255),
   category VARCHAR(255),
   condition VARCHAR(255),
   description TEXT,
