@@ -32,6 +32,10 @@ app.get('/', homePage);
 app.post('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
+
+app.delete('/delete/:id', deleteGame);
+app.get('/inventory', getInventory);
+
 app.get('/update/:id', updateGame);
 
 client.connect()
@@ -46,9 +50,30 @@ client.connect()
   });
 
 //FUNCTIONS
+function getInventory(req, res) {
+
+  let SQL = "SELECT * FROM gameinventorydata";
+
+  client.query(SQL)
+    .then(data => {
+      res.render('viewInventory', formatDbaseData(data.rows));
+    });
+
+  function formatDbaseData(rowArray) {
+    rowArray.map(element => {
+      element.platform_id = element.platform_id.replace('@', ' ');
+      element.platform_name = element.platform_name.replace('@', ' ');
+      element.publisher = element.publisher.replace('@', ' ');
+    });
+    return { databaseDetails: rowArray };
+  }
+
+
+
+}
+
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
-  //////
 
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
   console.log('Details URL', secondURL);
@@ -130,6 +155,18 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   let URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40${appendCriteria}`;
   console.log('URL to Get:', URL);
   return URL;
+
+}
+
+function deleteGame(req, res) {
+
+  console.log('FIRED! BAM! deleteGame', req.params.id);
+
+  let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
+  client.query(SQL)
+    .then(data => console.log('data deleted', data))
+    .then(res.redirect('/inventory'))
+    .catch(err => console.log('Delete did not go according to plan...', err));
 }
 
 // data is from superagent result, search is either 'detail' or 'type' or 'db'
@@ -167,7 +204,7 @@ function resultToObj(superAgentData, type = 'search') {
     data.platforms.map(element => {
 
       platformString += `${element.platform.name}${appendString}`;
-      platformId += `${element.platform.id} ${appendString} `;
+      platformId += `${element.platform.id}${appendString}`;
     })
     platformString = platformString.slice(0, sliceAmount);
 
