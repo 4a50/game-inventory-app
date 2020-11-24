@@ -28,9 +28,10 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
 
-// app.get('/', homePage);
-app.get('/search', getSearchCriteria);
-
+app.get('/', homePage);
+app.post('/search', getSearchCriteria);
+app.post('/addGame', addGame);
+app.post('/details', viewDetails);
 
 client.connect()
   .then(() => {
@@ -44,6 +45,37 @@ client.connect()
   });
 
 //FUNCTIONS
+function viewDetails(req, res) {
+  console.log('FIRED! viewDetails', req.body);
+}
+
+
+function addGame(req, res) {
+  console.log('FIRED! addGame', req.body.game_id);
+
+
+  let SQL = 'INSERT INTO gameInventoryData (title, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
+  // let values = [//enter values here to access data from API example: req.body.title];
+  let secondURL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&search=${req.body.game_id}`;
+  console.log(secondURL);
+  superagent(secondURL)
+    .then(data => {
+      let platformString = '';
+      result.platforms.map(element => {
+        platformString += `${element.name}@`;
+      });
+
+      let result = data.body.results[0];
+      values = [result.name, result.genre[0].name], 'unk', 'Itsa a game', -1, result.id, result.background_image, 'Insert Notes Here!', platformString, 
+
+    });
+  // client.query (SQL, values)
+  //   .then(do something)
+}
+
+function homePage(req, res) {
+  res.render('index');
+}
 
 
 // let URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=40&ordering=name`;
@@ -60,23 +92,24 @@ function getSearchCriteria(req, res) {
   //What ever the user set from the front end.  For now we will hard code.
   //Specific Game Title: (games, <name of game>)
 
-  //let { searchArea, searchCriteria} = req.body;
-  let searchArea = 'games';
-  let searchCriteria = 'castlevania';
+  let { searchArea, searchCriteria } = req.body;
+
+  // let searchArea = 'games';
+  // let searchCriteria = 'castlevania';
 
   setURL(searchArea, searchCriteria);
   superagent(URL)
     .then(data => {
       let webPageValuesArray = [];
       data.body.results.map((element) => {
-        webPageValuesArray.push({ name: element.name, id: element.id });
+        webPageValuesArray.push({ name: element.name, id: element.slug });
       });
       console.log('webPageValues', webPageValuesArray);
       return webPageValuesArray;
     })
     .then(element => {
-      res.send(element);
-      //res.render('searchResults.ejs', { searchResultsData: webPageValuesArray });
+      //res.send(element);
+      res.render('searchResults.ejs', { searchResultsData: element });
     })
 
 
@@ -106,7 +139,7 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   let appendCriteria = '';
   if (searchArea === 'date') { appendCriteria = `&dates=${searchDate}` }
 
-  URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40&ordering=name${appendCriteria}`;
+  URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40${appendCriteria}`;
   console.log('URL to Get:', URL);
 }
 

@@ -1,0 +1,4 @@
+ id | title | category | condition | description | game_count | game_id | image_url | notes | platform_id | platform_name | publisher | release_data | video_url 
+----+-------+----------+-----------+-------------+------------+---------+-----------+-------+-------------+---------------+-----------+--------------+-----------
+(0 rows)
+
