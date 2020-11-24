@@ -47,21 +47,66 @@ client.connect()
 //FUNCTIONS
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
+  //////
 
-  let detURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
+  let platformString = '';
+  let platformId = '';
+  let genreString = '';
+  let developersString = '';
+  let publisherString = '';
+  let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
 
-  superagent(detURL)
+  superagent(secondURL)
     .then(data => {
-      console.log(data.body)
-    });
-  // let info = data.body;
-  //     { name, description, }
+      data.body.platforms.map(element => {
+        platformString += `${element.platform.name}, `;
+        platformId += `${element.platform.id}, `;
+      })
+      platformString = platformString.slice(0, -2);
+      return data;
+    })
+    .then(data => {
+      data.body.genres.map(element => {
+        genreString += `${element.name}, `;
+      });
+      genreString = genreString.slice(0, -2);
+      return data;
+    })
+    .then(data => {
+      data.body.developers.map(element => {
+        developersString += `${element.name}, `;
+      })
+      developersString = developersString.slice(0, -2);
+      return data;
+    })
+    .then(data => {
+      data.body.publishers.map(element => {
+        publisherString += `${element.name}, `;
+      })
+      publisherString = publisherString.slice(0, -2);
+      return data;
+    })
+    .then(data => {
+      let { name, description: description_raw, id, background_image, released, } = data.body;
+      let detailObj = { name: name, genre: genreString, description: description_raw, game_id: id, image_url: background_image, platform: platformString, publisher: publisherString, release_date: released, developer: developersString };
+
+      return detailObj;
+    })
+    .then(obj => {
+      let renderObj = { detailData: obj };
+      res.render('details', renderObj);
+    })
+    .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
 
 
 
 
-  //     return info;
-  //   });
+
+
+
+
+
+  /////////
 }
 
 
