@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%- include('./head') %>
+        <%- include('./headPartial') %>
     </head>
     <body>
         <header>
@@ -9,7 +9,7 @@
         </header>
         <main>
             <section><% searchResultsData.forEach( game=> { %> 
-                <h2><%= game.title %></h2>
+                <h2><%= game.name %></h2>
                 <input type="hidden" name="gameTitle" value="<%=JSON.stringify(game)%>">
                 <form>
                     <button>View Details</button>

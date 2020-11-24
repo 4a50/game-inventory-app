@@ -1,2 +1,6 @@
 @import "layout.css";
 @import "modules.css";
+
+body{
+    background-color: lightgray;
+}
