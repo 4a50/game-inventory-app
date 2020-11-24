@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('./headPartial') %>
+    </head>
+    <body>
+        <header>
+            %- include('./goBackPartial') %>
+        </header>
+        <main>
+            <div>Click to update
+                <form action="/update/<%= game.game_id %>?_method=PUT" method="POST">
+                    <input type="text" name="image_url"><%= game.image_url %>"></inupt>
+                    <input type="text" name="name"><%= game.name %></inupt>
+                    <input type="text" name="publisher"><%= game.publisher %></inupt>
+                    <input type="text" name="developer"><%= game.developer %></inupt>
+                    <input type="text" name="release_date"><%= game.release_date %></inupt>
+                    <input type="text" name="genre"><%= game.genre %></inupt>
+                    <input type="text" name="platform"><%= game.platform %></inupt>
+                    <input type="text" name="description"><%- game.description %><input>
+                    <button type="submit">Update Game</button>
+                </form>
+                <form action="/details">
+                    <button type="submit" method="POST">Back to Details</button>
+                </form>
+            </div>
+
+
+        </main>
+        <footer></footer>
+    </body>
+</html>
