@@ -64,12 +64,6 @@ function viewDetails(req, res) {
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id);
 
-  let platformString = '';
-  let platformId = '';
-  let genreString = '';
-  let developersString = '';
-  let publisherString = '';
-
   let SQL = 'INSERT INTO gameinventorydata (title, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
   // let values = [//enter values here to access data from API example: req.body.title];
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
@@ -109,13 +103,6 @@ function getSearchCriteria(req, res) {
     .catch(err => console.log('Unable to access RAWG games database. Or reached end of pages, you decide.'));
 }
 
-
-
-
-
-
-
-
 //All games for platform search: (platforms, id <= API console unique id.  Can pull from database)
 //Specific Game Title: (games, <name of game>)
 //Search for games release on a specific date.
@@ -142,7 +129,7 @@ function resultToObj(superAgentData, type = 'search') {
       array.push({ name: element.name, id: element.id })
     });
     console.log('Array', array);
-    return ('searchResults.ejs', { searchResultsData: array });
+    return ({ searchResultsData: array });
   };
 
   if (type === 'detail' || 'db') {
