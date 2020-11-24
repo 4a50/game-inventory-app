@@ -49,66 +49,17 @@ function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
   //////
 
-  let platformString = '';
-  let platformId = '';
-  let genreString = '';
-  let developersString = '';
-  let publisherString = '';
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
+  console.log('Details URL', secondURL);
 
   superagent(secondURL)
     .then(data => {
-      data.body.platforms.map(element => {
-        platformString += `${element.platform.name}, `;
-        platformId += `${element.platform.id}, `;
-      })
-      platformString = platformString.slice(0, -2);
-      return data;
-    })
-    .then(data => {
-      data.body.genres.map(element => {
-        genreString += `${element.name}, `;
-      });
-      genreString = genreString.slice(0, -2);
-      return data;
-    })
-    .then(data => {
-      data.body.developers.map(element => {
-        developersString += `${element.name}, `;
-      })
-      developersString = developersString.slice(0, -2);
-      return data;
-    })
-    .then(data => {
-      data.body.publishers.map(element => {
-        publisherString += `${element.name}, `;
-      })
-      publisherString = publisherString.slice(0, -2);
-      return data;
-    })
-    .then(data => {
-      let { name, description: description_raw, id, background_image, released, } = data.body;
-      let detailObj = { name: name, genre: genreString, description: description_raw, game_id: id, image_url: background_image, platform: platformString, publisher: publisherString, release_date: released, developer: developersString };
-
-      return detailObj;
-    })
-    .then(obj => {
-      let renderObj = { detailData: obj };
-      res.render('details', renderObj);
+      //console.log('resultToObj', resultToObj(data, 'detail'))
+      res.render('details', resultToObj(data, 'detail'));
     })
     .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
 
-
-
-
-
-
-
-
-
-  /////////
 }
-
 
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id);
@@ -122,36 +73,18 @@ function addGame(req, res) {
   let SQL = 'INSERT INTO gameinventorydata (title, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
   // let values = [//enter values here to access data from API example: req.body.title];
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  console.log(secondURL);
+  console.log('Add Game URL', secondURL);
   superagent(secondURL)
     .then(data => {
-      data.body.platforms.map(element => {
-        platformString += `${element.platform.name}@`;
-        platformId += `${element.platform.id}@`;
-      })
-      return data;
+      return resultToObj(data, 'db');
     })
-    .then(data => {
-      data.body.genres.map(element => {
-        genreString += `${element.name}@`;
-      });
-      return data;
+    .then(obj => {
+      let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = obj.detailData;
+
+      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform, publisher, release_date, 'noSiteProvided'];
+      return values;
     })
-    .then(data => {
-      data.body.developers.map(element => {
-        developersString += `${element.name}@`;
-      })
-      return data;
-    })
-    .then(data => {
-      data.body.publishers.map(element => {
-        publisherString += `${element.name}@`;
-      })
-      return data;
-    })
-    .then(data => {
-      let { name, description_raw, id, background_image, released, } = data.body;
-      let values = [name, genreString, 'userProvide', description_raw, -1, id, background_image, 'userNotes', platformId, platformString, publisherString, released, 'noSiteProvided'];
+    .then(values => {
       client.query(SQL, values)
         .then(data => console.log('Shoved in the Databass!'))
         .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
@@ -161,44 +94,28 @@ function addGame(req, res) {
 function homePage(req, res) {
   res.render('index');
 }
-function getSearchCriteria(req, res) {
 
+function getSearchCriteria(req, res) {
 
   let { searchArea, searchCriteria } = req.body;
 
   setURL(searchArea, searchCriteria);
+  console.log('searchURL', URL);
   superagent(URL)
     .then(data => {
-      let webPageValuesArray = [];
-      data.body.results.map((element) => {
-        webPageValuesArray.push({ name: element.name, id: element.id });
-      });
-      console.log('webPageValues', webPageValuesArray);
-      return webPageValuesArray;
+      return resultToObj(data, 'search');
     })
-    .then(element => {
-      //res.send(element);
-      res.render('searchResults.ejs', { searchResultsData: element });
-    })
-
-
-    // console.log('data and stuff', data.body.results[0].name);
-    // if (data.body.next !== null) {
-    //   URL = data.body.next;
-    //   pageNum++;
-    //   _homePage(req, res);
-    // }
-    // else {
-    //   res.send(`DONE BRO! ${data.body.results}`);
-    //   URL = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&platforms=105&page_size=40&ordering=name`;
-    //   pageNum = 1;
-    // }
-
-    .catch(err => {
-      console.log('Unable to access RAWG games database. Or reached end of pages, you decide.');
-
-    });
+    .then(obj => res.render('searchResults.ejs', obj))
+    .catch(err => console.log('Unable to access RAWG games database. Or reached end of pages, you decide.'));
 }
+
+
+
+
+
+
+
+
 //All games for platform search: (platforms, id <= API console unique id.  Can pull from database)
 //Specific Game Title: (games, <name of game>)
 //Search for games release on a specific date.
@@ -212,3 +129,77 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   console.log('URL to Get:', URL);
 }
 
+// data is from superagent result, search is either 'detail' or 'type' or 'db'
+
+function resultToObj(superAgentData, type = 'search') {
+  let data = superAgentData.body;
+  let array = [];
+  let appendString = '';
+  let sliceAmount = 0;
+  if (type === 'search') {
+    data = superAgentData.body.results
+    data.map((element) => {
+      array.push({ name: element.name, id: element.id })
+    });
+    console.log('Array', array);
+    return ('searchResults.ejs', { searchResultsData: array });
+  };
+
+  if (type === 'detail' || 'db') {
+    if (type === 'detail') {
+      appendString = ', ';
+      sliceAmount = -2;
+    } else {
+      appendString = '@';
+      sliceAmount = -1;
+    }
+
+    let platformString = '';
+    let platformId = '';
+    let genreString = '';
+    let developersString = '';
+    let publisherString = '';
+
+    data.platforms.map(element => {
+
+      platformString += `${element.platform.name}${appendString}`;
+      platformId += `${element.platform.id} ${appendString} `;
+    })
+    platformString = platformString.slice(0, sliceAmount);
+
+
+    data.genres.map(element => {
+
+      genreString += `${element.name}${appendString}`;
+
+
+    });
+    genreString = genreString.slice(0, sliceAmount);
+
+    data.developers.map(element => {
+      developersString += `${element.name}${appendString}`;
+    })
+    developersString = developersString.slice(0, sliceAmount);
+    data.publishers.map(element => {
+      publisherString += `${element.name}${appendString}`;
+    })
+    publisherString = publisherString.slice(0, sliceAmount);
+
+    let { name, description_raw, id, background_image, released, } = data;
+    let detailObj = {
+      name: name,
+      genre: genreString,
+      description: description_raw,
+      game_id: id,
+      image_url: background_image,
+      platform: platformString,
+      platform_id: platformId,
+      publisher: publisherString,
+      release_date: released,
+      developer: developersString
+    };
+
+    return { detailData: detailObj };
+
+  }
+}
