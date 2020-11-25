@@ -11,19 +11,18 @@
         <%- include('./goBackPartial') %>
     </header>
     <main>
-        <br />
-        <div><% databaseItems.forEach( game => { %>
-            <form>
-                <input type="checkbox">Present</input>
+        <form action="/inventory/verify/results" method="POST">
+            <br />
+            <div><% databaseItems.forEach( game => { %>
+                <input type="checkbox" name="game_id" value="<%= game.game_id %>">
+                <label for="<%= game.id %>"></label>
                 <p><%= game.name %></p>
                 <p><%= game.id %></p>
-            </form>
-            <form>
+                <br />
+                <% }) %>
                 <button type="submit">Submit Results</button>
-            </form>
-            <br />
-            <% }) %>
-        </div>
+            </div>
+        </form>
     </main>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
