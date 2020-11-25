@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include('./headPartial') %>
+</head>
+
+<body>
+  <header>
+    <%- include('./goBackPartial') %>
+  </header>
+  <main>
+    <h2>The following Games are not accounted for:</h2>
+    <% invResultsData.forEach( game => { %>
+    <input type="hidden" name="game_id" value=<%=game.game_id%>>
+    <h2><%= game.name %></h2>
+    <% }) %>
+  </main>
+  <footer><% include('./footerPartial') %></footer>
+</body>
+
+</html>

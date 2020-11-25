@@ -15,7 +15,8 @@ CREATE TABLE gameInventoryData (
   publisher VARCHAR(255),
   release_date VARCHAR(255),
   video_url VARCHAR(255),
-  developer VARCHAR(255)
+  developer VARCHAR(255),
+  verified VARCHAR(5)
 );
   
 
