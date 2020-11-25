@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <%- include('./head') %>
-    </head>
-    <body>
-        <header>
-            <button>View Results</button>
-            <%- include('./goBackPartial') %>
-        </header>
-        <main>
-            <div><% something.forEach( game => { %> 
-                <form>
-                    <input type="checkbox">Present</input>
-                    <p><%= game.name %></p>
-                </form>
-                <form>
-                    <button type="submit">Submit Results</button>
-                </form>
-                <% }) %>
-            </div>
-        </main>
-        <footer><% include('./footerPartial') %></footer>
-    </body>
+
+<head>
+    <%- include('./headPartial') %>
+</head>
+
+<body>
+    <header>
+        <button>View Results</button>
+        <%- include('./goBackPartial') %>
+    </header>
+    <main>
+        <br />
+        <div><% databaseItems.forEach( game => { %>
+            <form>
+                <input type="checkbox">Present</input>
+                <p><%= game.name %></p>
+                <p><%= game.id %></p>
+            </form>
+            <form>
+                <button type="submit">Submit Results</button>
+            </form>
+            <br />
+            <% }) %>
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+    <footer><% include('./footerPartial') %></footer>
+</body>
+
 </html>
