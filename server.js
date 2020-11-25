@@ -1,8 +1,14 @@
 'use strict'
 
+// Global Variables /////////////////////////////////////////////////
+
 // let pageNum = 1;
 let prevSearch = {};
 let hasVisited = false;
+
+
+// Dependencies ////////////////////////////////////////////////////
+
 const express = require('express')
 const superagent = require('superagent');
 const dotenv = require('dotenv');
@@ -22,12 +28,14 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const client = new pg.Client(DATABASE_URL);
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
 
-
 app.use(cors());
 app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
+
+
+// Routes ///////////////////////////////////////////////////////////
 
 app.get('/', homePage);
 app.post('/search', getSearchCriteria);
@@ -35,21 +43,14 @@ app.get('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
 app.put('/update/:id', updateGameDetails)
-
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
-
-
-
 app.post('/dbDetails', dbDetail);
-
-
-
 app.delete('/wipeDB', clearDatabase);
-
 app.get('/update/:id', updateGameButton);
 
 
+// Server and Database Link ////////////////////////////////////////
 
 client.connect()
   .then(() => {
@@ -62,7 +63,8 @@ client.connect()
     console.log('Unable to connect, guess we are antisocial:', err);
   });
 
-//FUNCTIONS
+
+// FUNCTIONS ///////////////////////////////////////////////////////
 
 function dbDetail(req, res) {
   console.log('FIRED! Schwap!', req.body.game_id);
@@ -77,9 +79,6 @@ function dbDetail(req, res) {
       res.render('details', detailsPageCustom);
     })
     .catch((() => console.log('whoops!')));
-
-
-
 }
 function getInventory(req, res) {
 
@@ -110,11 +109,6 @@ function formatDbaseData(rowArray, objName) {
   return { [objName]: rowArray };
 }
 
-
-
-
-
-
 function clearDatabase(req, res) {
   let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
   if (userConfirmation === 'YES'){
@@ -127,7 +121,6 @@ function clearDatabase(req, res) {
     res.redirect('/inventory');
   }
 }
-
 
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
@@ -144,8 +137,6 @@ function viewDetails(req, res) {
 
 }
 
-
-
 function updateGameButton(req, res){
 
   console.log('this is the update game', req.query.game_id);
@@ -156,8 +147,6 @@ function updateGameButton(req, res){
     .then (data => {
       console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
       res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
-
-
     })
     .catch(err => console.error('Update game could not be completed', err))
 }
@@ -184,7 +173,6 @@ function updateGameDetails(req, res){
     })
     .catch(err => console.error(err));
 }
-
 
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
@@ -234,7 +222,6 @@ function getSearchCriteria(req, res) {
     console.log('searchArea', searchArea, searchCriteria);
     sURL = setURL(searchArea, searchCriteria);
   }
-
 
   console.log('searchURL', sURL);
   superagent(sURL)
