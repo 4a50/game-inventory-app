@@ -34,20 +34,20 @@ app.post('/search', getSearchCriteria);
 app.get('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
+
+app.post('/update', updateGameButton);
 app.put('/update/:id', updateGameDetails)
 
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
-
-
 app.post('/dbDetails', dbDetail);
-
-
+app.get('/dbDetails/routeback/:idGame', dbDetail);
 
 app.delete('/wipeDB', clearDatabase);
 
-app.get('/update/:id', updateGameButton);
+app.get('/inventory/verify', inventoryVerify);
+
 
 
 
@@ -62,19 +62,28 @@ client.connect()
     console.log('Unable to connect, guess we are antisocial:', err);
   });
 
-//FUNCTIONS
+//FUNCTIONS - Page Drivers
 
 function dbDetail(req, res) {
-  console.log('FIRED! Schwap!', req.body.game_id);
+  console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
   let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
-  let values = [req.body.game_id];
+  let values;
+  if (req.body.game_id) {
+    values = [req.body.game_id];
+    console.log('REQ BODY IS REAL!', req.body.game_id);
+  } else {
+    values = [req.params.idGame];
+    console.log('REQ PARAMS IS REAL!', req.params.idGame);
+  }
+  console.log('VALUES', values);
   client.query(SQL, values)
     .then(data => {
       //console.log('FORMATDATABASEDATA', formatDbaseData(data.rows, 'detailData'));
       let obj = formatDbaseData(data.rows, 'detailData');
       let detailsPageCustom = { 'detailData': obj.detailData[0] };
-      console.log('custom', detailsPageCustom);
+      //console.log('custom', detailsPageCustom);
       res.render('details', detailsPageCustom);
+      res.sendState(200);
     })
     .catch((() => console.log('whoops!')));
 
@@ -82,7 +91,7 @@ function dbDetail(req, res) {
 
 }
 function getInventory(req, res) {
-
+  console.log('Fired getInventory');
   let SQL = "SELECT * FROM gameinventorydata";
   client.query(SQL)
     .then(data => {
@@ -96,39 +105,22 @@ function getInventory(req, res) {
       return sortedData;
     })
     .then(data => {
+      console.log(formatDbaseData(data, 'databaseDetails'));
       res.render('viewInventory', formatDbaseData(data, 'databaseDetails'));
     });
 }
-function formatDbaseData(rowArray, objName) {
-
-  rowArray.map(element => {
-    element.platform_id = element.platform_id.replace('@', ' ');
-    element.platform_name = element.platform_name.replace('@', ' ');
-    element.publisher = element.publisher.replace('@', ' ');
-  });
-
-  return { [objName]: rowArray };
-}
-
-
-
-
-
-
 function clearDatabase(req, res) {
   let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
-  if (userConfirmation === 'YES'){
+  if (userConfirmation === 'YES') {
     let SQL = 'DELETE * FROM gameInventoryData;';
     client.query(SQL)
       .then(console.log('The DB has been wiped sparkling clean. Hope you meant to do that!'))
-      .catch( err => console.log('The database was not erased.', err));
+      .catch(err => console.log('The database was not erased.', err));
   } else {
     alert('Sending you back before you accidentally hurt yourself or your inventory data.')
     res.redirect('/inventory');
   }
 }
-
-
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
 
@@ -137,60 +129,58 @@ function viewDetails(req, res) {
 
   superagent(secondURL)
     .then(data => {
-      //console.log('resultToObj', resultToObj(data, 'detail'))
-      res.render('details', resultToObj(data, 'db'));
+      console.log('API Details', data);
+      res.render('details', resultToObj(data, 'detail'));
     })
     .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
 
 }
+function updateGameButton(req, res) {
 
-
-
-function updateGameButton(req, res){
-
-  console.log('this is the update game', req.query.game_id);
-  let SQL = `SELECT * FROM gameinventorydata WHERE game_id=${req.query.game_id};`;
+  console.log('this is the update game', req.body.game_id);
+  let SQL = `SELECT * FROM gameinventorydata WHERE game_id=${req.body.game_id};`;
 
   client.query(SQL)
 
-    .then (data => {
+    .then(data => {
       console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
+      console.log('formatData', formatDbaseData(data.rows, 'databaseDetails'));
       res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
 
 
     })
     .catch(err => console.error('Update game could not be completed', err))
 }
-
-function updateGameDetails(req, res){
+function updateGameDetails(req, res) {
   console.log('this is req body', req.body);
   let game = req.body;
-  let SQL = 'UPDATE gameInventoryData SET name=$1, category=$2, condition=$3, description=$4, game_count=$5, game_id=$6, image_url=$7, notes=$8, platform_id=$9, platform_name=$10, publisher=$11, release_date=$12, video_url=$13 WHERE game_id=$14;';
-  let values = [game.name, game.category, game.condition, game.description, game.game_count, game.game_id, game.image_url, game.notes, game.platform_id, game.platform.name, game.publisher, game.release_date, game.video_url, game.game_id];
-  // let newValues = values.map( element => {
-  //   if (!element){
-  //     element='No Data'
-  //   }
-  // });
-  console.log('this is value', values)
-  client.query (SQL, values)
-    .then(data => {
-      console.log('this is data', data);
-    })
+  let SQL = 'UPDATE gameInventoryData SET name=$1, genre=$2, condition=$3, description=$4, game_count=$5, game_id=$6, image_url=$7, notes=$8, platform_id=$9, platform_name=$10, publisher=$11, release_date=$12, video_url=$13, developer=$14 WHERE game_id=$15;';
+  let values = [game.name, game.genre, game.condition, game.description, game.game_count, game.game_id, game.image_url, game.notes, game.platform_id, game.platform.name, game.publisher, game.release_date, game.video_url, game.developer, game.game_id];
+
+  //  console.log('this is value', values)
+  client.query(SQL, values)
     .then(() => {
-      console.log('made it to the redirect')
-      // TODO: redirecto to previous details page
-      // res.redirect('details', req.body.game_id)
+      console.log('redirecting, hold on');
+      res.redirect(`/dbDetails/routeback/${game.game_id}`);
     })
     .catch(err => console.error(err));
 }
-
-
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
+  // client.query('SELECT game_id FROM gameinventorydata')
+  //   .then(data => {
+  //     let isDuplicate = false;
+  //     data.rows.map(elem =>
+  //     if (elem.game_id === parseInt(req.body.game_id) { isDuplicate = true; break; }
 
-  let SQL = 'INSERT INTO gameinventorydata (name, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
+  //     else { isDuplicate = false; }
+
+
+
+  //     });
+
+  let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
   // let values = [//enter values here to access data from API example: req.body.title];
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
   console.log('Add Game URL', secondURL);
@@ -202,7 +192,7 @@ function addGame(req, res) {
       // eslint-disable-next-line no-unused-vars
       let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = obj.detailData;
 
-      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform, publisher, release_date, 'noSiteProvided'];
+      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform, publisher, release_date, 'noSiteProvided', developer];
       return values;
     })
     .then(values => {
@@ -245,6 +235,30 @@ function getSearchCriteria(req, res) {
     .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
 }
 
+function deleteGame(req, res) {
+
+  console.log('FIRED! BAM! deleteGame', req.params.id);
+
+  let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
+  client.query(SQL)
+    .then(data => console.log('data deleted', data))
+    .then(res.redirect('/inventory'))
+    .catch(err => console.log('Delete did not go according to plan...', err));
+}
+
+function inventoryVerify(req, res) {
+  let SQL = 'SELECT game_id, name FROM gameInventoryData';
+  client.query(SQL)
+    .then(data => {
+      console.log(data.rows);
+      res.render('inventory', { databaseItems: data.rows });//data.rows
+
+    });
+
+
+}
+//Helper Functions
+
 //All games for platform search: (platforms, id <= API console unique id.  Can pull from database)
 //Specific Game Title: (games, <name of game>)
 //Search for games release on a specific date.
@@ -259,21 +273,10 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   return URL;
 
 }
-
-function deleteGame(req, res) {
-
-  console.log('FIRED! BAM! deleteGame', req.params.id);
-
-  let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
-  client.query(SQL)
-    .then(data => console.log('data deleted', data))
-    .then(res.redirect('/inventory'))
-    .catch(err => console.log('Delete did not go according to plan...', err));
-}
-
-// data is from superagent result, search is either 'detail' or 'type' or 'db'
+// data is from superagent result, type is either 'detail' or 'search' or 'db'
 
 function resultToObj(superAgentData, type = 'search') {
+  console.log(`resultToObj Formatting ${type}`);
   let data = superAgentData.body;
   let array = [];
   let appendString = '';
@@ -345,4 +348,16 @@ function resultToObj(superAgentData, type = 'search') {
     return { detailData: detailObj };
 
   }
+}
+function formatDbaseData(rowArray, objName) {
+
+  rowArray.map(element => {
+    console.log('element', element.platform_id);
+
+    if (element.platform_id) { element.platform_id = element.platform_id.replace('@', ' '); }
+    if (element.platform_name) { element.platform_name = element.platform_name.replace('@', ' '); }
+    if (element.publisher) { element.publisher = element.publisher.replace('@', ' '); }
+  });
+
+  return { [objName]: rowArray };
 }

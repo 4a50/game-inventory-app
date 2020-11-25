@@ -11,27 +11,12 @@
         <form action="/inventory">
             <button>View Inventory</button>
         </form>
-        <form>
-            <button>Verification of Inventory</button>
+        <form action="/verifyinventory" method="GET">
+            <button type="submit">Verification of Inventory</button>
         </form>
         <form action="/search" method="POST">
-            <fieldset class="radioButton" \>
-                <label for="games">Title:</label>
-                <input type="radio" name="searchArea" value="games" required>
-            </fieldset>
-            <fieldset class="radioButton" \>
-                <label for="publisher">Publisher</label>
-                <input type="radio" name="searchArea" value="publisher" required>
-            </fieldset>
-            <fieldset class="radioButton" \>
-                <label for="console">Console</label>
-                <input type="radio" name="searchArea" value="console" required>
-            </fieldset>
-            <fieldset class="radioButton" \>
-                <label for="releaseDate">Release Date</label>
-                <input type="radio" name="searchArea" value="releaseDate" required>
-            </fieldset>
-            <input type="text" name="searchCriteria" placeholder="Search" required />
+            <input type="hidden" name="searchArea" value="games">
+            <input type="text" name="searchCriteria" placeholder="Search By Game Title" required />
             <button type="submit">Search</button>
         </form>
     </main>
