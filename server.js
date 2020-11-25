@@ -48,12 +48,11 @@ app.post('/update', updateGameButton);
 app.put('/update/:id', updateGameDetails)
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
-//Evaluate the need for the get route
-app.get('/update/:id', updateGameButton);
+
 app.delete('/hardDeleteDB', eraseDBConfirmed)
 app.post('/dbDetails', dbDetail);
 app.get('/dbDetails/routeback/:idGame', dbDetail);
-app.delete('/wipeDB', clearDatabase);
+app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 
 // Server and Database Link ////////////////////////////////////////
@@ -134,25 +133,25 @@ function clearDatabase(req, res) {
   let randomNum2 = Math.floor(Math.random() * 1000);
   let randomProduct = randomNum1 * randomNum2;
   // console.log('random nums', randomNum1, randomNum2);
-  // console.log('randomProduct', randomProduct);
+  console.log('randomProduct', randomProduct);
   dbDeleteConfirmationKey = randomProduct;
   // let dbWipeConfirmData = { 'dbWipe': obj.detailData[0] };
   // console.log('custom', dbWipeConfirmData);
-  res.render('dbWipeConfirm', { 'numTest' : `${randomNum1} X ${randomNum2} = `});
+  res.render('dbWipeConfirm', { 'numTest': `${randomNum1} X ${randomNum2} = ` });
 }
 
-function eraseDBConfirmed (req, res) {
+function eraseDBConfirmed(req, res) {
   // console.log('eraseDBConfirmed FIRED!');
   // console.log('req', req.body.testAnswer);
   let userAnswer = parseInt(req.body.testAnswer);
   // console.log ('dbDeleteConfirmKey:', dbDeleteConfirmationKey);
   // console.log('userAnswer', userAnswer, 'type of userAnswer', typeof userAnswer);
-  if(userAnswer === dbDeleteConfirmationKey){
+  if (userAnswer === dbDeleteConfirmationKey) {
     let SQL = 'DELETE FROM gameInventoryData;';
     client.query(SQL)
       .then(console.log('The DB has been wiped sparkling clean. Hope you meant to do that!'))
       .then(res.redirect('/inventory'))
-      .catch( err => console.log('The database was not erased.', err));
+      .catch(err => console.log('The database was not erased.', err));
 
   } else {
     console.log('Sending you back before you accidentally hurt yourself or your inventory data.')
@@ -194,7 +193,7 @@ function updateGameDetails(req, res) {
   console.log('this is req body', req.body);
   let game = req.body;
   let SQL = 'UPDATE gameInventoryData SET name=$1, genre=$2, condition=$3, description=$4, game_count=$5, game_id=$6, image_url=$7, notes=$8, platform_id=$9, platform_name=$10, publisher=$11, release_date=$12, video_url=$13, developer=$14 WHERE game_id=$15;';
-  let values = [game.name, game.genre, game.condition, game.description, game.game_count, game.game_id, game.image_url, game.notes, game.platform_id, game.platform.name, game.publisher, game.release_date, game.video_url, game.developer, game.game_id];
+  let values = [game.name, game.genre, game.condition, game.description, game.game_count, game.game_id, game.image_url, game.notes, game.platform_id, game.platform_name, game.publisher, game.release_date, game.video_url, game.developer, game.game_id];
 
   //  console.log('this is value', values)
   client.query(SQL, values)
