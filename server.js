@@ -23,7 +23,7 @@ const methodOverride = require('method-override');
 dotenv.config();
 
 const app = express();
-console.log(process.env.PORT);
+//console.log(process.env.PORT);
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
 const client = new pg.Client(DATABASE_URL);
@@ -74,17 +74,17 @@ client.connect()
 
 
 function dbDetail(req, res) {
-  console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
+  //console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
   let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
   let values;
   if (req.body.game_id) {
     values = [req.body.game_id];
-    console.log('REQ BODY IS REAL!', req.body.game_id);
+    //console.log('REQ BODY IS REAL!', req.body.game_id);
   } else {
     values = [req.params.idGame];
-    console.log('REQ PARAMS IS REAL!', req.params.idGame);
+    //console.log('REQ PARAMS IS REAL!', req.params.idGame);
   }
-  console.log('VALUES', values);
+  //console.log('VALUES', values);
   client.query(SQL, values)
     .then(data => {
       //console.log('FORMATDATABASEDATA', formatDbaseData(data.rows, 'detailData'));
@@ -98,7 +98,7 @@ function dbDetail(req, res) {
 }
 function getInventory(req, res) {
 
-  console.log('Fired getInventory');
+  //console.log('Fired getInventory');
   let SQL = "SELECT * FROM gameinventorydata";
   client.query(SQL)
     .then(data => {
@@ -112,11 +112,10 @@ function getInventory(req, res) {
       return sortedData;
     })
     .then(data => {
-      console.log(formatDbaseData(data, 'databaseDetails'));
+      //console.log(formatDbaseData(data, 'databaseDetails'));
       res.render('viewInventory', formatDbaseData(data, 'databaseDetails'));
     });
 }
-
 
 function clearDatabase(req, res) {
   // console.log('clearDatabase FIRED!');
@@ -151,14 +150,14 @@ function eraseDBConfirmed(req, res) {
 }
 
 function viewDetails(req, res) {
-  console.log('FIRED! viewDetails', req.body);
+  //console.log('FIRED! viewDetails', req.body);
 
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  console.log('Details URL', secondURL);
+  //console.log('Details URL', secondURL);
 
   superagent(secondURL)
     .then(data => {
-      console.log('API Details', data);
+      //console.log('API Details', data);
       res.render('details', resultToObj(data, 'detail'));
     })
     .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
@@ -167,21 +166,21 @@ function viewDetails(req, res) {
 function updateGameButton(req, res) {
 
 
-  console.log('this is the update game', req.body.game_id);
+  //console.log('this is the update game', req.body.game_id);
   let SQL = `SELECT * FROM gameinventorydata WHERE game_id=${req.body.game_id};`;
 
 
   client.query(SQL)
 
     .then(data => {
-      console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
-      console.log('formatData', formatDbaseData(data.rows, 'databaseDetails'));
+      //console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
+      //console.log('formatData', formatDbaseData(data.rows, 'databaseDetails'));
       res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
     })
     .catch(err => console.error('Update game could not be completed', err))
 }
 function updateGameDetails(req, res) {
-  console.log('this is req body', req.body);
+  //console.log('this is req body', req.body);
   let game = req.body;
   let SQL = 'UPDATE gameInventoryData SET name=$1, genre=$2, condition=$3, description=$4, game_count=$5, game_id=$6, image_url=$7, notes=$8, platform_id=$9, platform_name=$10, publisher=$11, release_date=$12, video_url=$13, developer=$14 WHERE game_id=$15;';
   let values = [game.name, game.genre, game.condition, game.description, game.game_count, game.game_id, game.image_url, game.notes, game.platform_id, game.platform_name, game.publisher, game.release_date, game.video_url, game.developer, game.game_id];
@@ -189,7 +188,7 @@ function updateGameDetails(req, res) {
   //  console.log('this is value', values)
   client.query(SQL, values)
     .then(() => {
-      console.log('redirecting, hold on');
+      //console.log('redirecting, hold on');
       res.redirect(`/dbDetails/routeback/${game.game_id}`);
     })
     .catch(err => console.error(err));
@@ -197,7 +196,7 @@ function updateGameDetails(req, res) {
 
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
-  console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
+  //console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
   // client.query('SELECT game_id FROM gameinventorydata')
   //   .then(data => {
   //     let isDuplicate = false;
@@ -213,16 +212,17 @@ function addGame(req, res) {
   let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
   // let values = [//enter values here to access data from API example: req.body.title];
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  console.log('Add Game URL', secondURL);
+  //console.log('Add Game URL', secondURL);
   superagent(secondURL)
     .then(data => {
       return resultToObj(data, 'db');
     })
     .then(obj => {
       // eslint-disable-next-line no-unused-vars
-      let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = obj.detailData;
+      let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
 
-      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform, publisher, release_date, 'noSiteProvided', developer];
+      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
+      console.log('values:', values);
       return values;
     })
     .then(values => {
@@ -241,21 +241,21 @@ function homePage(req, res) {
 }
 
 function getSearchCriteria(req, res) {
-  console.log('original URL', req.body);
+  //console.log('original URL', req.body);
   let sURL = '';
   if (hasVisited) {
-    console.log('presearch', prevSearch);
+    //console.log('presearch', prevSearch);
     sURL = setURL(prevSearch.searchArea, prevSearch.searchCriteria);
     hasVisited = false;
   } else {
     let { searchArea, searchCriteria } = req.body;
     prevSearch = { searchArea: req.body.searchArea, searchCriteria: req.body.searchCriteria };
-    console.log('prevsearchInit', prevSearch);
-    console.log('searchArea', searchArea, searchCriteria);
+    //console.log('prevsearchInit', prevSearch);
+    //console.log('searchArea', searchArea, searchCriteria);
     sURL = setURL(searchArea, searchCriteria);
   }
 
-  console.log('searchURL', sURL);
+  //console.log('searchURL', sURL);
   superagent(sURL)
     .then(data => {
       return resultToObj(data, 'search');
@@ -266,7 +266,7 @@ function getSearchCriteria(req, res) {
 
 function deleteGame(req, res) {
 
-  console.log('FIRED! BAM! deleteGame', req.params.id);
+  //console.log('FIRED! BAM! deleteGame', req.params.id);
 
   let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
   client.query(SQL)
@@ -279,7 +279,7 @@ function inventoryVerify(req, res) {
   let SQL = 'SELECT game_id, name FROM gameInventoryData';
   client.query(SQL)
     .then(data => {
-      console.log(data.rows);
+      //console.log(data.rows);
       res.render('inventory', { databaseItems: data.rows });//data.rows
 
     });
@@ -326,19 +326,19 @@ function inventoryVerifyResults(req, res) {
 //Search for games release on a specific date.
 function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   let urlSearchCritera = searchCriteria.replace(/\s/g, '%20');
-  console.log(`searchCriteria: ${searchCriteria}  Modded: ${urlSearchCritera}`);
+  //console.log(`searchCriteria: ${searchCriteria}  Modded: ${urlSearchCritera}`);
   let appendCriteria = '';
   if (searchArea === 'date') { appendCriteria = `&dates=${searchDate}` }
 
   let URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40${appendCriteria}`;
-  console.log('URL to Get:', URL);
+  //console.log('URL to Get:', URL);
   return URL;
 
 }
 // data is from superagent result, type is either 'detail' or 'search' or 'db'
 
 function resultToObj(superAgentData, type = 'search') {
-  console.log(`resultToObj Formatting ${type}`);
+  //console.log(`resultToObj Formatting ${type}`);
   let data = superAgentData.body;
   let array = [];
   let appendString = '';
@@ -348,7 +348,7 @@ function resultToObj(superAgentData, type = 'search') {
     data.map((element) => {
       array.push({ name: element.name, id: element.id })
     });
-    console.log('Array', array);
+    //console.log('Array', array);
     return ({ searchResultsData: array });
   }
 
@@ -400,7 +400,7 @@ function resultToObj(superAgentData, type = 'search') {
       description: description_raw,
       game_id: id,
       image_url: background_image,
-      platform: platformString,
+      platform_name: platformString,
       platform_id: platformId,
       publisher: publisherString,
       release_date: released,
@@ -415,11 +415,17 @@ function formatDbaseData(rowArray, objName) {
 
   rowArray.map(element => {
     console.log('element', element.platform_id);
-
-    if (element.platform_id) { element.platform_id = element.platform_id.replace('@', ' '); }
-    if (element.platform_name) { element.platform_name = element.platform_name.replace('@', ' '); }
-    if (element.publisher) { element.publisher = element.publisher.replace('@', ' '); }
+    console.log('platform_name before formatDbData:', element.platform_name);
+    
+    if (element.platform_id) { element.platform_id = element.platform_id.replace(/@/g, ' '); }
+    if (element.platform_name) { element.platform_name = element.platform_name.replace(/@/g, ' '); }
+    if (element.publisher) { element.publisher = element.publisher.replace(/@/g, ' '); }
+    if (element.developer) { element.developer = element.developer.replace(/@/g, ' '); }
+    if (element.genre) { element.genre = element.genre.replace(/@/g, ' '); }
+    
+    console.log('platform_name after formatDbData:', element.platform_name);
   });
 
   return { [objName]: rowArray };
 }
+
