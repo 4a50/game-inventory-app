@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+  <head>
+
+  </head>
+  <body>
+    <header>
+      <h1>Are you sure that you want to completely erase your inventory? This action cannot be undone!</h1>
+    </header>
+    <main>
+      <section>
+        <form action="/hardDeleteDB/?_method=DELETE" method="POST">
+          <p>Please submit the correct answer to the following math problem to confirm your intent to irrevocably delete all of your inventory data:</p>
+          <p><%= numTest %></p>
+          <input type="text" name="testAnswer">
+          <button type="submit"> Submit & Delete</button>
+        </form>
+        <form action="/inventory" method="GET">
+          <button type="submit">Cancel!!!</button>
+        </form>
+      </section>
+    </main>
+  </body>

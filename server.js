@@ -1,8 +1,15 @@
 'use strict'
 
+// Global Variables /////////////////////////////////////////////////
+
 // let pageNum = 1;
 let prevSearch = {};
 let hasVisited = false;
+let dbDeleteConfirmationKey;
+
+
+// Dependencies ////////////////////////////////////////////////////
+
 const express = require('express')
 const superagent = require('superagent');
 const dotenv = require('dotenv');
@@ -22,12 +29,14 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const client = new pg.Client(DATABASE_URL);
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
 
-
 app.use(cors());
 app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
+
+
+// Routes ///////////////////////////////////////////////////////////
 
 app.get('/', homePage);
 app.post('/search', getSearchCriteria);
@@ -37,19 +46,17 @@ app.post('/details', viewDetails);
 
 app.post('/update', updateGameButton);
 app.put('/update/:id', updateGameDetails)
-
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
-
+//Evaluate the need for the get route
+app.get('/update/:id', updateGameButton);
+app.delete('/hardDeleteDB', eraseDBConfirmed)
 app.post('/dbDetails', dbDetail);
 app.get('/dbDetails/routeback/:idGame', dbDetail);
-
 app.delete('/wipeDB', clearDatabase);
-
 app.get('/inventory/verify', inventoryVerify);
 
-
-
+// Server and Database Link ////////////////////////////////////////
 
 client.connect()
   .then(() => {
@@ -62,7 +69,9 @@ client.connect()
     console.log('Unable to connect, guess we are antisocial:', err);
   });
 
-//FUNCTIONS - Page Drivers
+
+///////////////////////////////FUNCTIONS - Page Drivers
+
 
 function dbDetail(req, res) {
   console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
@@ -86,11 +95,9 @@ function dbDetail(req, res) {
       res.sendState(200);
     })
     .catch((() => console.log('whoops!')));
-
-
-
 }
 function getInventory(req, res) {
+
   console.log('Fired getInventory');
   let SQL = "SELECT * FROM gameinventorydata";
   client.query(SQL)
@@ -101,7 +108,7 @@ function getInventory(req, res) {
         if (a.name > b.name) { return 1; }
         return 0;
       })
-      console.log(sortedData);
+      //console.log(sortedData);
       return sortedData;
     })
     .then(data => {
@@ -109,18 +116,50 @@ function getInventory(req, res) {
       res.render('viewInventory', formatDbaseData(data, 'databaseDetails'));
     });
 }
+///Possible Duplicate
+function formatDbaseData(rowArray, objName) {
+
+  rowArray.map(element => {
+    element.platform_id = element.platform_id.replace('@', ' ');
+    element.platform_name = element.platform_name.replace('@', ' ');
+    element.publisher = element.publisher.replace('@', ' ');
+  });
+
+  return { [objName]: rowArray };
+}
+
 function clearDatabase(req, res) {
-  let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
-  if (userConfirmation === 'YES') {
-    let SQL = 'DELETE * FROM gameInventoryData;';
+  // console.log('clearDatabase FIRED!');
+  let randomNum1 = Math.floor(Math.random() * 1000);
+  let randomNum2 = Math.floor(Math.random() * 1000);
+  let randomProduct = randomNum1 * randomNum2;
+  // console.log('random nums', randomNum1, randomNum2);
+  // console.log('randomProduct', randomProduct);
+  dbDeleteConfirmationKey = randomProduct;
+  // let dbWipeConfirmData = { 'dbWipe': obj.detailData[0] };
+  // console.log('custom', dbWipeConfirmData);
+  res.render('dbWipeConfirm', { 'numTest' : `${randomNum1} X ${randomNum2} = `});
+}
+
+function eraseDBConfirmed (req, res) {
+  // console.log('eraseDBConfirmed FIRED!');
+  // console.log('req', req.body.testAnswer);
+  let userAnswer = parseInt(req.body.testAnswer);
+  // console.log ('dbDeleteConfirmKey:', dbDeleteConfirmationKey);
+  // console.log('userAnswer', userAnswer, 'type of userAnswer', typeof userAnswer);
+  if(userAnswer === dbDeleteConfirmationKey){
+    let SQL = 'DELETE FROM gameInventoryData;';
     client.query(SQL)
       .then(console.log('The DB has been wiped sparkling clean. Hope you meant to do that!'))
-      .catch(err => console.log('The database was not erased.', err));
+      .then(res.redirect('/inventory'))
+      .catch( err => console.log('The database was not erased.', err));
+
   } else {
-    alert('Sending you back before you accidentally hurt yourself or your inventory data.')
+    console.log('Sending you back before you accidentally hurt yourself or your inventory data.')
     res.redirect('/inventory');
   }
 }
+
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
 
@@ -137,8 +176,10 @@ function viewDetails(req, res) {
 }
 function updateGameButton(req, res) {
 
+
   console.log('this is the update game', req.body.game_id);
   let SQL = `SELECT * FROM gameinventorydata WHERE game_id=${req.body.game_id};`;
+
 
   client.query(SQL)
 
@@ -146,8 +187,6 @@ function updateGameButton(req, res) {
       console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
       console.log('formatData', formatDbaseData(data.rows, 'databaseDetails'));
       res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
-
-
     })
     .catch(err => console.error('Update game could not be completed', err))
 }
@@ -165,6 +204,7 @@ function updateGameDetails(req, res) {
     })
     .catch(err => console.error(err));
 }
+
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
@@ -224,7 +264,6 @@ function getSearchCriteria(req, res) {
     console.log('searchArea', searchArea, searchCriteria);
     sURL = setURL(searchArea, searchCriteria);
   }
-
 
   console.log('searchURL', sURL);
   superagent(sURL)
