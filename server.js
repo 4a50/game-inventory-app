@@ -1,7 +1,8 @@
 'use strict'
 
 // let pageNum = 1;
-// let giganticArray = [];
+let prevSearch = {};
+let hasVisited = false;
 const express = require('express')
 const superagent = require('superagent');
 const dotenv = require('dotenv');
@@ -30,6 +31,7 @@ app.use(methodOverride('_method'));
 
 app.get('/', homePage);
 app.post('/search', getSearchCriteria);
+app.get('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
 app.put('/update/:id', updateGameDetails)
@@ -39,9 +41,14 @@ app.get('/inventory', getInventory);
 
 
 
+app.post('/dbDetails', dbDetail);
+
+
+
 app.delete('/wipeDB', clearDatabase);
 
 app.get('/update/:id', updateGameButton);
+
 
 
 client.connect()
@@ -56,24 +63,57 @@ client.connect()
   });
 
 //FUNCTIONS
+
+function dbDetail(req, res) {
+  console.log('FIRED! Schwap!', req.body.game_id);
+  let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
+  let values = [req.body.game_id];
+  client.query(SQL, values)
+    .then(data => {
+      //console.log('FORMATDATABASEDATA', formatDbaseData(data.rows, 'detailData'));
+      let obj = formatDbaseData(data.rows, 'detailData');
+      let detailsPageCustom = { 'detailData': obj.detailData[0] };
+      console.log('custom', detailsPageCustom);
+      res.render('details', detailsPageCustom);
+    })
+    .catch((() => console.log('whoops!')));
+
+
+
+}
 function getInventory(req, res) {
 
   let SQL = "SELECT * FROM gameinventorydata";
-
   client.query(SQL)
     .then(data => {
-      res.render('viewInventory', formatDbaseData(data.rows, 'databaseDetails'));
-    });
 
+      let sortedData = data.rows.sort(function (a, b) {
+        if (a.name < b.name) { return -1; }
+        if (a.name > b.name) { return 1; }
+        return 0;
+      })
+      console.log(sortedData);
+      return sortedData;
+    })
+    .then(data => {
+      res.render('viewInventory', formatDbaseData(data, 'databaseDetails'));
+    });
 }
 function formatDbaseData(rowArray, objName) {
+
   rowArray.map(element => {
     element.platform_id = element.platform_id.replace('@', ' ');
     element.platform_name = element.platform_name.replace('@', ' ');
     element.publisher = element.publisher.replace('@', ' ');
   });
+
   return { [objName]: rowArray };
 }
+
+
+
+
+
 
 function clearDatabase(req, res) {
   let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
@@ -87,6 +127,7 @@ function clearDatabase(req, res) {
     res.redirect('/inventory');
   }
 }
+
 
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
@@ -104,6 +145,7 @@ function viewDetails(req, res) {
 }
 
 
+
 function updateGameButton(req, res){
 
   console.log('this is the update game', req.query.game_id);
@@ -115,8 +157,9 @@ function updateGameButton(req, res){
       console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
       res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
 
+
     })
-    .catch (err => console.error('Update game could not be completed', err))
+    .catch(err => console.error('Update game could not be completed', err))
 }
 
 function updateGameDetails(req, res){
@@ -145,7 +188,7 @@ function updateGameDetails(req, res){
 
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
-  console.log('FIRED! addGame', req.body.game_id);
+  console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
 
   let SQL = 'INSERT INTO gameinventorydata (name, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
   // let values = [//enter values here to access data from API example: req.body.title];
@@ -164,8 +207,12 @@ function addGame(req, res) {
     })
     .then(values => {
       client.query(SQL, values)
-        .then( () => console.log('Shoved in the Databass!'))
+        .then(() => console.log('Shoved in the Databass!'))
         .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
+    })
+    .then(() => {
+      hasVisited = true;
+      res.redirect('/search');
     });
 }
 
@@ -174,12 +221,23 @@ function homePage(req, res) {
 }
 
 function getSearchCriteria(req, res) {
+  console.log('original URL', req.body);
+  let sURL = '';
+  if (hasVisited) {
+    console.log('presearch', prevSearch);
+    sURL = setURL(prevSearch.searchArea, prevSearch.searchCriteria);
+    hasVisited = false;
+  } else {
+    let { searchArea, searchCriteria } = req.body;
+    prevSearch = { searchArea: req.body.searchArea, searchCriteria: req.body.searchCriteria };
+    console.log('prevsearchInit', prevSearch);
+    console.log('searchArea', searchArea, searchCriteria);
+    sURL = setURL(searchArea, searchCriteria);
+  }
 
-  let { searchArea, searchCriteria } = req.body;
 
-  let URL = setURL(searchArea, searchCriteria);
-  console.log('searchURL', URL);
-  superagent(URL)
+  console.log('searchURL', sURL);
+  superagent(sURL)
     .then(data => {
       return resultToObj(data, 'search');
     })
