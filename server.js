@@ -37,7 +37,12 @@ app.put('/update/:id', updateGameDetails)
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
+
+
+app.delete('/wipeDB', clearDatabase);
+
 app.get('/update/:id', updateGameButton);
+
 
 client.connect()
   .then(() => {
@@ -59,6 +64,7 @@ function getInventory(req, res) {
     .then(data => {
       res.render('viewInventory', formatDbaseData(data.rows, 'databaseDetails'));
     });
+
 }
 function formatDbaseData(rowArray, objName) {
   rowArray.map(element => {
@@ -67,6 +73,19 @@ function formatDbaseData(rowArray, objName) {
     element.publisher = element.publisher.replace('@', ' ');
   });
   return { [objName]: rowArray };
+}
+
+function clearDatabase(req, res) {
+  let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
+  if (userConfirmation === 'YES'){
+    let SQL = 'DELETE * FROM gameInventoryData;';
+    client.query(SQL)
+      .then(console.log('The DB has been wiped sparkling clean. Hope you meant to do that!'))
+      .catch( err => console.log('The database was not erased.', err));
+  } else {
+    alert('Sending you back before you accidentally hurt yourself or your inventory data.')
+    res.redirect('/inventory');
+  }
 }
 
 function viewDetails(req, res) {
@@ -84,12 +103,14 @@ function viewDetails(req, res) {
 
 }
 
+
 function updateGameButton(req, res){
 
   console.log('this is the update game', req.query.game_id);
   let SQL = `SELECT * FROM gameinventorydata WHERE game_id=${req.query.game_id};`;
 
   client.query(SQL)
+
     .then (data => {
       console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
       res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
