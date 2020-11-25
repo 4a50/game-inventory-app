@@ -10,20 +10,21 @@
         <%- include('./goBackPartial') %>
     </header>
     <main><% databaseDetails.forEach( game => { %>
-        <form action="/dbDetails" method="POST">
-            <input type="hidden" name="game_id" value=<%=game.game_id%>>
-            <h2><%= game.name %></h2>
-            <section>
-                <button type="submit">View Details</button>
-        </form>
+        <section class="grid-container" class="viewInventoryForm">
+            <h2 class="grid-item" id="listText"><%= game.name %></h2>
+            <div class="grid-item">
+                <form action="/dbDetails" method="POST">
+                    <input type="hidden" name="game_id" value=<%=game.game_id%>>
+                    <button id="inventoryButton" type="submit">View Details</button>
+                </form>
+                <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST">
+                    <button class="danger" id="inventoryButton" type="submit">Delete from Inventory</button>
+                </form>
+            </div>
         </section>
-        <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST">
-            <button type="submit">Delete from Inventory</button>
-            </section>
-        </form>
         <% }) %>
         <form action="/wipeDB" method="GET">
-            <button type="submit">DELETE ALL INVENTORY DATA - DANGER!</button>
+            <button class="danger" id="danger" class="indexButton" type="submit">DELETE ALL INVENTORY DATA - DANGER!</button>
         </form>
     </main>
     <footer><% include('./footerPartial') %></footer>
