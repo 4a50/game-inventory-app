@@ -2,20 +2,23 @@
 <html>
 
 <head>
-    <%- include('./headPartial') %>
+    <!-- LINKING CSS FILES TO THIS HTML IS CAUSING THIS PATH TO FIRE MULTIPLE TIMES WHEN REDIRECTING FROM updateGameDetails ??? -->
+
+    <!-- <%- include('headPartial') %> -->
+
 </head>
 
 <body>
     <header>
-
         <%- include('./goBackPartial') %>
     </header>
     <main>
         <div>
 
-            <form action="/update/<%= detailData.game_id%>" method="GET">
+            <form action="/update" method="POST">
 
                 <img src="<%= detailData.image_url %>"></img>
+                <!-- <h4><%= detailData.game_id %></h4> -->
                 <h4><%= detailData.name %></h4>
                 <p><%= detailData.publisher %></p>
                 <p><%= detailData.developer %></p>
@@ -39,7 +42,7 @@
             <form action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
                 <button type="submit">Delete from Inventory</button>
             </form>
-            
+
         </div>
     </main>
 
