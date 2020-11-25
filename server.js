@@ -115,7 +115,8 @@ function updateGameDetails(req, res){
     })
     .then(() => {
       console.log('made it to the redirect')
-      // res.redirect('/details')
+      // TODO: redirecto to previous details page
+      // res.redirect('details', req.body.game_id)
     })
     .catch(err => console.error(err));
 }
