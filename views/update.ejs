@@ -5,19 +5,36 @@
     </head>
     <body>
         <header>
-            %- include('./goBackPartial') %>
+            <%- include('./goBackPartial') %>
         </header>
         <main>
             <div>Click to update
-                <form action="/update/<%= game.game_id %>?_method=PUT" method="POST">
-                    <input type="text" name="image_url"><%= game.image_url %>"></inupt>
-                    <input type="text" name="name"><%= game.name %></inupt>
-                    <input type="text" name="publisher"><%= game.publisher %></inupt>
-                    <input type="text" name="developer"><%= game.developer %></inupt>
-                    <input type="text" name="release_date"><%= game.release_date %></inupt>
-                    <input type="text" name="genre"><%= game.genre %></inupt>
-                    <input type="text" name="platform"><%= game.platform %></inupt>
-                    <input type="text" name="description"><%- game.description %><input>
+                <form action="/update/<%= databaseDetails[0].game_id %>?_method=PUT" method="POST">
+                    <label>Image URL
+                        <input type="text" name="image_url" value="<%= databaseDetails[0].image_url %>"/>
+                    </label>
+                    <label>Title
+                        <input type="text" name="name" value="<%= databaseDetails[0].name %>"/>
+                    </label>  
+                    <label>Publisher
+                        <input type="text" name="publisher" value="<%= databaseDetails[0].publisher %>"/>
+                    </label>  
+                    <label>Developer
+                        <input type="text" name="developer" value="<%= databaseDetails[0].developer %>"/>
+                    </label>
+                    <label>Release Date
+                        <input type="text" name="release_date" value="<%= databaseDetails[0].release_date %>"/>
+                    </label>
+                    <label>Genre
+                        <input type="text" name="genre" value="<%= databaseDetails[0].genre %>"/>
+                    </label>
+                    <label>Platform
+                        <input type="text" name="platform" value="<%= databaseDetails[0].platform %>"/>
+                    </label>
+                    <label>Description
+                        <input type="text" name="description" value="<%= databaseDetails[0].description %>"/>
+                    </label>
+                    <input type="hidden" name="game_id" value="<%=JSON.stringify(databaseDetails[0].game_id)%>">
                     <button type="submit">Update Game</button>
                 </form>
                 <form action="/details">

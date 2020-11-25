@@ -13,7 +13,7 @@ CREATE TABLE gameInventoryData (
   platform_id VARCHAR(255),
   platform_name VARCHAR (255),
   publisher VARCHAR(255),
-  release_date DATE,
+  release_date VARCHAR(255),
   video_url VARCHAR(255)
 );
   
@@ -33,7 +33,7 @@ CREATE TABLE apiData (
   platform_id INT,
   platform_name VARCHAR (255),
   publisher VARCHAR(255),
-  release_data DATE,
+  release_data VARCHAR(255),
   video_url VARCHAR(255)
 );
 

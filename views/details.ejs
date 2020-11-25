@@ -7,12 +7,12 @@
 
 <body>
     <header>
-        <button>Add Game</button>
+
         <%- include('./goBackPartial') %>
     </header>
     <main>
         <div>
-            <form>
+            <form action="/update/<%= detailData.game_id%>" method="GET">
                 <img src="<%= detailData.image_url %>"></img>
                 <h4><%= detailData.name %></h4>
                 <p><%= detailData.publisher %></p>
@@ -21,20 +21,23 @@
                 <p><%= detailData.genre %></p>
                 <p><%= detailData.platform %></p>
                 <!-- <a href=""> detailData.url</a> -->
-            </form>
-            <form>
+                <input type="hidden" name="game_id" value="<%=JSON.stringify(detailData.game_id)%>">
                 <p><%= detailData.description %></p>
+                <button type="submit">Edit game</button>
+
             </form>
         </div>
 
         <!-- detail loop goes here -->
         <div>
+            <form action="/addGame" method="POST">
+                <input type="hidden" name="game_id" value="<%=JSON.stringify(detailData.game_id)%>">
+                <button>Add to Inventory</button>
+            </form>
             <form action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
                 <button type="submit">Delete from Inventory</button>
             </form>
-            <form action="/update/<%= detailData.game_id%>" method="GET">
-                <button type="submit">Edit game</button>
-            </form>
+            
         </div>
     </main>
 
