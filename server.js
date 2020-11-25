@@ -229,9 +229,10 @@ function addGame(req, res) {
     })
     .then(obj => {
       // eslint-disable-next-line no-unused-vars
-      let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = obj.detailData;
+      let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
 
-      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform, publisher, release_date, 'noSiteProvided', developer];
+      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
+      console.log('values:', values);
       return values;
     })
     .then(values => {
@@ -376,7 +377,7 @@ function resultToObj(superAgentData, type = 'search') {
       description: description_raw,
       game_id: id,
       image_url: background_image,
-      platform: platformString,
+      platform_name: platformString,
       platform_id: platformId,
       publisher: publisherString,
       release_date: released,
