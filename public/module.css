@@ -1,16 +1,106 @@
-button{
+
+.indexForm{
+    width: 400px;
+    font-size: 30px;
+    padding: 5px;
+    margin: 20px auto 20px auto;
+    /* border: 1px black solid; */
+}
+.viewInventoryForm{
+    width: 400px;
+    margin: 20px auto 20px auto;
+}
+
+.indexButton{
+    border-radius: 10px;
+    width: 100%;
+    height: 50px;
+}
+#indexSearch{
+    width: 76%;
+    height: 50px;
     border-radius: 10px;
 }
-button:hover{
-    background-color: darkgray;
+#submitButton{
+    width: 20%;
+    height: 55px;
+}
+
+#danger{
+    width: 400px;
+    height: 50px;
+}
+
+.danger:hover{
+    background-color: rgb(235, 140, 140);
+    border: red 2px solid;
+}
+
+#listText{
+    line-height: 70px;
+}
+
+.viewInventoryForm button{
+    width: 150px;
+    text-align: center;
+
+}
+
+.grid-container{
+    display: inline-grid;
+    grid-template-columns: 60% 35%; 
+    width: 500px;
+    height: 70px;
+    margin: 5px auto 5px auto;
+    padding: 15px;
+    border: 2px rgb(3, 3, 129) solid;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.grid-item div{
+    margin-bottom: 10px;
+}
+
+#inventoryButton{
+    height: 30px;
+    width: 150px;
+    border-radius: 5px;
+    background-color: black;
     color: white;
+    border: none;
+    margin-bottom: 10px;
 }
-form{
-    border: 1px black solid;
-    border-radius: 10px;
+.goBackButton{
+    width: 400px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
-h2{
-    font-size: 20px;
-    margin-left: auto;
-    margin-right: auto;
+/* details.ejs css */
+.grid-containerTwo{
+    display: inline-grid;
+    grid-template-columns: 60% 40%;
+    width: 90%;
+}
+
+.footerButtons{
+    display: inline-grid;
+    grid-template-columns: 50% 50%;
+    width: 800px;
+}
+#grid-itemThree{
+    border-radius: 5px;
+    width: 150px;
+    height: 40px;
+}
+
+#grid-itemTwo{
+    display: inline-block;
+}
+
+.detailItems{
+    margin-top: 5px;
+    text-align: left;
+    margin-left: 10%;
 }
