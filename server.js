@@ -168,6 +168,17 @@ function updateGameDetails(req, res) {
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
+  // client.query('SELECT game_id FROM gameinventorydata')
+  //   .then(data => {
+  //     let isDuplicate = false;
+  //     data.rows.map(elem =>
+  //     if (elem.game_id === parseInt(req.body.game_id) { isDuplicate = true; break; }
+
+  //     else { isDuplicate = false; }
+
+
+
+  //     });
 
   let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
   // let values = [//enter values here to access data from API example: req.body.title];
