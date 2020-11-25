@@ -46,6 +46,8 @@ app.get('/dbDetails/routeback/:idGame', dbDetail);
 
 app.delete('/wipeDB', clearDatabase);
 
+app.get('/inventory/verify', inventoryVerify);
+
 
 
 
@@ -60,7 +62,7 @@ client.connect()
     console.log('Unable to connect, guess we are antisocial:', err);
   });
 
-//FUNCTIONS
+//FUNCTIONS - Page Drivers
 
 function dbDetail(req, res) {
   console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
@@ -107,24 +109,6 @@ function getInventory(req, res) {
       res.render('viewInventory', formatDbaseData(data, 'databaseDetails'));
     });
 }
-function formatDbaseData(rowArray, objName) {
-
-  rowArray.map(element => {
-    console.log('element', element.platform_id);
-
-    if (element.platform_id) { element.platform_id = element.platform_id.replace('@', ' '); }
-    if (element.platform_name) { element.platform_name = element.platform_name.replace('@', ' '); }
-    if (element.publisher) { element.publisher = element.publisher.replace('@', ' '); }
-  });
-
-  return { [objName]: rowArray };
-}
-
-
-
-
-
-
 function clearDatabase(req, res) {
   let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
   if (userConfirmation === 'YES') {
@@ -137,8 +121,6 @@ function clearDatabase(req, res) {
     res.redirect('/inventory');
   }
 }
-
-
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
 
@@ -147,15 +129,12 @@ function viewDetails(req, res) {
 
   superagent(secondURL)
     .then(data => {
-      //console.log('resultToObj', resultToObj(data, 'detail'))
-      res.render('details', resultToObj(data, 'db'));
+      console.log('API Details', data);
+      res.render('details', resultToObj(data, 'detail'));
     })
     .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
 
 }
-
-
-
 function updateGameButton(req, res) {
 
   console.log('this is the update game', req.body.game_id);
@@ -172,7 +151,6 @@ function updateGameButton(req, res) {
     })
     .catch(err => console.error('Update game could not be completed', err))
 }
-
 function updateGameDetails(req, res) {
   console.log('this is req body', req.body);
   let game = req.body;
@@ -187,8 +165,6 @@ function updateGameDetails(req, res) {
     })
     .catch(err => console.error(err));
 }
-
-
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
@@ -248,6 +224,30 @@ function getSearchCriteria(req, res) {
     .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
 }
 
+function deleteGame(req, res) {
+
+  console.log('FIRED! BAM! deleteGame', req.params.id);
+
+  let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
+  client.query(SQL)
+    .then(data => console.log('data deleted', data))
+    .then(res.redirect('/inventory'))
+    .catch(err => console.log('Delete did not go according to plan...', err));
+}
+
+function inventoryVerify(req, res) {
+  let SQL = 'SELECT game_id, name FROM gameInventoryData';
+  client.query(SQL)
+    .then(data => {
+      console.log(data.rows);
+      res.render('inventory', { databaseItems: data.rows });//data.rows
+
+    });
+
+
+}
+//Helper Functions
+
 //All games for platform search: (platforms, id <= API console unique id.  Can pull from database)
 //Specific Game Title: (games, <name of game>)
 //Search for games release on a specific date.
@@ -262,21 +262,10 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   return URL;
 
 }
-
-function deleteGame(req, res) {
-
-  console.log('FIRED! BAM! deleteGame', req.params.id);
-
-  let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
-  client.query(SQL)
-    .then(data => console.log('data deleted', data))
-    .then(res.redirect('/inventory'))
-    .catch(err => console.log('Delete did not go according to plan...', err));
-}
-
-// data is from superagent result, search is either 'detail' or 'type' or 'db'
+// data is from superagent result, type is either 'detail' or 'search' or 'db'
 
 function resultToObj(superAgentData, type = 'search') {
+  console.log(`resultToObj Formatting ${type}`);
   let data = superAgentData.body;
   let array = [];
   let appendString = '';
@@ -348,4 +337,16 @@ function resultToObj(superAgentData, type = 'search') {
     return { detailData: detailObj };
 
   }
+}
+function formatDbaseData(rowArray, objName) {
+
+  rowArray.map(element => {
+    console.log('element', element.platform_id);
+
+    if (element.platform_id) { element.platform_id = element.platform_id.replace('@', ' '); }
+    if (element.platform_name) { element.platform_name = element.platform_name.replace('@', ' '); }
+    if (element.publisher) { element.publisher = element.publisher.replace('@', ' '); }
+  });
+
+  return { [objName]: rowArray };
 }
