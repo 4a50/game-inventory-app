@@ -12,6 +12,7 @@
     "method-override": "^3.0.0",
     "nodemon": "^2.0.6",
     "pg": "^8.5.1",
+    "prompt-sync": "^4.2.0",
     "superagent": "^6.1.0"
   },
   "devDependencies": {},

@@ -5,6 +5,7 @@
 // let pageNum = 1;
 let prevSearch = {};
 let hasVisited = false;
+let dbDeleteConfirmationKey;
 
 
 // Dependencies ////////////////////////////////////////////////////
@@ -46,8 +47,9 @@ app.put('/update/:id', updateGameDetails)
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 app.post('/dbDetails', dbDetail);
-app.delete('/wipeDB', clearDatabase);
+app.get('/wipeDB', clearDatabase);
 app.get('/update/:id', updateGameButton);
+app.delete('/hardDeleteDB', eraseDBConfirmed)
 
 
 // Server and Database Link ////////////////////////////////////////
@@ -82,7 +84,7 @@ function dbDetail(req, res) {
 }
 function getInventory(req, res) {
 
-  let SQL = "SELECT * FROM gameinventorydata";
+  let SQL = 'SELECT * FROM gameinventorydata';
   client.query(SQL)
     .then(data => {
 
@@ -91,7 +93,7 @@ function getInventory(req, res) {
         if (a.name > b.name) { return 1; }
         return 0;
       })
-      console.log(sortedData);
+      //console.log(sortedData);
       return sortedData;
     })
     .then(data => {
@@ -110,14 +112,32 @@ function formatDbaseData(rowArray, objName) {
 }
 
 function clearDatabase(req, res) {
-  let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
-  if (userConfirmation === 'YES'){
-    let SQL = 'DELETE * FROM gameInventoryData;';
+  // console.log('clearDatabase FIRED!');
+  let randomNum1 = Math.floor(Math.random() * 1000);
+  let randomNum2 = Math.floor(Math.random() * 1000);
+  let randomProduct = randomNum1 * randomNum2;
+  // console.log('random nums', randomNum1, randomNum2);
+  // console.log('randomProduct', randomProduct);
+  dbDeleteConfirmationKey = randomProduct;
+  // let dbWipeConfirmData = { 'dbWipe': obj.detailData[0] };
+  // console.log('custom', dbWipeConfirmData);
+  res.render('dbWipeConfirm', { 'numTest' : `${randomNum1} X ${randomNum2} = `});
+}
+
+function eraseDBConfirmed (req, res) {
+  // console.log('eraseDBConfirmed FIRED!');
+  // console.log('req', req.body.testAnswer);
+  let userAnswer = parseInt(req.body.testAnswer);
+  // console.log ('dbDeleteConfirmKey:', dbDeleteConfirmationKey);
+  // console.log('userAnswer', userAnswer, 'type of userAnswer', typeof userAnswer);
+  if(userAnswer === dbDeleteConfirmationKey){
+    let SQL = 'DELETE FROM gameInventoryData;';
     client.query(SQL)
       .then(console.log('The DB has been wiped sparkling clean. Hope you meant to do that!'))
+      .then(res.redirect('/inventory'))
       .catch( err => console.log('The database was not erased.', err));
   } else {
-    alert('Sending you back before you accidentally hurt yourself or your inventory data.')
+    console.log('Sending you back before you accidentally hurt yourself or your inventory data.')
     res.redirect('/inventory');
   }
 }
