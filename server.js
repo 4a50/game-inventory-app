@@ -54,6 +54,7 @@ app.post('/dbDetails', dbDetail);
 app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
+app.post('/inventory/verify/results', inventoryVerifyResults);
 
 // Server and Database Link ////////////////////////////////////////
 
@@ -115,17 +116,7 @@ function getInventory(req, res) {
       res.render('viewInventory', formatDbaseData(data, 'databaseDetails'));
     });
 }
-///Possible Duplicate
-function formatDbaseData(rowArray, objName) {
 
-  rowArray.map(element => {
-    element.platform_id = element.platform_id.replace('@', ' ');
-    element.platform_name = element.platform_name.replace('@', ' ');
-    element.publisher = element.publisher.replace('@', ' ');
-  });
-
-  return { [objName]: rowArray };
-}
 
 function clearDatabase(req, res) {
   // console.log('clearDatabase FIRED!');
@@ -292,6 +283,39 @@ function inventoryVerify(req, res) {
       res.render('inventory', { databaseItems: data.rows });//data.rows
 
     });
+}
+
+function inventoryVerifyResults(req, res) {
+  console.log('FIRED! inventoryVerifyResults', req.body, req.body.game_id.length, typeof (req.body.game_id));
+  let isSingle = false;
+  let arr = [];
+  let SQL = '';
+  SQL = `UPDATE gameInventoryData SET verified='false';`;
+  client.query(SQL)
+    .then(() => console.log(`SET ALL "VERIFIED" values to false`))
+    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+  if (typeof (req.body.game_id) === 'string') { isSingle = true; }
+  (isSingle ? arr.push(req.body.game_id) : arr = req.body.game_id);
+  arr.map(element => {
+    // let SQL = `SELECT DISTINCT verified FROM gameInventoryData WHERE game_id=${element};`;
+    //UPDATE gameInventoryData SET name=$1
+    SQL = `UPDATE gameInventoryData SET verified=$1 WHERE game_id=${element};`;
+    console.log(SQL);
+    client.query(SQL, [true])
+      .then(data => console.log(data))
+      .catch(err => console.log('ERROR UPDATING VERIFICATION: ', err));
+  })
+  SQL = `SELECT name, game_id FROM gameInventoryData WHERE NOT (verified='true');`;
+  client.query(SQL)
+    .then(data => {
+      console.log('DATA ROW VALUE:', data.rows);
+      return data;
+    })
+    .then(data => {
+      res.render('invResults', { invResultsData: data.rows });
+
+    })
+
 
 
 }
