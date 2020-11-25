@@ -10,8 +10,8 @@ const cors = require('cors');
 const pg = require('pg');
 const { render } = require('ejs');
 const methodOverride = require('method-override');
-let fs = require('fs');
-fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
+// let fs = require('fs');
+// fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
 
 dotenv.config();
 
@@ -34,12 +34,22 @@ app.post('/search', getSearchCriteria);
 app.get('/search', getSearchCriteria);
 app.post('/addGame', addGame);
 app.post('/details', viewDetails);
+app.put('/update/:id', updateGameDetails)
 
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
-app.get('/update/:id', updateGame);
+
+
 app.post('/dbDetails', dbDetail);
+
+
+
+app.delete('/wipeDB', clearDatabase);
+
+app.get('/update/:id', updateGameButton);
+
+
 
 client.connect()
   .then(() => {
@@ -76,6 +86,7 @@ function getInventory(req, res) {
   let SQL = "SELECT * FROM gameinventorydata";
   client.query(SQL)
     .then(data => {
+
       let sortedData = data.rows.sort(function (a, b) {
         if (a.name < b.name) { return -1; }
         if (a.name > b.name) { return 1; }
@@ -102,6 +113,22 @@ function formatDbaseData(rowArray, objName) {
 
 
 
+
+
+function clearDatabase(req, res) {
+  let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
+  if (userConfirmation === 'YES'){
+    let SQL = 'DELETE * FROM gameInventoryData;';
+    client.query(SQL)
+      .then(console.log('The DB has been wiped sparkling clean. Hope you meant to do that!'))
+      .catch( err => console.log('The database was not erased.', err));
+  } else {
+    alert('Sending you back before you accidentally hurt yourself or your inventory data.')
+    res.redirect('/inventory');
+  }
+}
+
+
 function viewDetails(req, res) {
   console.log('FIRED! viewDetails', req.body);
 
@@ -111,23 +138,53 @@ function viewDetails(req, res) {
   superagent(secondURL)
     .then(data => {
       //console.log('resultToObj', resultToObj(data, 'detail'))
-      res.render('details', resultToObj(data, 'detail'));
+      res.render('details', resultToObj(data, 'db'));
     })
     .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
 
 }
 
-function updateGame(req, res) {
-  console.log('this is the update game', req.params)
-  let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = req.params;
-  let SQL = `UPDATE gameinventorydata (name, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
-  let values = [name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer];
-  client.query(SQL, values)
-    .then(data => {
-      res.redirect('details', resultToObj(data, 'detail'));
+
+
+function updateGameButton(req, res){
+
+  console.log('this is the update game', req.query.game_id);
+  let SQL = `SELECT * FROM gameinventorydata WHERE game_id=${req.query.game_id};`;
+
+  client.query(SQL)
+
+    .then (data => {
+      console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
+      res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
+
+
     })
     .catch(err => console.error('Update game could not be completed', err))
 }
+
+function updateGameDetails(req, res){
+  console.log('this is req body', req.body);
+  let game = req.body;
+  let SQL = 'UPDATE gameInventoryData SET name=$1, category=$2, condition=$3, description=$4, game_count=$5, game_id=$6, image_url=$7, notes=$8, platform_id=$9, platform_name=$10, publisher=$11, release_date=$12, video_url=$13 WHERE game_id=$14;';
+  let values = [game.name, game.category, game.condition, game.description, game.game_count, game.game_id, game.image_url, game.notes, game.platform_id, game.platform.name, game.publisher, game.release_date, game.video_url, game.game_id];
+  // let newValues = values.map( element => {
+  //   if (!element){
+  //     element='No Data'
+  //   }
+  // });
+  console.log('this is value', values)
+  client.query (SQL, values)
+    .then(data => {
+      console.log('this is data', data);
+    })
+    .then(() => {
+      console.log('made it to the redirect')
+      // TODO: redirecto to previous details page
+      // res.redirect('details', req.body.game_id)
+    })
+    .catch(err => console.error(err));
+}
+
 
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {

@@ -22,6 +22,9 @@
             </section>
         </form>
         <% }) %>
+        <form action="/wipeDB/?_method=DELETE" method="POST">
+            <button type="submit">DELETE ALL INVENTORY DATA - DANGER!</button>
+        </form>
     </main>
     <footer><% include('./footerPartial') %></footer>
 </body>
