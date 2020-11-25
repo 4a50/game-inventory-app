@@ -10,7 +10,8 @@
         <%- include('./goBackPartial') %>
     </header>
     <main><% databaseDetails.forEach( game => { %>
-        <form action="" method="">
+        <form action="/dbDetails" method="POST">
+            <input type="hidden" name="game_id" value=<%=game.game_id%>>
             <h2><%= game.name %></h2>
             <section>
                 <button type="submit">View Details</button>
