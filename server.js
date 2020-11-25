@@ -37,6 +37,7 @@ app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
 app.get('/update/:id', updateGame);
+app.delete('/wipeDB', clearDatabase);
 
 client.connect()
   .then(() => {
@@ -59,17 +60,33 @@ function getInventory(req, res) {
       res.render('viewInventory', formatDbaseData(data.rows));
     });
 
-  function formatDbaseData(rowArray) {
+
+
+  function formatDbaseData(rowArray,objName) {
     rowArray.map(element => {
       element.platform_id = element.platform_id.replace('@', ' ');
       element.platform_name = element.platform_name.replace('@', ' ');
       element.publisher = element.publisher.replace('@', ' ');
     });
-    return { databaseDetails: rowArray };
+   
+    return { [objName] : rowArray };
   }
 
 
 
+}
+
+function clearDatabase(req, res) {
+  let userConfirmation = ('Please confirm that you want to completely reformat your inventory! Enter \'YES\' to confirm.')
+  if (userConfirmation === 'YES'){
+    let SQL = 'DELETE * FROM gameInventoryData;';
+    client.query(SQL)
+      .then(console.log('The DB has been wiped sparkling clean. Hope you meant to do that!'))
+      .catch( err => console.log('The database was not erased.', err));
+  } else {
+    alert('Sending you back before you accidentally hurt yourself or your inventory data.')
+    res.redirect('/inventory');
+  }
 }
 
 function viewDetails(req, res) {
@@ -90,8 +107,9 @@ function viewDetails(req, res) {
 function updateGame(req, res){
   console.log('this is the update game', req.params)
   let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = req.params;
-  let SQL = `UPDATE gameinventorydata (name, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
+  let SQL = `UPDATE gameInventoryData (name, category, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
   let values = [name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer];
+  
   client.query(SQL, values)
     .then (data => {
       res.redirect('details', resultToObj(data, 'detail'));
