@@ -19,7 +19,7 @@
                         <button id="inventoryButton">View Details</button>
                     </form>
                     <form action="/addGame" method="POST">
-                        <input type="hidden" name="game_id" value="<%=JSON.stringify(game_id)%>">
+                        <input type="hidden" name="game_id" value="<%=JSON.stringify(game.game_id)%>">
                         <input type="hidden" name="parent_page" value="/search">
                         <button id="inventoryButton">Add to Inventory</button>
                     </form>
