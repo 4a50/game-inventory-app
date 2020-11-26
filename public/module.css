@@ -162,3 +162,13 @@
     height: 40px;
     width: 40%;
 }
+
+
+#almostLastButton{
+    width: 60%;
+    height: 50px;
+}
+
+.inventoryItem{
+    margin: 15px auto 15px auto;
+}

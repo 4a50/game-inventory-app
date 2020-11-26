@@ -5,22 +5,21 @@
     <%- include('./headPartial') %>
 </head>
 
-<body>
+<body class="inventoryBody">
     <header>
-        <button>View Results</button>
         <%- include('./goBackPartial') %>
     </header>
     <main>
         <form action="/inventory/verify/results" method="POST">
             <br />
             <div><% databaseItems.forEach( game => { %>
-                <input type="checkbox" name="game_id" value="<%= game.game_id %>">
-                <label for="<%= game.id %>"></label>
-                <p><%= game.name %></p>
-                <p><%= game.id %></p>
-                <br />
+                <section class="inventoryItem">
+                    <label for="<%= game.id %>"><input type="checkbox" name="game_id" value="<%= game.game_id %>"
+                    <p><%= game.name %></p>
+                    </label>   
+                </section>
                 <% }) %>
-                <button type="submit">Submit Results</button>
+                <button id="almostLastButton" type="submit">Submit Results</button>
             </div>
         </form>
     </main>
