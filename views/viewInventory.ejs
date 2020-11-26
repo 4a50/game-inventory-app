@@ -10,7 +10,7 @@
         <%- include('./goBackPartial') %>
     </header>
     <main><% databaseDetails.forEach( game => { %>
-        <form action="/dbDetails" method="POST">
+        <form action="/details/<%=JSON.stringify(game.game_id)%>" method="GET">
             <input type="hidden" name="game_id" value=<%=game.game_id%>>
             <h2><%= game.name %></h2>
             <section>

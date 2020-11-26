@@ -3,7 +3,7 @@
 // Global Variables /////////////////////////////////////////////////
 
 // let pageNum = 1;
-let prevSearch = {};
+let prevSearch;
 let hasVisited = false;
 let dbDeleteConfirmationKey;
 
@@ -42,7 +42,7 @@ app.get('/', homePage);
 app.post('/search', getSearchCriteria);
 app.get('/search', getSearchCriteria);
 app.post('/addGame', addGame);
-app.post('/details', viewDetails);
+app.get('/details/:game_id', viewDetails);
 
 app.post('/update', updateGameButton);
 app.put('/update/:id', updateGameDetails)
@@ -50,8 +50,8 @@ app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
 app.delete('/hardDeleteDB', eraseDBConfirmed)
-app.post('/dbDetails', dbDetail);
-app.get('/dbDetails/routeback/:idGame', dbDetail);
+//app.post('/dbDetails', dbDetail);
+//app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
@@ -73,29 +73,30 @@ client.connect()
 ///////////////////////////////FUNCTIONS - Page Drivers
 
 
-function dbDetail(req, res) {
-  console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
-  let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
-  let values;
-  if (req.body.game_id) {
-    values = [req.body.game_id];
-    console.log('REQ BODY IS REAL!', req.body.game_id);
-  } else {
-    values = [req.params.idGame];
-    console.log('REQ PARAMS IS REAL!', req.params.idGame);
-  }
-  console.log('VALUES', values);
-  client.query(SQL, values)
-    .then(data => {
-      //console.log('FORMATDATABASEDATA', formatDbaseData(data.rows, 'detailData'));
-      let obj = formatDbaseData(data.rows, 'detailData');
-      let detailsPageCustom = { 'detailData': obj.detailData[0] };
-      //console.log('custom', detailsPageCustom);
-      res.render('details', detailsPageCustom);
-      res.sendState(200);
-    })
-    .catch((() => console.log('whoops!')));
-}
+// function dbDetail(req, res) {
+//   console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
+//   let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
+//   let values;
+//   if (req.body.game_id) {
+//     values = [req.body.game_id];
+//     console.log('REQ BODY IS REAL!', req.body.game_id);
+//   } else {
+//     values = [req.params.idGame];
+//     console.log('REQ PARAMS IS REAL!', req.params.idGame);
+//   }
+
+//   console.log('VALUES', values);
+//   client.query(SQL, values)
+//     .then(data => {
+//       //console.log('FORMATDATABASEDATA', formatDbaseData(data.rows, 'detailData'));
+//       let obj = formatDbaseData(data.rows, 'detailData');
+//       let detailsPageCustom = { 'detailData': obj.detailData[0] };
+//       //console.log('custom', detailsPageCustom);
+//       res.render('details', detailsPageCustom);
+//       res.sendState(200);
+//     })
+//     .catch((() => console.log('whoops!')));
+// }
 function getInventory(req, res) {
 
   console.log('Fired getInventory');
@@ -150,18 +151,37 @@ function eraseDBConfirmed(req, res) {
   }
 }
 
-function viewDetails(req, res) {
-  console.log('FIRED! viewDetails', req.body);
-
-  let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  console.log('Details URL', secondURL);
-
-  superagent(secondURL)
+async function viewDetails(req, res) {
+  console.log('viewDetails', req.params.game_id);
+  let dataRows;
+  console.log('FIRED! viewDetails', req.params.game_id); //game_id: 4444444
+  let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
+  let isInDB = false;
+  await client.query(SQL, [req.params.game_id])
     .then(data => {
-      console.log('API Details', data);
-      res.render('details', resultToObj(data, 'detail'));
-    })
-    .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
+      if (data.rows.length > 0) {
+        console.log('There is stuff to disp!');
+        dataRows = data.rows;
+        isInDB = true;
+      }
+    });
+  if (isInDB) {
+    console.log('RESRENDERING FROM DATABASS');
+    let dataObj = dataRows[0];
+    res.render('details', { detailData: dataObj });
+  }
+  else {
+    console.log('RESRENDERING FROM WEBPAGE');
+    let secondURL = `https://api.rawg.io/api/games/${req.params.game_id}?key=230e069959414c6f961df991eb43017f`;
+    console.log('Details URL', secondURL);
+    superagent(secondURL)
+      .then(data => {
+        //console.log('API Details', data);
+        res.render('details', resultToObj(data, 'detail'));
+      })
+      .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
+
+  }
 
 }
 function updateGameButton(req, res) {
@@ -190,25 +210,14 @@ function updateGameDetails(req, res) {
   client.query(SQL, values)
     .then(() => {
       console.log('redirecting, hold on');
-      res.redirect(`/dbDetails/routeback/${game.game_id}`);
+      res.redirect(`/details/${game.game_id}`);
     })
     .catch(err => console.error(err));
 }
 
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
-  console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
-  // client.query('SELECT game_id FROM gameinventorydata')
-  //   .then(data => {
-  //     let isDuplicate = false;
-  //     data.rows.map(elem =>
-  //     if (elem.game_id === parseInt(req.body.game_id) { isDuplicate = true; break; }
-
-  //     else { isDuplicate = false; }
-
-
-
-  //     });
+  console.log('FIRED! addGame', req.body);
 
   let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
   // let values = [//enter values here to access data from API example: req.body.title];
@@ -227,10 +236,15 @@ function addGame(req, res) {
     })
     .then(values => {
       client.query(SQL, values)
-        .then(() => console.log('Shoved in the Databass!'))
+        .then(() => {
+          console.log('Shoved in the Databass!')
+
+
+        })
         .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
     })
     .then(() => {
+      console.log('Set hasVisited to TRUE');
       hasVisited = true;
       res.redirect('/search');
     });
@@ -242,26 +256,26 @@ function homePage(req, res) {
 
 function getSearchCriteria(req, res) {
   console.log('original URL', req.body);
-  let sURL = '';
+  console.log('getSearchCriteria - hasVisited:', hasVisited);
   if (hasVisited) {
-    console.log('presearch', prevSearch);
-    sURL = setURL(prevSearch.searchArea, prevSearch.searchCriteria);
+    console.log('Loading Previous Search Results', prevSearch);
+    console.log('Setting hasVisited to FALSE');
     hasVisited = false;
+    res.render('searchResults.ejs', prevSearch);
   } else {
-    let { searchArea, searchCriteria } = req.body;
-    prevSearch = { searchArea: req.body.searchArea, searchCriteria: req.body.searchCriteria };
-    console.log('prevsearchInit', prevSearch);
-    console.log('searchArea', searchArea, searchCriteria);
-    sURL = setURL(searchArea, searchCriteria);
+    console.log('Loading API Search Results');
+    let sURL = '';
+    sURL = setURL(req.body.searchArea, req.body.searchCriteria);
+    console.log('searchURL', sURL);
+    superagent(sURL)
+      .then(data => {
+        let finalObj = resultToObj(data, 'search');
+        prevSearch = finalObj;
+        return finalObj
+      })
+      .then(obj => res.render('searchResults.ejs', obj))
+      .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
   }
-
-  console.log('searchURL', sURL);
-  superagent(sURL)
-    .then(data => {
-      return resultToObj(data, 'search');
-    })
-    .then(obj => res.render('searchResults.ejs', obj))
-    .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
 }
 
 function deleteGame(req, res) {
@@ -338,7 +352,7 @@ function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
 // data is from superagent result, type is either 'detail' or 'search' or 'db'
 
 function resultToObj(superAgentData, type = 'search') {
-  console.log(`resultToObj Formatting ${type}`);
+  //console.log(`resultToObj Formatting ${type}`);
   let data = superAgentData.body;
   let array = [];
   let appendString = '';
@@ -346,7 +360,7 @@ function resultToObj(superAgentData, type = 'search') {
   if (type === 'search') {
     data = superAgentData.body.results
     data.map((element) => {
-      array.push({ name: element.name, id: element.id })
+      array.push({ name: element.name, game_id: element.id })
     });
     console.log('Array', array);
     return ({ searchResultsData: array });

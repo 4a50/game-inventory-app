@@ -11,6 +11,9 @@
     </header>
     <main>
         <div>Click to update
+            <!-- Remove Below -->
+            <h1><%= databaseDetails[0] %></h1>
+            <!--  -->
             <form action="/update/<%= databaseDetails[0].game_id %>?_method=PUT" method="POST">
                 <label>Image URL
                     <input type="text" name="image_url" value="<%= databaseDetails[0].image_url %>" />
@@ -39,9 +42,9 @@
                 <input type="hidden" name="game_id" value="<%=JSON.stringify(databaseDetails[0].game_id)%>">
                 <button type="submit">Update Game</button>
             </form>
-            <form action="/dbDetails" method="POST">
+            <form action="/details/<%=JSON.stringify(databaseDetails[0].game_id)%>" method="GET">
                 <input type="hidden" name="game_id" value="<%=databaseDetails[0].game_id %>">
-                <button type="submit" method="POST">Back to Details</button>
+                <button type="submit">Back to Details</button>
             </form>
         </div>
 
