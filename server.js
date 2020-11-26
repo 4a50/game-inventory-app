@@ -92,14 +92,13 @@ function dbDetail(req, res) {
       let detailsPageCustom = { 'detailData': obj.detailData[0] };
       //console.log('custom', detailsPageCustom);
       res.render('details', detailsPageCustom);
-      res.sendState(200);
     })
-    .catch((() => console.log('whoops!')));
+    .catch(((err) => console.log('something went wrong with the db retrieve:', err)));
 }
 function getInventory(req, res) {
 
   //console.log('Fired getInventory');
-  let SQL = "SELECT * FROM gameinventorydata";
+  let SQL = 'SELECT * FROM gameinventorydata';
   client.query(SQL)
     .then(data => {
 
@@ -194,8 +193,10 @@ function updateGameDetails(req, res) {
     .catch(err => console.error(err));
 }
 
+//let duplicateCheck;
+
 // eslint-disable-next-line no-unused-vars
-function addGame(req, res) {
+async function addGame(req, res) {
   //console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
   // client.query('SELECT game_id FROM gameinventorydata')
   //   .then(data => {
@@ -205,35 +206,69 @@ function addGame(req, res) {
 
   //     else { isDuplicate = false; }
 
-
-
   //     });
 
-  let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
-  // let values = [//enter values here to access data from API example: req.body.title];
-  let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  //console.log('Add Game URL', secondURL);
-  superagent(secondURL)
-    .then(data => {
-      return resultToObj(data, 'db');
-    })
-    .then(obj => {
-      // eslint-disable-next-line no-unused-vars
-      let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
+  console.log('(1) req.body.game_id @addGame:', req.body.game_id);
 
-      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
-      console.log('values:', values);
-      return values;
+  let duplicateCheck = false;
+  
+  console.log('(2) duplicateCheck before checker', duplicateCheck);
+
+  //call helper function to check for id in db
+
+  let SQL = `SELECT * FROM gameInventoryData WHERE game_id=${req.body.game_id};`
+
+  await client.query (SQL)
+    .then( dbData => {
+    console.log('(3) dbData exists');
+      if (dbData.rows.length > 0) {
+        console.log ('(3.5) duplicateCheck', duplicateCheck);
+      duplicateCheck = true;
+      console.log('(4) @switch duplicateCheck', duplicateCheck);
+      }
     })
-    .then(values => {
-      client.query(SQL, values)
-        .then(() => console.log('Shoved in the Databass!'))
-        .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
-    })
-    .then(() => {
-      hasVisited = true;
-      res.redirect('/search');
-    });
+    .catch ( err => console.log('game does not exist in db or another error occurred', err));
+
+
+  console.log('(5)duplicateCheck after checker', duplicateCheck);
+
+  if (!duplicateCheck) {
+
+    console.log('(6)duplicateCheck = ', duplicateCheck);
+
+    let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
+  
+    let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
+    //console.log('Add Game URL', secondURL);
+    superagent(secondURL)
+      .then(data => {
+        return resultToObj(data, 'db');
+      })
+      .then(obj => {
+        // eslint-disable-next-line no-unused-vars
+        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
+
+        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
+        // console.log('values:', values);
+        return values;
+      })
+      .then(values => {
+        client.query(SQL, values)
+          .then(() => console.log('Shoved in the Databass!'))
+          .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
+      })
+      .then(() => {
+        hasVisited = true;
+        res.redirect('/search');
+      });
+
+  } else {
+    console.log('game already exists in db, returning to search page');
+    hasVisited = true;
+    res.redirect(`/dbDetails/routeback/${req.body.game_id}`);
+
+  }
+
 }
 
 function homePage(req, res) {
@@ -414,18 +449,34 @@ function resultToObj(superAgentData, type = 'search') {
 function formatDbaseData(rowArray, objName) {
 
   rowArray.map(element => {
-    console.log('element', element.platform_id);
-    console.log('platform_name before formatDbData:', element.platform_name);
-    
+    //console.log('element', element.platform_id);
+    //console.log('platform_name before formatDbData:', element.platform_name);
+
     if (element.platform_id) { element.platform_id = element.platform_id.replace(/@/g, ' '); }
     if (element.platform_name) { element.platform_name = element.platform_name.replace(/@/g, ' '); }
     if (element.publisher) { element.publisher = element.publisher.replace(/@/g, ' '); }
     if (element.developer) { element.developer = element.developer.replace(/@/g, ' '); }
     if (element.genre) { element.genre = element.genre.replace(/@/g, ' '); }
-    
-    console.log('platform_name after formatDbData:', element.platform_name);
+
+    //console.log('platform_name after formatDbData:', element.platform_name);
   });
 
   return { [objName]: rowArray };
 }
 
+// async function dbDuplicateChecker(game_id) {
+//   console.log('(3) dbDuplicateChecker FIRED! with game_id:', game_id);
+
+//   let SQL = `SELECT * FROM gameInventoryData WHERE game_id=${game_id};`
+
+//   await client.query (SQL)
+//     .then( dbData => {
+//     console.log('(4) dbData exists');
+//       if (dbData.rows.length > 0) {
+//       return duplicateCheck = true;
+//       // console.log('(5) @switch duplicateCheck', duplicateCheck);
+//       }
+//     })
+//     .catch ( err => console.log('game does not exist in db or another error occurred', err));
+
+// }
