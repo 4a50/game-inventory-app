@@ -23,7 +23,7 @@ const methodOverride = require('method-override');
 dotenv.config();
 
 const app = express();
-console.log(process.env.PORT);
+//console.log(process.env.PORT);
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
 const client = new pg.Client(DATABASE_URL);
@@ -99,7 +99,7 @@ client.connect()
 // }
 function getInventory(req, res) {
 
-  console.log('Fired getInventory');
+  //console.log('Fired getInventory');
   let SQL = "SELECT * FROM gameinventorydata";
   client.query(SQL)
     .then(data => {
@@ -113,11 +113,10 @@ function getInventory(req, res) {
       return sortedData;
     })
     .then(data => {
-      console.log(formatDbaseData(data, 'databaseDetails'));
+      //console.log(formatDbaseData(data, 'databaseDetails'));
       res.render('viewInventory', formatDbaseData(data, 'databaseDetails'));
     });
 }
-
 
 function clearDatabase(req, res) {
   // console.log('clearDatabase FIRED!');
@@ -187,21 +186,21 @@ async function viewDetails(req, res) {
 function updateGameButton(req, res) {
 
 
-  console.log('this is the update game', req.body.game_id);
+  //console.log('this is the update game', req.body.game_id);
   let SQL = `SELECT * FROM gameinventorydata WHERE game_id=${req.body.game_id};`;
 
 
   client.query(SQL)
 
     .then(data => {
-      console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
-      console.log('formatData', formatDbaseData(data.rows, 'databaseDetails'));
+      //console.log('this is the data', formatDbaseData(data.rows, 'databaseDetails'));
+      //console.log('formatData', formatDbaseData(data.rows, 'databaseDetails'));
       res.render('update.ejs', formatDbaseData(data.rows, 'databaseDetails'));
     })
     .catch(err => console.error('Update game could not be completed', err))
 }
 function updateGameDetails(req, res) {
-  console.log('this is req body', req.body);
+  //console.log('this is req body', req.body);
   let game = req.body;
   let SQL = 'UPDATE gameInventoryData SET name=$1, genre=$2, condition=$3, description=$4, game_count=$5, game_id=$6, image_url=$7, notes=$8, platform_id=$9, platform_name=$10, publisher=$11, release_date=$12, video_url=$13, developer=$14 WHERE game_id=$15;';
   let values = [game.name, game.genre, game.condition, game.description, game.game_count, game.game_id, game.image_url, game.notes, game.platform_id, game.platform_name, game.publisher, game.release_date, game.video_url, game.developer, game.game_id];
@@ -218,20 +217,33 @@ function updateGameDetails(req, res) {
 // eslint-disable-next-line no-unused-vars
 function addGame(req, res) {
   console.log('FIRED! addGame', req.body);
+  //console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
+  // client.query('SELECT game_id FROM gameinventorydata')
+  //   .then(data => {
+  //     let isDuplicate = false;
+  //     data.rows.map(elem =>
+  //     if (elem.game_id === parseInt(req.body.game_id) { isDuplicate = true; break; }
+
+  //     else { isDuplicate = false; }
+
+
+
+  //     });
 
   let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
   // let values = [//enter values here to access data from API example: req.body.title];
   let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  console.log('Add Game URL', secondURL);
+  //console.log('Add Game URL', secondURL);
   superagent(secondURL)
     .then(data => {
       return resultToObj(data, 'db');
     })
     .then(obj => {
       // eslint-disable-next-line no-unused-vars
-      let { name, genre, description, game_id, image_url, platform, platform_id, publisher, release_date, developer } = obj.detailData;
+      let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
 
-      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform, publisher, release_date, 'noSiteProvided', developer];
+      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
+      console.log('values:', values);
       return values;
     })
     .then(values => {
@@ -280,7 +292,7 @@ function getSearchCriteria(req, res) {
 
 function deleteGame(req, res) {
 
-  console.log('FIRED! BAM! deleteGame', req.params.id);
+  //console.log('FIRED! BAM! deleteGame', req.params.id);
 
   let SQL = `DELETE FROM gameinventorydata WHERE game_id=${req.params.id};`;
   client.query(SQL)
@@ -293,7 +305,7 @@ function inventoryVerify(req, res) {
   let SQL = 'SELECT game_id, name FROM gameInventoryData';
   client.query(SQL)
     .then(data => {
-      console.log(data.rows);
+      //console.log(data.rows);
       res.render('inventory', { databaseItems: data.rows });//data.rows
 
     });
@@ -340,12 +352,12 @@ function inventoryVerifyResults(req, res) {
 //Search for games release on a specific date.
 function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   let urlSearchCritera = searchCriteria.replace(/\s/g, '%20');
-  console.log(`searchCriteria: ${searchCriteria}  Modded: ${urlSearchCritera}`);
+  //console.log(`searchCriteria: ${searchCriteria}  Modded: ${urlSearchCritera}`);
   let appendCriteria = '';
   if (searchArea === 'date') { appendCriteria = `&dates=${searchDate}` }
 
   let URL = `https://api.rawg.io/api/${searchArea}?key=${RAWG_API_KEY}&search=${urlSearchCritera}&page_size=40${appendCriteria}`;
-  console.log('URL to Get:', URL);
+  //console.log('URL to Get:', URL);
   return URL;
 
 }
@@ -362,7 +374,7 @@ function resultToObj(superAgentData, type = 'search') {
     data.map((element) => {
       array.push({ name: element.name, game_id: element.id })
     });
-    console.log('Array', array);
+    //console.log('Array', array);
     return ({ searchResultsData: array });
   }
 
@@ -414,7 +426,7 @@ function resultToObj(superAgentData, type = 'search') {
       description: description_raw,
       game_id: id,
       image_url: background_image,
-      platform: platformString,
+      platform_name: platformString,
       platform_id: platformId,
       publisher: publisherString,
       release_date: released,
@@ -429,11 +441,17 @@ function formatDbaseData(rowArray, objName) {
 
   rowArray.map(element => {
     console.log('element', element.platform_id);
+    console.log('platform_name before formatDbData:', element.platform_name);
 
-    if (element.platform_id) { element.platform_id = element.platform_id.replace('@', ' '); }
-    if (element.platform_name) { element.platform_name = element.platform_name.replace('@', ' '); }
-    if (element.publisher) { element.publisher = element.publisher.replace('@', ' '); }
+    if (element.platform_id) { element.platform_id = element.platform_id.replace(/@/g, ' '); }
+    if (element.platform_name) { element.platform_name = element.platform_name.replace(/@/g, ' '); }
+    if (element.publisher) { element.publisher = element.publisher.replace(/@/g, ' '); }
+    if (element.developer) { element.developer = element.developer.replace(/@/g, ' '); }
+    if (element.genre) { element.genre = element.genre.replace(/@/g, ' '); }
+
+    console.log('platform_name after formatDbData:', element.platform_name);
   });
 
   return { [objName]: rowArray };
 }
+

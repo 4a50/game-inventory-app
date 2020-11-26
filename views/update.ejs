@@ -5,46 +5,41 @@
     <%- include('./headPartial') %>
 </head>
 
-<body>
+<body class="inventoryBody">
     <header>
         <%- include('./goBackPartial') %>
     </header>
     <main>
-        <div>Click to update
-            <!-- Remove Below -->
-            <h1><%= databaseDetails[0] %></h1>
-            <!--  -->
-            <form action="/update/<%= databaseDetails[0].game_id %>?_method=PUT" method="POST">
-                <label>Image URL
-                    <input type="text" name="image_url" value="<%= databaseDetails[0].image_url %>" />
-                </label>
-                <label>Title
-                    <input type="text" name="name" value="<%= databaseDetails[0].name %>" />
-                </label>
-                <label>Publisher
-                    <input type="text" name="publisher" value="<%= databaseDetails[0].publisher %>" />
-                </label>
-                <label>Developer
-                    <input type="text" name="developer" value="<%= databaseDetails[0].developer %>" />
-                </label>
-                <label>Release Date
-                    <input type="text" name="release_date" value="<%= databaseDetails[0].release_date %>" />
-                </label>
-                <label>Genre
-                    <input type="text" name="genre" value="<%= databaseDetails[0].genre %>" />
-                </label>
-                <label>Platform
-                    <input type="text" name="platform" value="<%= databaseDetails[0].platform_name %>" />
-                </label>
-                <label>Description
-                    <input type="text" name="description" value="<%= databaseDetails[0].description %>" />
-                </label>
+        <div>
+            <form class="updateForm" action="/update/<%= databaseDetails[0].game_id %>?_method=PUT" method="POST">
+                <label class="updateFormItem">Image URL</label>
+                <input class="updateFormItem" type="text" name="image_url"
+                    value="<%= databaseDetails[0].image_url %>" />
+                <label class="updateFormItem">Title</label>
+                <input class="updateFormItem" type="text" name="name" value="<%= databaseDetails[0].name %>" />
+                <label class="updateFormItem">Publisher</label>
+                <input class="updateFormItem" type="text" name="publisher"
+                    value="<%= databaseDetails[0].publisher %>" />
+                <label class="updateFormItem">Developer</label>
+                <input class="updateFormItem" type="text" name="developer"
+                    value="<%= databaseDetails[0].developer %>" />
+                <label class="updateFormItem">Release Date</label>
+                <input class="updateFormItem" type="text" name="release_date"
+                    value="<%= databaseDetails[0].release_date %>" />
+                <label class="updateFormItem">Genre</label>
+                <input class="updateFormItem" type="text" name="genre" value="<%= databaseDetails[0].genre %>" />
+                <label class="updateFormItem">Platform</label>
+                <input class="updateFormItem" type="text" name="platform"
+                    value="<%= databaseDetails[0].platform_name %>" />
+                <label class="updateFormItem">Description</label>
+                <input class="updateFormItem" type="text" name="description"
+                    value="<%= databaseDetails[0].description %>" />
                 <input type="hidden" name="game_id" value="<%=JSON.stringify(databaseDetails[0].game_id)%>">
-                <button type="submit">Update Game</button>
+                <button id="updateFormButton" class="goBackButton" type="submit">Update Game</button>
             </form>
             <form action="/details/<%=JSON.stringify(databaseDetails[0].game_id)%>" method="GET">
                 <input type="hidden" name="game_id" value="<%=databaseDetails[0].game_id %>">
-                <button type="submit">Back to Details</button>
+                <button id="backToDetails" type="submit">Back to Details</button>
             </form>
         </div>
 

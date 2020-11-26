@@ -2,50 +2,51 @@
 <html>
 
 <head>
-    <!-- LINKING CSS FILES TO THIS HTML IS CAUSING THIS PATH TO FIRE MULTIPLE TIMES WHEN REDIRECTING FROM updateGameDetails ??? -->
     <%- include('./headPartial') %>
-
 
 </head>
 
-<body>
+<body class="inventoryBody">
     <header>
         <%- include('./goBackPartial') %>
     </header>
-    <main>
+    <main id="inventoryMain">
         <div>
 
-            <form action="/update" method="POST">
-
-                <img src="<%= detailData.image_url %>"></img>
-                <!-- <h4><%= detailData.game_id %></h4> -->
-                <h4><%= detailData.name %></h4>
-                <p><%= detailData.publisher %></p>
-                <p><%= detailData.developer %></p>
-                <p><%= detailData.release_date %></p>
-                <p><%= detailData.genre %></p>
-                <p><%= detailData.platform %></p>
-                <!-- <a href=""> detailData.url</a> -->
-                <input type="hidden" name="game_id" value="<%=JSON.stringify(detailData.game_id)%>">
-                <p><%= detailData.description %></p>
-                <button type="submit">Edit game</button>
-
+            <form class="grid-containerTwo" action="/update" method="POST">
+                <div class="grid-itemTwo">
+                    <img src="<%= detailData.image_url %>"></img>
+                    <!-- <h4><%= detailData.game_id %></h4> -->
+                </div>
+                <div class="grid-itemTwo" id="gameStats">
+                    <h4 class="detailItems">Title: <%= detailData.name %></h4>
+                    <p class="detailItems">Publisher: <%= detailData.publisher %></p>
+                    <p class="detailItems">Developer: <%= detailData.developer %></p>
+                    <p class="detailItems">Release Date: <%= detailData.release_date %></p>
+                    <p class="detailItems">Genre: <%= detailData.genre %></p>
+                    <p class="detailItems">Platform: <%= detailData.platform_name %></p>
+                    <!-- <a href=""> detailData.url</a> -->
+                    <button  id="editGameButton" class="detailItems" type="submit">Edit game</button>
+                </div>
+                <div class="grid-itemTwo" id="gameDescription">
+                    <input type="hidden" name="game_id" value="<%=JSON.stringify(detailData.game_id)%>">
+                    <%= detailData.description %>
+                </div>
             </form>
         </div>
 
-        <!-- detail loop goes here -->
-        <div>
-            <form action="/addGame" method="POST">
+        <div class="footerButtons">
+            <form id="grid-itemThree" action="/addGame" method="POST">
                 <input type="hidden" name="game_id" value="<%=JSON.stringify(detailData.game_id)%>">
-                <button>Add to Inventory</button>
+                <button class="footerButtonOne" >Add to Inventory</button>
             </form>
-            <form action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
-                <button type="submit">Delete from Inventory</button>
+            <form id="grid-itemThree" action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
+                <button class="footerButtonOne" type="submit">Delete from Inventory</button>
             </form>
 
         </div>
     </main>
-
+    <footer><%- include('./footerPartial') %></footer>
 </body>
 
 </html>
