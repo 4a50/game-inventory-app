@@ -13,21 +13,27 @@
         <div>
             <form class="updateForm" action="/update/<%= databaseDetails[0].game_id %>?_method=PUT" method="POST">
                 <label class="updateFormItem">Image URL</label>
-                <input class="updateFormItem" type="text" name="image_url" value="<%= databaseDetails[0].image_url %>" />
+                <input class="updateFormItem" type="text" name="image_url"
+                    value="<%= databaseDetails[0].image_url %>" />
                 <label class="updateFormItem">Title</label>
-                <input class="updateFormItem"  type="text" name="name" value="<%= databaseDetails[0].name %>" />               
+                <input class="updateFormItem" type="text" name="name" value="<%= databaseDetails[0].name %>" />
                 <label class="updateFormItem">Publisher</label>
-                <input class="updateFormItem"  type="text" name="publisher" value="<%= databaseDetails[0].publisher %>" />               
+                <input class="updateFormItem" type="text" name="publisher"
+                    value="<%= databaseDetails[0].publisher %>" />
                 <label class="updateFormItem">Developer</label>
-                <input class="updateFormItem"  type="text" name="developer" value="<%= databaseDetails[0].developer %>" />                
+                <input class="updateFormItem" type="text" name="developer"
+                    value="<%= databaseDetails[0].developer %>" />
                 <label class="updateFormItem">Release Date</label>
-                <input class="updateFormItem"  type="text" name="release_date" value="<%= databaseDetails[0].release_date %>" />
+                <input class="updateFormItem" type="text" name="release_date"
+                    value="<%= databaseDetails[0].release_date %>" />
                 <label class="updateFormItem">Genre</label>
-                <input class="updateFormItem"  type="text" name="genre" value="<%= databaseDetails[0].genre %>" />
+                <input class="updateFormItem" type="text" name="genre" value="<%= databaseDetails[0].genre %>" />
                 <label class="updateFormItem">Platform</label>
-                <input class="updateFormItem"  type="text" name="platform" value="<%= databaseDetails[0].platform_name %>" />
+                <input class="updateFormItem" type="text" name="platform_name"
+                    value="<%= databaseDetails[0].platform_name %>" />
                 <label class="updateFormItem">Description</label>
-                <input class="updateFormItem"  type="text" name="description" value="<%= databaseDetails[0].description %>" />
+                <input class="updateFormItem" type="text" name="description"
+                    value="<%= databaseDetails[0].description %>" />
                 <input type="hidden" name="game_id" value="<%=JSON.stringify(databaseDetails[0].game_id)%>">
                 <button id="updateFormButton" class="goBackButton" type="submit">Update Game</button>
             </form>
