@@ -394,6 +394,7 @@ function resultToObj(superAgentData, type = 'search') {
     publisherString = publisherString.slice(0, sliceAmount);
 
     let { name, description_raw, id, background_image, released, } = data;
+    description_raw = textScrubber(description_raw);
     let detailObj = {
       name: name,
       genre: genreString,
@@ -416,16 +417,28 @@ function formatDbaseData(rowArray, objName) {
   rowArray.map(element => {
     console.log('element', element.platform_id);
     console.log('platform_name before formatDbData:', element.platform_name);
-    
+
     if (element.platform_id) { element.platform_id = element.platform_id.replace(/@/g, ' '); }
     if (element.platform_name) { element.platform_name = element.platform_name.replace(/@/g, ' '); }
     if (element.publisher) { element.publisher = element.publisher.replace(/@/g, ' '); }
     if (element.developer) { element.developer = element.developer.replace(/@/g, ' '); }
     if (element.genre) { element.genre = element.genre.replace(/@/g, ' '); }
-    
+
     console.log('platform_name after formatDbData:', element.platform_name);
   });
 
   return { [objName]: rowArray };
 }
 
+function textScrubber(str) {
+  console.log('Type of parameter in textScrubber', typeof (str));
+  console.log('String to scub:\n', str);
+  let regex = /([<](.*?)[>])/g; //selects all tags
+  let regex2 = /((https:\/\/)(.*?)[/])(\s)|((http:\/\/)(.*?)[/])(\s)/g; //web addresses
+  let brRegex = /(<br\/>)/g;
+  let finalString = str.replace(brRegex, '\n'); //changing <br/> to newlines
+  console.log(finalString, '\n\nFinalString:\n');
+  finalString = finalString.replace(regex, ''); //Removes all HTML tags
+  finalString = finalString.replace(regex2, ''); //Removes web addresses
+  return finalString;
+}
