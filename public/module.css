@@ -135,23 +135,23 @@
     background-color: gray;
 }
 
-#screen-saver{
-    display: none;
-    background-color: black;
-    border: 1px solid orange;
-    
-}
-
 #tina-section {
   display: none;
 }
 
 #jp-section {
-
+  display: none;
 }
 
 #simon-section {
   display: none;
+}
+
+#pixel-section {
+  line-height: 89vw;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 3em;
 }
 
 .dev-team img {
