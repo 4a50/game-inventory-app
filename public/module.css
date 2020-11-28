@@ -107,18 +107,21 @@
 
 #aboutUs-body {
     max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
 }
 
 #nintendo-switch {
-    max-width: 90vw;
-    margin-left: 5vw;
+    width: 71vw;
+    margin-left: 1.5vw;
     height: 159vw;
     background-image: url(nintendo-switch-about-us-edit.jpeg);
     background-size: 70vw 158vw;
     background-repeat: no-repeat;
     border: 4px solid black;
     box-sizing: border-box;
-    border-radius: 16vw;
+    border-radius: 5vw;
 }
 
 .dev-team {
@@ -127,8 +130,8 @@
     width: 51vw;
     height: 89vw;
     position: absolute;
-    top: 33vw;
-    left: 27vw;
+    top: 48vw;
+    left: 23.5vw;
     background-color: gray;
 }
 
@@ -158,16 +161,33 @@
 }
 
 .dev-team h2 {
+    margin-top: 2vw;
     text-align: center;
     font-size: 2em;
 }
 
+.dev-team ul {
+    color: black;
+    /* border: 1px solid orange; */
+    font-size: 1.5em;
+    width: 50vw;
+    height: 37vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.dev-team li {
+  list-style-type: circle;
+  list-style-position: inside;
+}
+
 #nintendo-button-section {
-    border: 1px solid greenyellow;
+    /* border: 1px solid greenyellow; */
     color: white;
     font-weight: 500;
     position: absolute;
-    top: 135vw;
+    top: 150vw;
     width: 67vw;
     height: 22vw;
 
@@ -219,4 +239,8 @@
     top: 13.25vw;
     left: 48.625vw;
     background-color: black;
+}
+
+#aboutUs-footer {
+    margin-top: 2vw;
 }
