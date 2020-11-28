@@ -14,16 +14,16 @@
             <div class="grid-container" class="viewInventoryForm">
                 <h2 class="grid-item" id="listText"><%= game.name %></h2>
                 <div class="grid-item">
-                    <form action="/details" method="POST">
+                    <form action="/details/<%=game.game_id%>" method="GET">
                         <input type="hidden" name="game_id" value="<%=JSON.stringify(game.id)%>">
                         <button id="inventoryButton">View Details</button>
                     </form>
                     <form action="/addGame" method="POST">
-                        <input type="hidden" name="game_id" value="<%=JSON.stringify(game.id)%>">
+                        <input type="hidden" name="game_id" value="<%=JSON.stringify(game.game_id)%>">
                         <input type="hidden" name="parent_page" value="/search">
                         <button id="inventoryButton">Add to Inventory</button>
                     </form>
-            </div>
+                </div>
             </div>
             <% }) %>
         </section>
