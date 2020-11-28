@@ -148,6 +148,7 @@
 }
 
 #pixel-section {
+  display: block;
   line-height: 89vw;
   text-align: center;
   font-family: 'IBM Plex Mono', monospace;
