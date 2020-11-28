@@ -420,6 +420,7 @@ function resultToObj(superAgentData, type = 'search') {
     publisherString = publisherString.slice(0, sliceAmount);
 
     let { name, description_raw, id, background_image, released, } = data;
+    description_raw = textScrubber(description_raw);
     let detailObj = {
       name: name,
       genre: genreString,
@@ -455,3 +456,15 @@ function formatDbaseData(rowArray, objName) {
   return { [objName]: rowArray };
 }
 
+function textScrubber(str) {
+  console.log('Type of parameter in textScrubber', typeof (str));
+  console.log('String to scub:\n', str);
+  let regex = /([<](.*?)[>])/g; //selects all tags
+  let regex2 = /((https:\/\/)(.*?)[/])(\s)|((http:\/\/)(.*?)[/])(\s)/g; //web addresses
+  let brRegex = /(<br\/>)/g;
+  let finalString = str.replace(brRegex, '\n'); //changing <br/> to newlines
+  console.log(finalString, '\n\nFinalString:\n');
+  finalString = finalString.replace(regex, ''); //Removes all HTML tags
+  finalString = finalString.replace(regex2, ''); //Removes web addresses
+  return finalString;
+}
