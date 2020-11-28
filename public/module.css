@@ -127,11 +127,10 @@
 .dev-team {
     color: black;
     border: 3px solid black;
-    width: 51vw;
+    width: 73%;
     height: 89vw;
-    position: absolute;
-    top: 48vw;
-    left: 23.5vw;
+    margin-left: 13%;
+    margin-top: 47%;
     background-color: gray;
 }
 
@@ -148,16 +147,16 @@
 }
 
 #pixel-section {
-  display: block;
-  line-height: 89vw;
-  text-align: center;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 3em;
+    display: block;
+    line-height: 88vw;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10vw;
 }
 
 .dev-team img {
-    margin-top: 2vw;
-    width: 45vw;
+    margin-top: 5%;
+    width: 86%;
     border: 1vw solid black;
 }
 
@@ -171,8 +170,8 @@
     color: black;
     /* border: 1px solid orange; */
     font-size: 1.5em;
-    width: 50vw;
-    height: 37vw;
+    width: 99%;
+    height: 44%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -184,70 +183,59 @@
 }
 
 #nintendo-button-section {
-    /* border: 1px solid greenyellow; */
     color: white;
     font-weight: 500;
-    position: absolute;
-    top: 150vw;
     width: 67vw;
     height: 22vw;
 
 }
 
 #j-button {
-    /* border: 1px solid yellow; */
-    border-radius: 50%;
-    width: 5vw;
-    height: 5vw;
-    line-height: 5vw;
-    position: absolute;
-    top: 7.75vw;
-    left: 43.5vw;
-    background-color: black;
-    cursor: pointer;
-    color: white;
+     border-radius: 50%;
+      width: 5vw;
+      height: 5vw;
+      line-height: 5vw;
+      background-color: black;
+      cursor: pointer;
+      color: white;
+      margin-left: 72.5%;
+      margin-top: 21.5%;
 }
 
 #t-button {
-    /* border: 1px solid yellow; */
     border-radius: 50%;
     width: 5vw;
     height: 5vw;
     line-height: 5vw;
-    position: absolute;
-    top: 2.75vw;
-    left: 48.625vw;
     background-color: black;
     cursor: pointer;
     color: white;
+    margin-left: 65%;
+    margin-top: 0%;
 }
 
 #s-button {
-    /* border: 1px solid yellow; */
     border-radius: 50%;
     width: 5vw;
     height: 5vw;
     line-height: 5vw;
-    position: absolute;
-    top: 8vw;
-    left: 53.75vw;
-    background: black;
-    cursor: pointer;
-    color: white;
-}
-
-#p-button {
-    /* border: 1px solid yellow; */
-    border-radius: 50%;
-    width: 5vw;
-    height: 5vw;
-    line-height: 5vw;
-    position: absolute;
-    top: 13.25vw;
-    left: 48.625vw;
     background-color: black;
     cursor: pointer;
     color: white;
+    margin-left: 80.5%;
+    margin-top: -7%;
+}
+
+#p-button {
+    border-radius: 50%;
+    width: 5vw;
+    height: 5vw;
+    line-height: 5vw;
+    background-color: black;
+    cursor: pointer;
+    color: white;
+    margin-left: 72.5%;
+    margin-top: 1%;
 }
 
 #aboutUs-footer {
