@@ -17,6 +17,7 @@ const cors = require('cors');
 const pg = require('pg');
 const { render } = require('ejs');
 const methodOverride = require('method-override');
+const puppeteer = require('puppeteer');
 // let fs = require('fs');
 // fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
 
@@ -55,6 +56,9 @@ app.delete('/hardDeleteDB', eraseDBConfirmed)
 app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
+app.get('/inventory/verify/reset', resetInventoryVerification);
+
+app.get('/longplay/:game_name', getLongplayVideo);
 
 // Server and Database Link ////////////////////////////////////////
 
@@ -211,7 +215,7 @@ async function addGame(req, res) {
   console.log('(1) req.body.game_id @addGame:', req.body.game_id);
 
   let duplicateCheck = false;
-  
+
   console.log('(2) duplicateCheck before checker', duplicateCheck);
 
   //call helper function to check for id in db
@@ -219,16 +223,16 @@ async function addGame(req, res) {
 
   let SQL = `SELECT * FROM gameInventoryData WHERE game_id=${req.body.game_id};`
 
-  await client.query (SQL)
-    .then( dbData => {
-    console.log('(3) dbData exists');
+  await client.query(SQL)
+    .then(dbData => {
+      console.log('(3) dbData exists');
       if (dbData.rows.length > 0) {
-        console.log ('(3.5) duplicateCheck', duplicateCheck);
-      duplicateCheck = true;
-      console.log('(4) @switch duplicateCheck', duplicateCheck);
+        console.log('(3.5) duplicateCheck', duplicateCheck);
+        duplicateCheck = true;
+        console.log('(4) @switch duplicateCheck', duplicateCheck);
       }
     })
-    .catch ( err => console.log('game does not exist in db or another error occurred', err));
+    .catch(err => console.log('game does not exist in db or another error occurred', err));
 
 
   console.log('(5)duplicateCheck after checker', duplicateCheck);
@@ -238,7 +242,7 @@ async function addGame(req, res) {
     console.log('(6)duplicateCheck = ', duplicateCheck);
 
     let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
-  
+
     let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
     //console.log('Add Game URL', secondURL);
     superagent(secondURL)
@@ -247,9 +251,9 @@ async function addGame(req, res) {
       })
       .then(obj => {
         // eslint-disable-next-line no-unused-vars
-        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
+        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer, video_url } = obj.detailData;
 
-        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
+        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, video_url, developer];
         // console.log('values:', values);
         return values;
       })
@@ -327,10 +331,7 @@ function inventoryVerifyResults(req, res) {
   let isSingle = false;
   let arr = [];
   let SQL = '';
-  SQL = `UPDATE gameInventoryData SET verified='false';`;
-  client.query(SQL)
-    .then(() => console.log(`SET ALL "VERIFIED" values to false`))
-    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+  resetInventoryVerification();
   if (typeof (req.body.game_id) === 'string') { isSingle = true; }
   (isSingle ? arr.push(req.body.game_id) : arr = req.body.game_id);
   arr.map(element => {
@@ -431,7 +432,12 @@ function resultToObj(superAgentData, type = 'search') {
     publisherString = publisherString.slice(0, sliceAmount);
 
     let { name, description_raw, id, background_image, released, } = data;
+
+    let video_url = `https://www.youtube.com/results?search_query=${name.replace(/\s/g, '+')}+longplay`;
+    console.log('video_url', video_url);
+
     description_raw = textScrubber(description_raw);
+
     let detailObj = {
       name: name,
       genre: genreString,
@@ -442,7 +448,9 @@ function resultToObj(superAgentData, type = 'search') {
       platform_id: platformId,
       publisher: publisherString,
       release_date: released,
-      developer: developersString
+      developer: developersString,
+      video_url: video_url
+
     };
 
     return { detailData: detailObj };
@@ -484,3 +492,23 @@ function textScrubber(str) {
   return finalString;
 }
 
+async function resetInventoryVerification(req, res) {
+  let SQL = `UPDATE gameInventoryData SET verified='false';`;
+  await client.query(SQL)
+    .then(() => {
+      console.log(`SET ALL "VERIFIED" values to false`);
+      res.redirect('/inventory/verify');
+    })
+    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+}
+
+async function getLongplayVideo(req, res) {
+  console.log('RandomParam', req.params.game_name);
+  let gameToGet = req.params.game_name.replace(/\s/g, '+');
+  console.log(gameToGet);
+  // const browser = await puppeteer.launch();//({ headless: false });
+  // const page = await browser.newPage({ headless: false });
+  // await page.goto(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`)
+  // await browser.close();
+  res.redirect(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`);
+}
