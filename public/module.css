@@ -204,6 +204,8 @@
     top: 7.75vw;
     left: 43.5vw;
     background-color: black;
+    cursor: pointer;
+    color: white;
 }
 
 #t-button {
@@ -216,6 +218,8 @@
     top: 2.75vw;
     left: 48.625vw;
     background-color: black;
+    cursor: pointer;
+    color: white;
 }
 
 #s-button {
@@ -228,9 +232,11 @@
     top: 8vw;
     left: 53.75vw;
     background: black;
+    cursor: pointer;
+    color: white;
 }
 
-#blank-button {
+#p-button {
     /* border: 1px solid yellow; */
     border-radius: 50%;
     width: 5vw;
@@ -240,6 +246,8 @@
     top: 13.25vw;
     left: 48.625vw;
     background-color: black;
+    cursor: pointer;
+    color: white;
 }
 
 #aboutUs-footer {
