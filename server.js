@@ -55,6 +55,7 @@ app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
+app.get('/aboutUs', aboutUs);
 
 // Server and Database Link ////////////////////////////////////////
 
@@ -71,6 +72,10 @@ client.connect()
 
 
 ///////////////////////////////FUNCTIONS - Page Drivers
+
+function aboutUs (req, res) {
+  res.render('aboutUs');
+}
 
 
 function dbDetail(req, res) {
