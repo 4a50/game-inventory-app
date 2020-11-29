@@ -38,8 +38,11 @@ Access the app hosted on [Heroku](https://game-inv-app.herokuapp.com/)
 + [RAWG API](https://rawg.io/apidocs)
 + [RAWG API Docs](https://api.rawg.io/docs/)
 + Sample Endpoint: `GET https://api.rawg.io/api/games?key=YOUR_API_KEY&search=sonic`
-+ [Sample Results](./public/sample-sonic-rawg-search-results.pdf)
++ [Sample Results](/readme_img/sample-sonic-rawg-search-results.pdf)
 
+## Database Schema
+
+[Database Schema](/readme_img/game-inventory-schema.png)
 
 ## Acknowledgements
 
