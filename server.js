@@ -6,6 +6,7 @@
 let prevSearch;
 let hasVisited = false;
 let dbDeleteConfirmationKey;
+let canUpdateInfo = false;
 
 
 // Dependencies ////////////////////////////////////////////////////
@@ -17,6 +18,9 @@ const cors = require('cors');
 const pg = require('pg');
 const { render } = require('ejs');
 const methodOverride = require('method-override');
+
+const { query } = require('express');
+
 // let fs = require('fs');
 // fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
 
@@ -56,6 +60,19 @@ app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
 
+app.get('/aboutUs', aboutUs);
+
+app.get('/inventory/verify/reset', resetInventoryVerification);
+
+app.get('/longplay/:game_name', getLongplayVideo);
+
+
+app.get('/getConsoleIds', getConsoleIds);
+
+app.get('/test', randomGameSuggestion);
+
+
+
 // Server and Database Link ////////////////////////////////////////
 
 client.connect()
@@ -71,6 +88,10 @@ client.connect()
 
 
 ///////////////////////////////FUNCTIONS - Page Drivers
+
+function aboutUs (req, res) {
+  res.render('aboutUs');
+}
 
 
 
@@ -144,16 +165,21 @@ async function viewDetails(req, res) {
   if (isInDB) {
     console.log('RESRENDERING FROM DATABASS');
     let dataObj = dataRows[0];
+    dataObj.isInDB = isInDB;
+    console.log('isInDB should true:', dataObj);
     res.render('details', { detailData: dataObj });
   }
   else {
     console.log('RESRENDERING FROM WEBPAGE');
     let secondURL = `https://api.rawg.io/api/games/${req.params.game_id}?key=230e069959414c6f961df991eb43017f`;
     console.log('Details URL', secondURL);
-    superagent(secondURL)
+    await superagent(secondURL)
       .then(data => {
         //console.log('API Details', data);
-        res.render('details', resultToObj(data, 'detail'));
+        let sendToPageObj = resultToObj(data, 'detail');
+        sendToPageObj.detailData.isInDB = isInDB;
+        console.log('isInDB should false:', sendToPageObj);
+        res.render('details', sendToPageObj);
       })
       .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
 
@@ -211,7 +237,7 @@ async function addGame(req, res) {
   console.log('(1) req.body.game_id @addGame:', req.body.game_id);
 
   let duplicateCheck = false;
-  
+
   console.log('(2) duplicateCheck before checker', duplicateCheck);
 
   //call helper function to check for id in db
@@ -219,16 +245,16 @@ async function addGame(req, res) {
 
   let SQL = `SELECT * FROM gameInventoryData WHERE game_id=${req.body.game_id};`
 
-  await client.query (SQL)
-    .then( dbData => {
-    console.log('(3) dbData exists');
+  await client.query(SQL)
+    .then(dbData => {
+      console.log('(3) dbData exists');
       if (dbData.rows.length > 0) {
-        console.log ('(3.5) duplicateCheck', duplicateCheck);
-      duplicateCheck = true;
-      console.log('(4) @switch duplicateCheck', duplicateCheck);
+        console.log('(3.5) duplicateCheck', duplicateCheck);
+        duplicateCheck = true;
+        console.log('(4) @switch duplicateCheck', duplicateCheck);
       }
     })
-    .catch ( err => console.log('game does not exist in db or another error occurred', err));
+    .catch(err => console.log('game does not exist in db or another error occurred', err));
 
 
   console.log('(5)duplicateCheck after checker', duplicateCheck);
@@ -238,7 +264,7 @@ async function addGame(req, res) {
     console.log('(6)duplicateCheck = ', duplicateCheck);
 
     let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
-  
+
     let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
     //console.log('Add Game URL', secondURL);
     superagent(secondURL)
@@ -247,9 +273,9 @@ async function addGame(req, res) {
       })
       .then(obj => {
         // eslint-disable-next-line no-unused-vars
-        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
+        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer, video_url } = obj.detailData;
 
-        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
+        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, video_url, developer];
         // console.log('values:', values);
         return values;
       })
@@ -266,7 +292,7 @@ async function addGame(req, res) {
   } else {
     console.log('game already exists in db, returning to search page');
     hasVisited = true;
-    res.redirect(`/dbDetails/routeback/${req.body.game_id}`);
+    res.redirect('/search');
 
   }
 
@@ -327,10 +353,7 @@ function inventoryVerifyResults(req, res) {
   let isSingle = false;
   let arr = [];
   let SQL = '';
-  SQL = `UPDATE gameInventoryData SET verified='false';`;
-  client.query(SQL)
-    .then(() => console.log(`SET ALL "VERIFIED" values to false`))
-    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+  resetInventoryVerification();
   if (typeof (req.body.game_id) === 'string') { isSingle = true; }
   (isSingle ? arr.push(req.body.game_id) : arr = req.body.game_id);
   arr.map(element => {
@@ -431,7 +454,12 @@ function resultToObj(superAgentData, type = 'search') {
     publisherString = publisherString.slice(0, sliceAmount);
 
     let { name, description_raw, id, background_image, released, } = data;
+
+    let video_url = `https://www.youtube.com/results?search_query=${name.replace(/\s/g, '+')}+longplay`;
+    console.log('video_url', video_url);
+
     description_raw = textScrubber(description_raw);
+
     let detailObj = {
       name: name,
       genre: genreString,
@@ -442,7 +470,9 @@ function resultToObj(superAgentData, type = 'search') {
       platform_id: platformId,
       publisher: publisherString,
       release_date: released,
-      developer: developersString
+      developer: developersString,
+      video_url: video_url
+
     };
 
     return { detailData: detailObj };
@@ -484,3 +514,75 @@ function textScrubber(str) {
   return finalString;
 }
 
+
+async function resetInventoryVerification(req, res) {
+  let SQL = `UPDATE gameInventoryData SET verified='false';`;
+  await client.query(SQL)
+    .then(() => {
+      console.log(`SET ALL "VERIFIED" values to false`);
+      res.redirect('/inventory/verify');
+    })
+    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+}
+
+async function getLongplayVideo(req, res) {
+  console.log('RandomParam', req.params.game_name);
+  let gameToGet = req.params.game_name.replace(/\s/g, '+');
+  console.log(gameToGet);
+  // const browser = await puppeteer.launch();//({ headless: false });
+  // const page = await browser.newPage({ headless: false });
+  // await page.goto(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`)
+  // await browser.close();
+  res.redirect(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`);
+
+
+async function getConsoleIds(req, res) {
+  let SQL = 'INSERT INTO platforms (platform_id, platform_name) VALUES ($1, $2)';
+  let URL = 'https://api.rawg.io/api/platforms/lists/parents?key=230e069959414c6f961df991eb43017f';
+  let consoleDataArray = [];
+
+  await superagent(URL)
+    .then(data => {
+      // console.log('console array', data.body.results.platforms);
+      // console.log('console element 3:', data.body.results[2].platforms[2]);
+      return data.body.results;
+    })
+    .then(data => {
+      data.map(parents => {
+        parents.platforms.map(platform => {
+          consoleDataArray.push({ platform_id: platform.id, platform_name: platform.name });
+        })
+      })
+      return consoleDataArray;
+    })
+    .then((data) => {
+      client.query('DROP TABLE IF EXISTS platforms; CREATE TABLE platforms (id SERIAL PRIMARY KEY, platform_id INT, platform_name VARCHAR(255));');
+      return data;
+    })
+    .then(data => {
+      data.map(element => {
+        client.query(SQL, [element.platform_id, element.platform_name]);
+      })
+    })
+    .then(() => { res.redirect('/') })
+    .catch(err => console.log('Unable to retrieve consoles:', err));
+
+async function randomGameSuggestion(req, res) {
+  let SQL = `SELECT game_Id, name, image_url FROM gameinventorydata ORDER BY RANDOM() LIMIT 1;`;
+  let returnObj;
+  await client.query(SQL)
+    .then(data => {
+      console.log('data Rows', data.rows);
+      if (!data.rows[0]) {
+        console.log('No Data in the database')
+        returnObj = { game_id: 0, name: 'No Game Found', image_url: '404' };
+      }
+      else {
+        returnObj = data.rows[0];
+      }
+    })
+    .catch(err => console.log('Unable to access database for random entry:', err));
+  console.log('Return OBJ:', returnObj);
+  return returnObj;
+
+}
