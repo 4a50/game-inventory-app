@@ -3,9 +3,10 @@
 // Global Variables /////////////////////////////////////////////////
 
 // let pageNum = 1;
-let prevSearch = {};
+let prevSearch;
 let hasVisited = false;
 let dbDeleteConfirmationKey;
+let canUpdateInfo = false;
 
 
 // Dependencies ////////////////////////////////////////////////////
@@ -17,6 +18,9 @@ const cors = require('cors');
 const pg = require('pg');
 const { render } = require('ejs');
 const methodOverride = require('method-override');
+
+const { query } = require('express');
+
 // let fs = require('fs');
 // fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
 
@@ -42,7 +46,7 @@ app.get('/', homePage);
 app.post('/search', getSearchCriteria);
 app.get('/search', getSearchCriteria);
 app.post('/addGame', addGame);
-app.post('/details', viewDetails);
+app.get('/details/:game_id', viewDetails);
 
 app.post('/update', updateGameButton);
 app.put('/update/:id', updateGameDetails)
@@ -50,11 +54,24 @@ app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
 app.delete('/hardDeleteDB', eraseDBConfirmed)
-app.post('/dbDetails', dbDetail);
-app.get('/dbDetails/routeback/:idGame', dbDetail);
+//app.post('/dbDetails', dbDetail);
+//app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
+
+app.get('/aboutUs', aboutUs);
+
+app.get('/inventory/verify/reset', resetInventoryVerification);
+
+app.get('/longplay/:game_name', getLongplayVideo);
+
+
+app.get('/getConsoleIds', getConsoleIds);
+
+app.get('/test', randomGameSuggestion);
+
+
 
 // Server and Database Link ////////////////////////////////////////
 
@@ -72,34 +89,16 @@ client.connect()
 
 ///////////////////////////////FUNCTIONS - Page Drivers
 
-
-function dbDetail(req, res) {
-  //console.log('FIRED! Schwap!', req.body.game_id, req.params.idGame);
-  let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
-  let values;
-  if (req.body.game_id) {
-    values = [req.body.game_id];
-    //console.log('REQ BODY IS REAL!', req.body.game_id);
-  } else {
-    values = [req.params.idGame];
-    //console.log('REQ PARAMS IS REAL!', req.params.idGame);
-  }
-  //console.log('VALUES', values);
-  client.query(SQL, values)
-    .then(data => {
-      //console.log('FORMATDATABASEDATA', formatDbaseData(data.rows, 'detailData'));
-      let obj = formatDbaseData(data.rows, 'detailData');
-      let detailsPageCustom = { 'detailData': obj.detailData[0] };
-      //console.log('custom', detailsPageCustom);
-      res.render('details', detailsPageCustom);
-      res.sendState(200);
-    })
-    .catch((() => console.log('whoops!')));
+function aboutUs (req, res) {
+  res.render('aboutUs');
 }
+
+
+
 function getInventory(req, res) {
 
   //console.log('Fired getInventory');
-  let SQL = "SELECT * FROM gameinventorydata";
+  let SQL = 'SELECT * FROM gameinventorydata';
   client.query(SQL)
     .then(data => {
 
@@ -149,18 +148,42 @@ function eraseDBConfirmed(req, res) {
   }
 }
 
-function viewDetails(req, res) {
-  //console.log('FIRED! viewDetails', req.body);
-
-  let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  //console.log('Details URL', secondURL);
-
-  superagent(secondURL)
+async function viewDetails(req, res) {
+  console.log('viewDetails', req.params.game_id);
+  let dataRows;
+  console.log('FIRED! viewDetails', req.params.game_id); //game_id: 4444444
+  let SQL = 'SELECT * FROM gameinventorydata WHERE game_id=$1';
+  let isInDB = false;
+  await client.query(SQL, [req.params.game_id])
     .then(data => {
-      //console.log('API Details', data);
-      res.render('details', resultToObj(data, 'detail'));
-    })
-    .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
+      if (data.rows.length > 0) {
+        console.log('There is stuff to disp!');
+        dataRows = data.rows;
+        isInDB = true;
+      }
+    });
+  if (isInDB) {
+    console.log('RESRENDERING FROM DATABASS');
+    let dataObj = dataRows[0];
+    dataObj.isInDB = isInDB;
+    console.log('isInDB should true:', dataObj);
+    res.render('details', { detailData: dataObj });
+  }
+  else {
+    console.log('RESRENDERING FROM WEBPAGE');
+    let secondURL = `https://api.rawg.io/api/games/${req.params.game_id}?key=230e069959414c6f961df991eb43017f`;
+    console.log('Details URL', secondURL);
+    await superagent(secondURL)
+      .then(data => {
+        //console.log('API Details', data);
+        let sendToPageObj = resultToObj(data, 'detail');
+        sendToPageObj.detailData.isInDB = isInDB;
+        console.log('isInDB should false:', sendToPageObj);
+        res.render('details', sendToPageObj);
+      })
+      .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
+
+  }
 
 }
 function updateGameButton(req, res) {
@@ -188,14 +211,18 @@ function updateGameDetails(req, res) {
   //  console.log('this is value', values)
   client.query(SQL, values)
     .then(() => {
-      //console.log('redirecting, hold on');
-      res.redirect(`/dbDetails/routeback/${game.game_id}`);
+      console.log('redirecting, hold on');
+      res.redirect(`/details/${game.game_id}`);
     })
     .catch(err => console.error(err));
 }
 
+//let duplicateCheck;
+
 // eslint-disable-next-line no-unused-vars
-function addGame(req, res) {
+
+async function addGame(req, res) {
+
   //console.log('FIRED! addGame', req.body.game_id, req.body.parent_page);
   // client.query('SELECT game_id FROM gameinventorydata')
   //   .then(data => {
@@ -205,35 +232,71 @@ function addGame(req, res) {
 
   //     else { isDuplicate = false; }
 
-
-
   //     });
 
-  let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
-  // let values = [//enter values here to access data from API example: req.body.title];
-  let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
-  //console.log('Add Game URL', secondURL);
-  superagent(secondURL)
-    .then(data => {
-      return resultToObj(data, 'db');
-    })
-    .then(obj => {
-      // eslint-disable-next-line no-unused-vars
-      let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
+  console.log('(1) req.body.game_id @addGame:', req.body.game_id);
 
-      let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
-      console.log('values:', values);
-      return values;
+  let duplicateCheck = false;
+
+  console.log('(2) duplicateCheck before checker', duplicateCheck);
+
+  //call helper function to check for id in db
+
+
+  let SQL = `SELECT * FROM gameInventoryData WHERE game_id=${req.body.game_id};`
+
+  await client.query(SQL)
+    .then(dbData => {
+      console.log('(3) dbData exists');
+      if (dbData.rows.length > 0) {
+        console.log('(3.5) duplicateCheck', duplicateCheck);
+        duplicateCheck = true;
+        console.log('(4) @switch duplicateCheck', duplicateCheck);
+      }
     })
-    .then(values => {
-      client.query(SQL, values)
-        .then(() => console.log('Shoved in the Databass!'))
-        .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
-    })
-    .then(() => {
-      hasVisited = true;
-      res.redirect('/search');
-    });
+    .catch(err => console.log('game does not exist in db or another error occurred', err));
+
+
+  console.log('(5)duplicateCheck after checker', duplicateCheck);
+
+  if (!duplicateCheck) {
+
+    console.log('(6)duplicateCheck = ', duplicateCheck);
+
+    let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
+
+    let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
+    //console.log('Add Game URL', secondURL);
+    superagent(secondURL)
+      .then(data => {
+        return resultToObj(data, 'db');
+      })
+      .then(obj => {
+        // eslint-disable-next-line no-unused-vars
+        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer, video_url } = obj.detailData;
+
+        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, video_url, developer];
+        // console.log('values:', values);
+        return values;
+      })
+      .then(values => {
+        client.query(SQL, values)
+          .then(() => console.log('Shoved in the Databass!'))
+          .catch(err => console.log('Whoops, didn\'t make it in the databass', err));
+      })
+      .then(() => {
+        hasVisited = true;
+        res.redirect('/search');
+      });
+
+  } else {
+    console.log('game already exists in db, returning to search page');
+    hasVisited = true;
+    res.redirect('/search');
+
+  }
+
+
 }
 
 function homePage(req, res) {
@@ -241,27 +304,27 @@ function homePage(req, res) {
 }
 
 function getSearchCriteria(req, res) {
-  //console.log('original URL', req.body);
-  let sURL = '';
+  console.log('original URL', req.body);
+  console.log('getSearchCriteria - hasVisited:', hasVisited);
   if (hasVisited) {
-    //console.log('presearch', prevSearch);
-    sURL = setURL(prevSearch.searchArea, prevSearch.searchCriteria);
+    console.log('Loading Previous Search Results', prevSearch);
+    console.log('Setting hasVisited to FALSE');
     hasVisited = false;
+    res.render('searchResults.ejs', prevSearch);
   } else {
-    let { searchArea, searchCriteria } = req.body;
-    prevSearch = { searchArea: req.body.searchArea, searchCriteria: req.body.searchCriteria };
-    //console.log('prevsearchInit', prevSearch);
-    //console.log('searchArea', searchArea, searchCriteria);
-    sURL = setURL(searchArea, searchCriteria);
+    console.log('Loading API Search Results');
+    let sURL = '';
+    sURL = setURL(req.body.searchArea, req.body.searchCriteria);
+    console.log('searchURL', sURL);
+    superagent(sURL)
+      .then(data => {
+        let finalObj = resultToObj(data, 'search');
+        prevSearch = finalObj;
+        return finalObj
+      })
+      .then(obj => res.render('searchResults.ejs', obj))
+      .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
   }
-
-  //console.log('searchURL', sURL);
-  superagent(sURL)
-    .then(data => {
-      return resultToObj(data, 'search');
-    })
-    .then(obj => res.render('searchResults.ejs', obj))
-    .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
 }
 
 function deleteGame(req, res) {
@@ -290,10 +353,7 @@ function inventoryVerifyResults(req, res) {
   let isSingle = false;
   let arr = [];
   let SQL = '';
-  SQL = `UPDATE gameInventoryData SET verified='false';`;
-  client.query(SQL)
-    .then(() => console.log(`SET ALL "VERIFIED" values to false`))
-    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+  resetInventoryVerification();
   if (typeof (req.body.game_id) === 'string') { isSingle = true; }
   (isSingle ? arr.push(req.body.game_id) : arr = req.body.game_id);
   arr.map(element => {
@@ -346,7 +406,7 @@ function resultToObj(superAgentData, type = 'search') {
   if (type === 'search') {
     data = superAgentData.body.results
     data.map((element) => {
-      array.push({ name: element.name, id: element.id })
+      array.push({ name: element.name, game_id: element.id })
     });
     //console.log('Array', array);
     return ({ searchResultsData: array });
@@ -394,6 +454,12 @@ function resultToObj(superAgentData, type = 'search') {
     publisherString = publisherString.slice(0, sliceAmount);
 
     let { name, description_raw, id, background_image, released, } = data;
+
+    let video_url = `https://www.youtube.com/results?search_query=${name.replace(/\s/g, '+')}+longplay`;
+    console.log('video_url', video_url);
+
+    description_raw = textScrubber(description_raw);
+
     let detailObj = {
       name: name,
       genre: genreString,
@@ -404,7 +470,9 @@ function resultToObj(superAgentData, type = 'search') {
       platform_id: platformId,
       publisher: publisherString,
       release_date: released,
-      developer: developersString
+      developer: developersString,
+      video_url: video_url
+
     };
 
     return { detailData: detailObj };
@@ -414,18 +482,108 @@ function resultToObj(superAgentData, type = 'search') {
 function formatDbaseData(rowArray, objName) {
 
   rowArray.map(element => {
-    console.log('element', element.platform_id);
-    console.log('platform_name before formatDbData:', element.platform_name);
-    
+
+    //console.log('element', element.platform_id);
+    //console.log('platform_name before formatDbData:', element.platform_name);
+
+
     if (element.platform_id) { element.platform_id = element.platform_id.replace(/@/g, ' '); }
     if (element.platform_name) { element.platform_name = element.platform_name.replace(/@/g, ' '); }
     if (element.publisher) { element.publisher = element.publisher.replace(/@/g, ' '); }
     if (element.developer) { element.developer = element.developer.replace(/@/g, ' '); }
     if (element.genre) { element.genre = element.genre.replace(/@/g, ' '); }
-    
-    console.log('platform_name after formatDbData:', element.platform_name);
+
+    //console.log('platform_name after formatDbData:', element.platform_name);
+
   });
 
   return { [objName]: rowArray };
 }
 
+
+function textScrubber(str) {
+  console.log('Type of parameter in textScrubber', typeof (str));
+  console.log('String to scub:\n', str);
+  let regex = /([<](.*?)[>])/g; //selects all tags
+  let regex2 = /((https:\/\/)(.*?)[/])(\s)|((http:\/\/)(.*?)[/])(\s)/g; //web addresses
+  let brRegex = /(<br\/>)/g;
+  let finalString = str.replace(brRegex, '\n'); //changing <br/> to newlines
+  console.log(finalString, '\n\nFinalString:\n');
+  finalString = finalString.replace(regex, ''); //Removes all HTML tags
+  finalString = finalString.replace(regex2, ''); //Removes web addresses
+  return finalString;
+}
+
+
+async function resetInventoryVerification(req, res) {
+  let SQL = `UPDATE gameInventoryData SET verified='false';`;
+  await client.query(SQL)
+    .then(() => {
+      console.log(`SET ALL "VERIFIED" values to false`);
+      res.redirect('/inventory/verify');
+    })
+    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+}
+
+async function getLongplayVideo(req, res) {
+  console.log('RandomParam', req.params.game_name);
+  let gameToGet = req.params.game_name.replace(/\s/g, '+');
+  console.log(gameToGet);
+  // const browser = await puppeteer.launch();//({ headless: false });
+  // const page = await browser.newPage({ headless: false });
+  // await page.goto(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`)
+  // await browser.close();
+  res.redirect(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`);
+}
+
+async function getConsoleIds(req, res) {
+  let SQL = 'INSERT INTO platforms (platform_id, platform_name) VALUES ($1, $2)';
+  let URL = 'https://api.rawg.io/api/platforms/lists/parents?key=230e069959414c6f961df991eb43017f';
+  let consoleDataArray = [];
+
+  await superagent(URL)
+    .then(data => {
+      // console.log('console array', data.body.results.platforms);
+      // console.log('console element 3:', data.body.results[2].platforms[2]);
+      return data.body.results;
+    })
+    .then(data => {
+      data.map(parents => {
+        parents.platforms.map(platform => {
+          consoleDataArray.push({ platform_id: platform.id, platform_name: platform.name });
+        })
+      })
+      return consoleDataArray;
+    })
+    .then((data) => {
+      client.query('DROP TABLE IF EXISTS platforms; CREATE TABLE platforms (id SERIAL PRIMARY KEY, platform_id INT, platform_name VARCHAR(255));');
+      return data;
+    })
+    .then(data => {
+      data.map(element => {
+        client.query(SQL, [element.platform_id, element.platform_name]);
+      })
+    })
+    .then(() => { res.redirect('/') })
+    .catch(err => console.log('Unable to retrieve consoles:', err));
+}
+
+async function randomGameSuggestion(req, res) {
+  let SQL = `SELECT game_Id, name, image_url FROM gameinventorydata ORDER BY RANDOM() LIMIT 1;`;
+  let returnObj;
+  await client.query(SQL)
+    .then(data => {
+      console.log('data Rows', data.rows);
+      if (!data.rows[0]) {
+        console.log('No Data in the database')
+        returnObj = { game_id: 0, name: 'No Game Found', image_url: '404' };
+      }
+      else {
+        returnObj = data.rows[0];
+      }
+    })
+    .catch(err => console.log('Unable to access database for random entry:', err));
+  console.log('Return OBJ:', returnObj);
+  return returnObj;
+
+}

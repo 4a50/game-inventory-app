@@ -24,6 +24,8 @@ JP Jones
 
 ## Acknowledgements
 
+### Nintendo Switch Image: Photo by [Ahmad Mohammed](https://unsplash.com/@amed10?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on Unsplash
+
 ## Wireframe
 
 ![Wireframe Image](./readme_img/Game-inv-App-Wireframe.png)
