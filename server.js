@@ -279,7 +279,7 @@ async function addGame(req, res) {
   } else {
     console.log('game already exists in db, returning to search page');
     hasVisited = true;
-    res.redirect(`/dbDetails/routeback/${req.body.game_id}`);
+    res.redirect('/search');
 
   }
 
