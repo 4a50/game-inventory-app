@@ -59,6 +59,9 @@ app.delete('/hardDeleteDB', eraseDBConfirmed)
 app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
+
+app.get('/aboutUs', aboutUs);
+
 app.get('/inventory/verify/reset', resetInventoryVerification);
 
 app.get('/longplay/:game_name', getLongplayVideo);
@@ -67,6 +70,7 @@ app.get('/longplay/:game_name', getLongplayVideo);
 app.get('/getConsoleIds', getConsoleIds);
 
 app.get('/test', randomGameSuggestion);
+
 
 
 // Server and Database Link ////////////////////////////////////////
@@ -84,6 +88,10 @@ client.connect()
 
 
 ///////////////////////////////FUNCTIONS - Page Drivers
+
+function aboutUs (req, res) {
+  res.render('aboutUs');
+}
 
 
 
