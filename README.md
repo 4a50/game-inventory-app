@@ -2,13 +2,13 @@
 
 ## Version
 
-0.0.0
+1.0.0
 
-## Descsription
+## Description
 
 Multi-Functional Game Inventory and Display System
 
-## Authors:
+## Authors
 
 Tina Myers
 Simon Panek
@@ -21,6 +21,25 @@ JP Jones
 ## Technology Used
 
 + NodeJs
++ Express
++ JQuery
++ Superagent
++ Cors
++ PG
++ Method Override
++ Postgres SQL
+
+## Instructions for Use
+
+Access the app hosted on [Heroku](https://game-inv-app.herokuapp.com/)
+
+## API
+
++ [RAWG API](https://rawg.io/apidocs)
++ [RAWG API Docs](https://api.rawg.io/docs/)
++ Sample Endpoint: `GET https://api.rawg.io/api/games?key=YOUR_API_KEY&search=sonic`
++ [Sample Results](./public/sample-sonic-rawg-search-results.pdf)
+
 
 ## Acknowledgements
 
