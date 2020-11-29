@@ -534,7 +534,7 @@ async function getLongplayVideo(req, res) {
   // await page.goto(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`)
   // await browser.close();
   res.redirect(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`);
-
+}
 
 async function getConsoleIds(req, res) {
   let SQL = 'INSERT INTO platforms (platform_id, platform_name) VALUES ($1, $2)';
@@ -566,6 +566,7 @@ async function getConsoleIds(req, res) {
     })
     .then(() => { res.redirect('/') })
     .catch(err => console.log('Unable to retrieve consoles:', err));
+}
 
 async function randomGameSuggestion(req, res) {
   let SQL = `SELECT game_Id, name, image_url FROM gameinventorydata ORDER BY RANDOM() LIMIT 1;`;
