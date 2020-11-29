@@ -18,7 +18,9 @@ const cors = require('cors');
 const pg = require('pg');
 const { render } = require('ejs');
 const methodOverride = require('method-override');
+
 const { query } = require('express');
+
 // let fs = require('fs');
 // fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
 
@@ -57,6 +59,9 @@ app.delete('/hardDeleteDB', eraseDBConfirmed)
 app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
+app.get('/inventory/verify/reset', resetInventoryVerification);
+
+app.get('/longplay/:game_name', getLongplayVideo);
 
 
 app.get('/getConsoleIds', getConsoleIds);
@@ -260,9 +265,9 @@ async function addGame(req, res) {
       })
       .then(obj => {
         // eslint-disable-next-line no-unused-vars
-        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer } = obj.detailData;
+        let { name, genre, description, game_id, image_url, platform_name, platform_id, publisher, release_date, developer, video_url } = obj.detailData;
 
-        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, 'noSiteProvided', developer];
+        let values = [name, genre, 'userProvide', description, -1, game_id, image_url, 'userNotes', platform_id, platform_name, publisher, release_date, video_url, developer];
         // console.log('values:', values);
         return values;
       })
@@ -340,10 +345,7 @@ function inventoryVerifyResults(req, res) {
   let isSingle = false;
   let arr = [];
   let SQL = '';
-  SQL = `UPDATE gameInventoryData SET verified='false';`;
-  client.query(SQL)
-    .then(() => console.log(`SET ALL "VERIFIED" values to false`))
-    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+  resetInventoryVerification();
   if (typeof (req.body.game_id) === 'string') { isSingle = true; }
   (isSingle ? arr.push(req.body.game_id) : arr = req.body.game_id);
   arr.map(element => {
@@ -444,7 +446,12 @@ function resultToObj(superAgentData, type = 'search') {
     publisherString = publisherString.slice(0, sliceAmount);
 
     let { name, description_raw, id, background_image, released, } = data;
+
+    let video_url = `https://www.youtube.com/results?search_query=${name.replace(/\s/g, '+')}+longplay`;
+    console.log('video_url', video_url);
+
     description_raw = textScrubber(description_raw);
+
     let detailObj = {
       name: name,
       genre: genreString,
@@ -455,7 +462,9 @@ function resultToObj(superAgentData, type = 'search') {
       platform_id: platformId,
       publisher: publisherString,
       release_date: released,
-      developer: developersString
+      developer: developersString,
+      video_url: video_url
+
     };
 
     return { detailData: detailObj };
@@ -496,6 +505,27 @@ function textScrubber(str) {
   finalString = finalString.replace(regex2, ''); //Removes web addresses
   return finalString;
 }
+
+
+async function resetInventoryVerification(req, res) {
+  let SQL = `UPDATE gameInventoryData SET verified='false';`;
+  await client.query(SQL)
+    .then(() => {
+      console.log(`SET ALL "VERIFIED" values to false`);
+      res.redirect('/inventory/verify');
+    })
+    .catch(err => console.log('Unable to set all VERIFIED to false', err));
+}
+
+async function getLongplayVideo(req, res) {
+  console.log('RandomParam', req.params.game_name);
+  let gameToGet = req.params.game_name.replace(/\s/g, '+');
+  console.log(gameToGet);
+  // const browser = await puppeteer.launch();//({ headless: false });
+  // const page = await browser.newPage({ headless: false });
+  // await page.goto(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`)
+  // await browser.close();
+  res.redirect(`https://www.youtube.com/results?search_query=${gameToGet}+longplay`);
 
 
 async function getConsoleIds(req, res) {
@@ -546,4 +576,5 @@ async function randomGameSuggestion(req, res) {
     .catch(err => console.log('Unable to access database for random entry:', err));
   console.log('Return OBJ:', returnObj);
   return returnObj;
+
 }
