@@ -211,7 +211,7 @@ async function addGame(req, res) {
   console.log('(1) req.body.game_id @addGame:', req.body.game_id);
 
   let duplicateCheck = false;
-  
+
   console.log('(2) duplicateCheck before checker', duplicateCheck);
 
   //call helper function to check for id in db
@@ -219,16 +219,16 @@ async function addGame(req, res) {
 
   let SQL = `SELECT * FROM gameInventoryData WHERE game_id=${req.body.game_id};`
 
-  await client.query (SQL)
-    .then( dbData => {
-    console.log('(3) dbData exists');
+  await client.query(SQL)
+    .then(dbData => {
+      console.log('(3) dbData exists');
       if (dbData.rows.length > 0) {
-        console.log ('(3.5) duplicateCheck', duplicateCheck);
-      duplicateCheck = true;
-      console.log('(4) @switch duplicateCheck', duplicateCheck);
+        console.log('(3.5) duplicateCheck', duplicateCheck);
+        duplicateCheck = true;
+        console.log('(4) @switch duplicateCheck', duplicateCheck);
       }
     })
-    .catch ( err => console.log('game does not exist in db or another error occurred', err));
+    .catch(err => console.log('game does not exist in db or another error occurred', err));
 
 
   console.log('(5)duplicateCheck after checker', duplicateCheck);
@@ -238,7 +238,7 @@ async function addGame(req, res) {
     console.log('(6)duplicateCheck = ', duplicateCheck);
 
     let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
-  
+
     let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
     //console.log('Add Game URL', secondURL);
     superagent(secondURL)
@@ -266,7 +266,7 @@ async function addGame(req, res) {
   } else {
     console.log('game already exists in db, returning to search page');
     hasVisited = true;
-    res.redirect(`/dbDetails/routeback/${req.body.game_id}`);
+    res.redirect('/search');
 
   }
 
