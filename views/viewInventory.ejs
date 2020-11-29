@@ -13,7 +13,7 @@
         <section class="grid-container" class="viewInventoryForm">
             <h2 class="grid-item" id="listText"><%= game.name %></h2>
             <div class="grid-item">
-                <form action="/dbDetails" method="POST">
+                <form action="/details/<%=JSON.stringify(game.game_id)%>" method="GET">
                     <input type="hidden" name="game_id" value=<%=game.game_id%>>
                     <button id="inventoryButton" type="submit">View Details</button>
                 </form>
@@ -24,7 +24,8 @@
         </section>
         <% }) %>
         <form action="/wipeDB" method="GET">
-            <button class="danger" id="danger" class="indexButton" type="submit">DELETE ALL INVENTORY DATA - DANGER!</button>
+            <button class="danger" id="danger" class="indexButton" type="submit">DELETE ALL INVENTORY DATA -
+                DANGER!</button>
         </form>
     </main>
     <footer><% include('./footerPartial') %></footer>

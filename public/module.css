@@ -72,27 +72,36 @@
     margin-bottom: 10px;
 }
 .goBackButton{
-    width: 400px;
+    width: 86%;
     height: 50px;
     margin-top: 10px;
     margin-bottom: 20px;
+    font-size: 25px;
 }
 /* details.ejs css */
 .grid-containerTwo{
     display: inline-grid;
+    margin-top: 20px;
     grid-template-columns: 60% 40%;
-    width: 90%;
+    width: 95%;
 }
 
 .footerButtons{
+    position: aboslute;
     display: inline-grid;
     grid-template-columns: 50% 50%;
-    width: 800px;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
 }
+
 #grid-itemThree{
     border-radius: 5px;
     width: 150px;
     height: 40px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #grid-itemTwo{
@@ -100,8 +109,9 @@
 }
 
 .detailItems{
-    margin-top: 5px;
+    margin-top: 10px;
     text-align: left;
+
     margin-left: 10%;
 }
 
@@ -240,4 +250,64 @@
 
 #aboutUs-footer {
     margin-top: 2vw;
+}
+
+.footerButtonOne{
+    width: 100%;
+    height: 50px;
+}
+
+#gameDescription{
+    width: 160%;
+    text-align: justify;
+    margin-top: 2%;
+    margin-left: 3%;
+    margin-bottom: 3%;
+}
+
+#inventoryMain{
+    border: 1px black solid;
+}
+
+#editGameButton{
+    width: 89%;
+    height: 30px;
+    text-align: center;
+    margin-right: 11%;
+    margin-top: 5px;
+}
+
+.updateForm{
+    width: 89%;
+    display: inline-grid;
+    grid-template-columns: 30% 70%;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.updateFormItem input{
+    width: 250px;
+    margin-right: 0;
+}
+
+#updateFormButton{
+    width: 330%;
+    margin: 20px auto 20px auto;
+}
+
+#backToDetails{
+    height: 40px;
+    width: 40%;
+}
+
+
+#almostLastButton{
+    width: 60%;
+    height: 50px;
+}
+
+.inventoryItem{
+    margin: 15px auto 15px auto;
+
 }
