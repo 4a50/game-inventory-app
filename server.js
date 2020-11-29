@@ -58,7 +58,11 @@ app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
 
+
+app.get('/getConsoleIds', getConsoleIds);
+
 app.get('/test', randomGameSuggestion);
+
 
 // Server and Database Link ////////////////////////////////////////
 
@@ -493,6 +497,38 @@ function textScrubber(str) {
   return finalString;
 }
 
+
+async function getConsoleIds(req, res) {
+  let SQL = 'INSERT INTO platforms (platform_id, platform_name) VALUES ($1, $2)';
+  let URL = 'https://api.rawg.io/api/platforms/lists/parents?key=230e069959414c6f961df991eb43017f';
+  let consoleDataArray = [];
+
+  await superagent(URL)
+    .then(data => {
+      // console.log('console array', data.body.results.platforms);
+      // console.log('console element 3:', data.body.results[2].platforms[2]);
+      return data.body.results;
+    })
+    .then(data => {
+      data.map(parents => {
+        parents.platforms.map(platform => {
+          consoleDataArray.push({ platform_id: platform.id, platform_name: platform.name });
+        })
+      })
+      return consoleDataArray;
+    })
+    .then((data) => {
+      client.query('DROP TABLE IF EXISTS platforms; CREATE TABLE platforms (id SERIAL PRIMARY KEY, platform_id INT, platform_name VARCHAR(255));');
+      return data;
+    })
+    .then(data => {
+      data.map(element => {
+        client.query(SQL, [element.platform_id, element.platform_name]);
+      })
+    })
+    .then(() => { res.redirect('/') })
+    .catch(err => console.log('Unable to retrieve consoles:', err));
+
 async function randomGameSuggestion(req, res) {
   let SQL = `SELECT game_Id, name, image_url FROM gameinventorydata ORDER BY RANDOM() LIMIT 1;`;
   let returnObj;
@@ -510,6 +546,4 @@ async function randomGameSuggestion(req, res) {
     .catch(err => console.log('Unable to access database for random entry:', err));
   console.log('Return OBJ:', returnObj);
   return returnObj;
-
-
 }
