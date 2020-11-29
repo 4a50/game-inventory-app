@@ -6,6 +6,7 @@
 let prevSearch;
 let hasVisited = false;
 let dbDeleteConfirmationKey;
+let canUpdateInfo = false;
 
 
 // Dependencies ////////////////////////////////////////////////////
@@ -17,6 +18,7 @@ const cors = require('cors');
 const pg = require('pg');
 const { render } = require('ejs');
 const methodOverride = require('method-override');
+const { query } = require('express');
 // let fs = require('fs');
 // fs.writeFile('garbage.txt', '', (err => console.log('FILE ERROR', err)));
 
@@ -56,7 +58,11 @@ app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
 
+
 app.get('/getConsoleIds', getConsoleIds);
+
+app.get('/test', randomGameSuggestion);
+
 
 // Server and Database Link ////////////////////////////////////////
 
@@ -146,16 +152,21 @@ async function viewDetails(req, res) {
   if (isInDB) {
     console.log('RESRENDERING FROM DATABASS');
     let dataObj = dataRows[0];
+    dataObj.isInDB = isInDB;
+    console.log('isInDB should true:', dataObj);
     res.render('details', { detailData: dataObj });
   }
   else {
     console.log('RESRENDERING FROM WEBPAGE');
     let secondURL = `https://api.rawg.io/api/games/${req.params.game_id}?key=230e069959414c6f961df991eb43017f`;
     console.log('Details URL', secondURL);
-    superagent(secondURL)
+    await superagent(secondURL)
       .then(data => {
         //console.log('API Details', data);
-        res.render('details', resultToObj(data, 'detail'));
+        let sendToPageObj = resultToObj(data, 'detail');
+        sendToPageObj.detailData.isInDB = isInDB;
+        console.log('isInDB should false:', sendToPageObj);
+        res.render('details', sendToPageObj);
       })
       .catch(err => console.log('View Details Could Not Be Completed.  Check your number and try again:', err));
 
@@ -486,6 +497,7 @@ function textScrubber(str) {
   return finalString;
 }
 
+
 async function getConsoleIds(req, res) {
   let SQL = 'INSERT INTO platforms (platform_id, platform_name) VALUES ($1, $2)';
   let URL = 'https://api.rawg.io/api/platforms/lists/parents?key=230e069959414c6f961df991eb43017f';
@@ -517,4 +529,21 @@ async function getConsoleIds(req, res) {
     .then(() => { res.redirect('/') })
     .catch(err => console.log('Unable to retrieve consoles:', err));
 
+async function randomGameSuggestion(req, res) {
+  let SQL = `SELECT game_Id, name, image_url FROM gameinventorydata ORDER BY RANDOM() LIMIT 1;`;
+  let returnObj;
+  await client.query(SQL)
+    .then(data => {
+      console.log('data Rows', data.rows);
+      if (!data.rows[0]) {
+        console.log('No Data in the database')
+        returnObj = { game_id: 0, name: 'No Game Found', image_url: '404' };
+      }
+      else {
+        returnObj = data.rows[0];
+      }
+    })
+    .catch(err => console.log('Unable to access database for random entry:', err));
+  console.log('Return OBJ:', returnObj);
+  return returnObj;
 }
