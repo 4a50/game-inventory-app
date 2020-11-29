@@ -56,6 +56,8 @@ app.get('/wipeDB', clearDatabase);
 app.get('/inventory/verify', inventoryVerify);
 app.post('/inventory/verify/results', inventoryVerifyResults);
 
+app.get('/getConsoleIds', getConsoleIds);
+
 // Server and Database Link ////////////////////////////////////////
 
 client.connect()
@@ -211,7 +213,7 @@ async function addGame(req, res) {
   console.log('(1) req.body.game_id @addGame:', req.body.game_id);
 
   let duplicateCheck = false;
-  
+
   console.log('(2) duplicateCheck before checker', duplicateCheck);
 
   //call helper function to check for id in db
@@ -219,16 +221,16 @@ async function addGame(req, res) {
 
   let SQL = `SELECT * FROM gameInventoryData WHERE game_id=${req.body.game_id};`
 
-  await client.query (SQL)
-    .then( dbData => {
-    console.log('(3) dbData exists');
+  await client.query(SQL)
+    .then(dbData => {
+      console.log('(3) dbData exists');
       if (dbData.rows.length > 0) {
-        console.log ('(3.5) duplicateCheck', duplicateCheck);
-      duplicateCheck = true;
-      console.log('(4) @switch duplicateCheck', duplicateCheck);
+        console.log('(3.5) duplicateCheck', duplicateCheck);
+        duplicateCheck = true;
+        console.log('(4) @switch duplicateCheck', duplicateCheck);
       }
     })
-    .catch ( err => console.log('game does not exist in db or another error occurred', err));
+    .catch(err => console.log('game does not exist in db or another error occurred', err));
 
 
   console.log('(5)duplicateCheck after checker', duplicateCheck);
@@ -238,7 +240,7 @@ async function addGame(req, res) {
     console.log('(6)duplicateCheck = ', duplicateCheck);
 
     let SQL = 'INSERT INTO gameinventorydata (name, genre, condition, description, game_count, game_id, image_url, notes, platform_id, platform_name, publisher, release_date, video_url, developer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);';
-  
+
     let secondURL = `https://api.rawg.io/api/games/${req.body.game_id}?key=230e069959414c6f961df991eb43017f`;
     //console.log('Add Game URL', secondURL);
     superagent(secondURL)
@@ -484,3 +486,35 @@ function textScrubber(str) {
   return finalString;
 }
 
+async function getConsoleIds(req, res) {
+  let SQL = 'INSERT INTO platforms (platform_id, platform_name) VALUES ($1, $2)';
+  let URL = 'https://api.rawg.io/api/platforms/lists/parents?key=230e069959414c6f961df991eb43017f';
+  let consoleDataArray = [];
+
+  await superagent(URL)
+    .then(data => {
+      // console.log('console array', data.body.results.platforms);
+      // console.log('console element 3:', data.body.results[2].platforms[2]);
+      return data.body.results;
+    })
+    .then(data => {
+      data.map(parents => {
+        parents.platforms.map(platform => {
+          consoleDataArray.push({ platform_id: platform.id, platform_name: platform.name });
+        })
+      })
+      return consoleDataArray;
+    })
+    .then((data) => {
+      client.query('DROP TABLE IF EXISTS platforms; CREATE TABLE platforms (id SERIAL PRIMARY KEY, platform_id INT, platform_name VARCHAR(255));');
+      return data;
+    })
+    .then(data => {
+      data.map(element => {
+        client.query(SQL, [element.platform_id, element.platform_name]);
+      })
+    })
+    .then(() => { res.redirect('/') })
+    .catch(err => console.log('Unable to retrieve consoles:', err));
+
+}
