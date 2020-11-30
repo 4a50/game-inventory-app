@@ -27,10 +27,14 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
+        checkForChecks();
         $('.inventoryItem').click(e => {
             let checkBox = $(`#${e.currentTarget.id} > input`);
             let boxId = $(`#${e.currentTarget.id}`);
             console.log(checkBox.prop('checked'));
+
+
+
             if (checkBox.prop('checked') === true) {
                 checkBox.prop('checked', false);
                 boxId.removeClass('inventoryItem-selected');
@@ -40,7 +44,20 @@
                 checkBox.prop('checked', true);
                 boxId.addClass('inventoryItem-selected');
             }
+            checkForChecks();
         });
+        function checkForChecks() {
+            let arr = [];
+            $('.inventoryItem input').each(function () {
+                arr.push(this.checked);
+            });
+            arr.forEach(element => {
+                console.log('scan checkboxes', element);
+
+                if (!element) { $('#almostLastButton').prop('disabled', true); }
+                else { $('#almostLastButton').prop('disabled', false); }
+            });
+        }
     </script>
 
     <footer><% include('./footerPartial') %></footer>
@@ -49,12 +66,8 @@
         if (!q) { $('#almostLastButton').prop('disabled', true); }
         else {
             $('.inventoryItem').click(e => {
-
             });
-
         }
-
-
     </script>
 </body>
 
