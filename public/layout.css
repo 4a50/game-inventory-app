@@ -7,9 +7,7 @@ button:hover{
 }
 
 h2{
-    font-size: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 2.8vw;
     text-align: left;
 }
 
@@ -17,9 +15,6 @@ input[type=text]{
     text-align: center;
 }
 
-img{
-    border: outset 8px;
-}
 .inventoryBody{
-    width: 80%;
+    width: 70%;
 }

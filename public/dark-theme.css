@@ -1,0 +1,13 @@
+body{
+    color: #b6b6b6;
+    background-color: rgb(63, 62, 62);
+}
+#inventoryButton{
+    background-color: lightgray;
+    color: black;
+}
+
+/* #addToInv:hover{
+    border: rgb(2, 66, 2) 2px solid;
+    background-color: lightgreen;
+} */

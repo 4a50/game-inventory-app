@@ -7,14 +7,23 @@
 }
 
 body{
-    background-color: lightgray;
+    /* background-color: lightgray; */
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    width: 600px;
+    width: 70%;
 }
 img{
     min-width: 230px;
-    width: 65%;
+    width: 80%;
     height: auto;
+    border: outset 8px;
+}
+header h1{
+    font-size: 4vw;
+    margin: 3% auto 0 auto;
+    border: 1px black solid;
+    width: 80%;
+    border-radius: 10px;
+    padding: 15px 0 15px 0;
 }
