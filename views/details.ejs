@@ -16,7 +16,7 @@
 
             <form class="grid-containerTwo" action="/update" method="POST">
                 <div class="grid-itemTwo">
-                    <img src="<%= detailData.image_url %>"></img>
+                    <img class="imageLarge" src="<%= detailData.image_url %>"></img>
                     <!-- <h4><%= detailData.game_id %></h4> -->
                 </div>
                 <div class="grid-itemTwo" id="gameStats">
@@ -26,7 +26,8 @@
                     <p class="detailItems">Release Date: <%= detailData.release_date %></p>
                     <p class="detailItems">Genre: <%= detailData.genre %></p>
                     <p class="detailItems">Platform: <%= detailData.platform_name %></p>
-                    <p>DeleteMe Testing the var is working: <%= detailData.isInDB %></p>
+                    <p class="detailItems">Video: <a href="<%= detailData.video_url %>">Click Me!</a></p>
+                    <!-- <p>DeleteMe Testing the var is working: <%= detailData.isInDB %></p> -->
                     <!-- <a href=""> detailData.url</a> -->
                     <button id="editGameButton" class="detailItems" type="submit">Edit game</button>
                 </div>
@@ -37,7 +38,7 @@
             </form>
         </div>
 
-        <div class="footerButtons">
+        <div class="footerButtonsTwo">
             <form id="grid-itemThree" action="/addGame" method="POST">
                 <input type="hidden" name="game_id" value="<%=JSON.stringify(detailData.game_id)%>">
                 <button id="add-inv-button" class="footerButtonOne">Add to Inventory</button>
@@ -51,17 +52,17 @@
     <footer><%- include('./footerPartial') %></footer>
     <script>
         if (<%= detailData.isInDB %> === true) {
-            $('#editGameButton').prop('disabled', false);
-            $('#add-inv-button').prop('disabled', true);
-            $('#delete-button').prop('disabled', false);
-            // $('#go-back-form').attr('action', '/search/');
-            // $('#go-back').text('Back to Results');
-        }
-        if (<%= detailData.isInDB %> === false) {
-            $('#editGameButton').prop('disabled', true);
-            $('#add-inv-button').prop('disabled', false);
-            $('#delete-button').prop('disabled', true);
-        }
+    $('#editGameButton').prop('disabled', false);
+    $('#add-inv-button').prop('disabled', true);
+    $('#delete-button').prop('disabled', false);
+    // $('#go-back-form').attr('action', '/search/');
+    // $('#go-back').text('Back to Results');
+}
+    if (<%= detailData.isInDB %> === false) {
+    $('#editGameButton').prop('disabled', true);
+    $('#add-inv-button').prop('disabled', false);
+    $('#delete-button').prop('disabled', true);
+}
     </script>
 </body>
 
