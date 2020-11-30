@@ -17,7 +17,7 @@
                 <section id="<%= game.game_id %>" class="inventoryItem">
                     <input type="checkbox" name="game_id" value="<%= game.game_id %>">
                     <h2><%= game.name %></h2>
-                   </label>
+                    </label>
                 </section>
                 <% }) %>
                 <button id="almostLastButton" type="submit">Submit Results</button>
@@ -44,6 +44,18 @@
     </script>
 
     <footer><% include('./footerPartial') %></footer>
+    <script>
+        let q = $('.inventoryItem').attr('class');
+        if (!q) { $('#almostLastButton').prop('disabled', true); }
+        else {
+            $('.inventoryItem').click(e => {
+
+            });
+
+        }
+
+
+    </script>
 </body>
 
 </html>

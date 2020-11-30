@@ -89,7 +89,7 @@ client.connect()
 
 ///////////////////////////////FUNCTIONS - Page Drivers
 
-function aboutUs (req, res) {
+function aboutUs(req, res) {
   res.render('aboutUs');
 }
 
@@ -341,18 +341,18 @@ function deleteGame(req, res) {
     .catch(err => console.log('Delete did not go according to plan...', err));
 }
 
-function inventoryVerify(req, res) {
+async function inventoryVerify(req, res) {
+  let disableSubmit = false;
   let SQL = 'SELECT game_id, name FROM gameInventoryData';
-  client.query(SQL)
+  await client.query(SQL)
     .then(data => {
-      //console.log(data.rows);
-      res.render('inventory', { databaseItems: data.rows });//data.rows
-
-    });
+      res.render('inventory', { databaseItems: data.rows });
+    })
+    .catch(err => { console.log('error in verification', err) });
 }
 
 function inventoryVerifyResults(req, res) {
-  console.log('FIRED! inventoryVerifyResults', req.body, req.body.game_id.length, typeof (req.body.game_id));
+  // console.log('FIRED! inventoryVerifyResults', req.body, req.body.game_id.length, typeof (req.body.game_id));
   let isSingle = false;
   let arr = [];
   let SQL = '';
@@ -486,7 +486,7 @@ function formatDbaseData(rowArray, objName) {
 
   rowArray.map(element => {
 
-    //console.log('element', element.platform_id);
+    console.log('element', element);
     //console.log('platform_name before formatDbData:', element.platform_name);
 
 
