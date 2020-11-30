@@ -441,22 +441,6 @@
     margin: 15px auto 15px auto;
 }
 
-#aboutUs-form {
-    display: inline;
-}
-
-#aboutUs-button {
-    border: none;
-    text-decoration: underline;
-    color: blue;
-    background-color: inherit;
-    display: inline;
-}
-
-#copy-year {
-  display: inline;
-}
-
 /* delete-all page below */
 
     #delete-all-body {
@@ -510,13 +494,6 @@
     #explosion {
         display: none;
     }
-
-    /* #sprite-section{
-       
-      border: green solid 1px;
-    } */
-
-    
 
     .sprite-div{
         
