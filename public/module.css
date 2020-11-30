@@ -371,3 +371,153 @@
 #aboutUs-footer {
     margin-top: 2vw;
 }
+
+.footerButtonOne{
+    width: 100%;
+    height: 50px;
+}
+
+#gameDescription{
+    width: 160%;
+    text-align: justify;
+    margin-top: 2%;
+    margin-left: 3%;
+    margin-bottom: 3%;
+}
+
+#inventoryMain{
+    border: 1px black solid;
+}
+
+#editGameButton{
+    width: 89%;
+    height: 30px;
+    text-align: center;
+    margin-right: 11%;
+    margin-top: 5px;
+}
+
+.updateForm{
+    width: 89%;
+    display: inline-grid;
+    grid-template-columns: 30% 70%;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.updateFormItem input{
+    width: 250px;
+    margin-right: 0;
+}
+
+#updateFormButton{
+    width: 330%;
+    margin: 20px auto 20px auto;
+}
+
+#backToDetails{
+    height: 40px;
+    width: 40%;
+}
+
+
+#almostLastButton{
+    width: 60%;
+    height: 50px;
+}
+
+.inventoryItem{
+    margin: 15px auto 15px auto;
+
+}
+#aboutUs-form {
+    display: inline;
+}
+
+#aboutUs-button {
+    border: none;
+    text-decoration: underline;
+    color: blue;
+    background-color: inherit;
+    display: inline;
+}
+
+#copy-year {
+  display: inline;
+}
+
+/* delete-all page below */
+@media (max-width: 375px){
+    /* For iPhone X */
+
+    #delete-all-body {
+        
+        border: 5vw solid red;
+        font-size: 1.5em;
+        text-align: left;
+        padding: 0 10vw 10vw 10vw;
+        max-width: 70vw;
+        height: 91vh;
+    }
+
+    #cancel-button {
+        width: 70vw;
+        height: 20vw;
+        font-size: 1em;
+    }
+
+    #delete-all-h1 {
+        font-size: 1.15em;
+        background-color: yellow;
+        border: 2px solid black;
+        padding: 2vw;
+        margin-bottom: 5vw;
+    }
+
+    #delete-all-form > p {
+        padding-top: 5vw;
+        padding-bottom: 1vw;
+        text-align: left;
+        font-size: .85em;
+    }
+
+    #numTest-p {
+        display: inline-block;
+    }
+
+    #testAnswer-input {
+        height: 2em;
+    }
+
+    #delete-all-button {
+        margin-top: 3vw;
+        width: 70vw;
+        height: 20vw;
+        font-size: 1em;
+    }
+
+    #explosion {
+        display: none;
+    }
+
+    .sprite-div{
+        margin-top: -15vw;
+        margin-left: 7vw;
+        width: 200px;
+        height: 200px;
+        /* border: 1px solid black; */
+        background: url('/img/scaledExplosion.png') no-repeat 0 0%;
+        animation: spriteH .75s steps(25) infinite;
+        /* margin: -5% auto 0 auto;  */
+    }
+    
+    @keyframes spriteH { 
+        from { background-position: 0 0%; }
+        to { background-position: 104% 0%; }
+    } 
+}
+
+/* delete-all page above  */
+
+

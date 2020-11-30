@@ -49,11 +49,11 @@ app.post('/addGame', addGame);
 app.get('/details/:game_id', viewDetails);
 
 app.post('/update', updateGameButton);
-app.put('/update/:id', updateGameDetails)
+app.put('/update/:id', updateGameDetails);
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
-app.delete('/hardDeleteDB', eraseDBConfirmed)
+app.delete('/hardDeleteDB', eraseDBConfirmed);
 //app.post('/dbDetails', dbDetail);
 //app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
@@ -118,15 +118,15 @@ function getInventory(req, res) {
 
 function clearDatabase(req, res) {
   // console.log('clearDatabase FIRED!');
-  let randomNum1 = Math.floor(Math.random() * 1000);
-  let randomNum2 = Math.floor(Math.random() * 1000);
-  let randomProduct = randomNum1 * randomNum2;
+  let randomNum1 = Math.floor(Math.random() * 100);
+  let randomNum2 = Math.floor(Math.random() * 100);
+  let randomProduct = randomNum1 + randomNum2;
   // console.log('random nums', randomNum1, randomNum2);
   console.log('randomProduct', randomProduct);
   dbDeleteConfirmationKey = randomProduct;
   // let dbWipeConfirmData = { 'dbWipe': obj.detailData[0] };
   // console.log('custom', dbWipeConfirmData);
-  res.render('dbWipeConfirm', { 'numTest': `${randomNum1} X ${randomNum2} = ` });
+  res.render('dbWipeConfirm', { 'numTest': `${randomNum1} + ${randomNum2} = ` });
 }
 
 function eraseDBConfirmed(req, res) {
