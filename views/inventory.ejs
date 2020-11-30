@@ -60,7 +60,7 @@
         }
     </script>
 
-    <footer><% include('./footerPartial') %></footer>
+    <footer><%- include('./footerPartial') %></footer>
     <script>
         let q = $('.inventoryItem').attr('class');
         if (!q) { $('#almostLastButton').prop('disabled', true); }

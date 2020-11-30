@@ -27,13 +27,11 @@ input[type=checkbox]{
 
 header h1{
     font-family: 'Epilogue', sans-serif;
-    font-size: 4vw;
-    margin: 3% auto 0 auto;
-    border: 1px black solid;
+    font-size: 5vw;
+    margin: 2.5% auto 0 auto;
     width: 80%;
     border-radius: 10px;
-    padding: 15px 0 15px 0;
-    background-color: white;
+    padding: 0 0 15px 0;
 }
 /* Save for delete page fix */
 /* body{
