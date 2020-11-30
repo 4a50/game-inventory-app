@@ -163,11 +163,14 @@ async function viewDetails(req, res) {
       }
     });
   if (isInDB) {
-    console.log('RESRENDERING FROM DATABASS');
+    // console.log('RESRENDERING FROM DATABASS');
     let dataObj = dataRows[0];
     dataObj.isInDB = isInDB;
-    console.log('isInDB should true:', dataObj);
-    res.render('details', { detailData: dataObj });
+    // console.log('isInDB should true: dataObj', dataObj);
+    // console.log('dataRows', dataRows);
+    let formattedDetailData = {detailData: (formatDbaseData(dataRows, 'detailData')).detailData[0]};
+    // console.log('tempvar', formattedDetailData);
+    res.render('details', formattedDetailData);
   }
   else {
     console.log('RESRENDERING FROM WEBPAGE');
