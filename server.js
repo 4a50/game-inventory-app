@@ -370,7 +370,7 @@ function inventoryVerifyResults(req, res) {
   let isSingle = false;
   let arr = [];
   let SQL = '';
-  resetInventoryVerification();
+  resetInventoryVerification(); //this resets all inventory verification checkboxes
   if (typeof (req.body.game_id) === 'string') {
     isSingle = true;
     console.log('single ID', req.body.game_id);

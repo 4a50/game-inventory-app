@@ -446,11 +446,11 @@
     width: 60%;
     height: 50px;
 }
-.inventoryItem{
+/* .inventoryItem{
     grid-template-columns: 100% 100%; 
     margin: 12px auto 6px auto;
-    
-}
+} */
+
 .inventoryItem h2{    
     
     text-align: center;
@@ -575,7 +575,7 @@
     padding: 0.3em 0.5em;
 }
 
-/* Inventory Verification Results below  */
+/* Inventory Verification & Results below  */
 
 .grid-container-results {
     display: inline-grid;
@@ -606,7 +606,7 @@
     margin-right: 2vw;
 }
 
-#h2-results{
+#h2-results {
     font-size: 3vw;
     text-align: left;
     padding-right: 1vw;
@@ -614,4 +614,18 @@
     /* border: 1px solid green; */
 }
 
-/* Inventory Verification Results above  */
+.inventoryItem{
+    display: inline-grid;
+    grid-template-columns: 55% 35%;
+    width: 70%;
+    height: 8vw;
+    margin: 10px auto 10px auto;
+    padding: 10px 0 10px 10px;
+    border: 2px rgb(3, 3, 129) solid;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* Inventory Verification & Results above  */
