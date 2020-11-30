@@ -14,7 +14,7 @@
             <br />
             <div><% databaseItems.forEach( game => { %>
                 <section class="inventoryItem">
-                    <label for="<%= game.id %>"><input type="checkbox" name="game_id" value="<%= game.game_id %>"
+                    <label for="<%= game.id %>"><input type="checkbox" name="game_id" value="<%= game.game_id %>">
                     <p><%= game.name %></p>
                     </label>   
                 </section>
@@ -25,8 +25,8 @@
     </main>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
-    <script src="app.js"></script>
-    <footer><% include('./footerPartial') %></footer>
+    <script src="../js/app.js"></script>
+    <footer><%- include('./footerPartial') %></footer>
 </body>
 
 </html>
