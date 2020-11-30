@@ -40,6 +40,7 @@
     width: 65%;
     height: 8vw;
     border-radius: 10px;
+    font-size: 3.7vw;
 }
 #submitButton{
     width: 25%;
@@ -117,7 +118,7 @@
     width: 50%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 50px;
+    margin-bottom: 18px;
 }
 
 .footerButtonsTwo{
@@ -208,7 +209,7 @@
     width: 220%;
     margin: 20px auto 20px auto;
     position: relative;
-    left: 60%;
+    left: 31%;
 }
 
 #backToDetails{
@@ -417,13 +418,14 @@
 }
 
 #updateFormButton{
-    width: 330%;
+    width: 273%;
     margin: 20px auto 20px auto;
 }
 
 #backToDetails{
-    height: 40px;
-    width: 40%;
+    height: 4.4em;
+    width: 73.5%;
+    font-size: 78%;
 }
 
 
@@ -519,3 +521,40 @@
 
 
 /* delete-all page above  */
+
+/* JPJ INDEX STUFF */
+.randomContainer{
+    background-color: whitesmoke;
+    margin:auto;
+    width: 90%;
+    border-radius: 5%;
+    border: .4em solid rgb(69, 69, 228);
+
+}
+
+.randomName {
+    padding:0.5em 0em 0em 0em;
+    font-size: 5vw;
+    margin: 5vw 0vw;
+}
+.randomImage {
+    border: .4em solid black;
+    width: 60vw;
+    height: 25vh;
+    margin: 2vw 0vw 4vw 0vw;
+    border-radius: 5%;
+}
+.randomHeader{
+
+    margin:7vw 0vw 5vw 0vw;
+    font-size: 4.2vw;
+    text-align: center;
+}
+
+#descriptionField {
+    height: 20vh;
+    font-size:1.3em;
+    text-align: justify;
+    padding: 0.3em 0.5em;
+  
+/*  */

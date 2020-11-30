@@ -12,7 +12,9 @@ h2{
 }
 
 input[type=text]{
-    text-align: center;
+    text-align: left;
+    font-size: 2.4vw;
+    padding: .3em .5em;
 }
 
 .inventoryBody{

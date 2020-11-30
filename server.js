@@ -302,8 +302,12 @@ async function addGame(req, res) {
 
 }
 
-function homePage(req, res) {
-  res.render('index');
+async function homePage(req, res) {
+  let gameData;
+  gameData = await randomGameSuggestion();
+  console.log('gameData', gameData);
+
+  res.render('index', { gameData: gameData });
 }
 
 function getSearchCriteria(req, res) {
@@ -588,7 +592,7 @@ async function randomGameSuggestion(req, res) {
       }
     })
     .catch(err => console.log('Unable to access database for random entry:', err));
-  console.log('Return OBJ:', returnObj);
+  console.log(returnObj);
   return returnObj;
 
 }
