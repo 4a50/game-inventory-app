@@ -234,24 +234,23 @@
 /*  */
 /* This is the About us Style */
 #aboutUs-body {
-    max-width: 60%;
+    /* max-width: 70%; */
     display: flex;
     flex-direction: column;
     justify-items: center;
+    /* border: 1px solid yellow; */
 }
 
 #nintendo-switch {
-    /* width: 71vw; */
-    margin-left: 1.5vw;
-    /* height: 159vw; */
+    width: 70vw;
+    height: 158vw;
     background-image: url(img/nintendo-switch-about-us-edit.jpeg);
     background-size: 70vw 158vw;
     background-repeat: no-repeat;
     border: 4px solid black;
     box-sizing: border-box;
     border-radius: 5vw;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: calc(50% - 35vw);
 }
 
 .dev-team {
