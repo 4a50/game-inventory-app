@@ -37,7 +37,7 @@
 }
 
 #listText{
-    line-height: 70px;
+    line-height: 25px;
 }
 
 .viewInventoryForm button{
@@ -111,7 +111,145 @@
 .detailItems{
     margin-top: 10px;
     text-align: left;
-    margin-left: 5%;
+
+    margin-left: 10%;
+}
+
+#aboutUs-body {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+}
+
+#nintendo-switch {
+    width: 71vw;
+    margin-left: 1.5vw;
+    height: 159vw;
+    background-image: url(nintendo-switch-about-us-edit.jpeg);
+    background-size: 70vw 158vw;
+    background-repeat: no-repeat;
+    border: 4px solid black;
+    box-sizing: border-box;
+    border-radius: 5vw;
+}
+
+.dev-team {
+    color: black;
+    border: 3px solid black;
+    width: 73%;
+    height: 89vw;
+    margin-left: 13%;
+    margin-top: 47%;
+    background-color: gray;
+}
+
+#tina-section {
+  display: none;
+}
+
+#jp-section {
+  display: none;
+}
+
+#simon-section {
+  display: none;
+}
+
+#pixel-section {
+    display: block;
+    line-height: 88vw;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10vw;
+}
+
+.dev-team img {
+    margin-top: 5%;
+    width: 86%;
+    border: 1vw solid black;
+}
+
+.dev-team h2 {
+    margin-top: 2vw;
+    text-align: center;
+    font-size: 2em;
+}
+
+.dev-team ul {
+    color: black;
+    /* border: 1px solid orange; */
+    font-size: 1.5em;
+    width: 99%;
+    height: 44%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.dev-team li {
+  list-style-type: circle;
+  list-style-position: inside;
+}
+
+#nintendo-button-section {
+    color: white;
+    font-weight: 500;
+    width: 67vw;
+    height: 22vw;
+
+}
+
+#j-button {
+     border-radius: 50%;
+      width: 5vw;
+      height: 5vw;
+      line-height: 5vw;
+      background-color: black;
+      cursor: pointer;
+      color: white;
+      margin-left: 72.5%;
+      margin-top: 21.5%;
+}
+
+#t-button {
+    border-radius: 50%;
+    width: 5vw;
+    height: 5vw;
+    line-height: 5vw;
+    background-color: black;
+    cursor: pointer;
+    color: white;
+    margin-left: 65%;
+    margin-top: 0%;
+}
+
+#s-button {
+    border-radius: 50%;
+    width: 5vw;
+    height: 5vw;
+    line-height: 5vw;
+    background-color: black;
+    cursor: pointer;
+    color: white;
+    margin-left: 80.5%;
+    margin-top: -7%;
+}
+
+#p-button {
+    border-radius: 50%;
+    width: 5vw;
+    height: 5vw;
+    line-height: 5vw;
+    background-color: black;
+    cursor: pointer;
+    color: white;
+    margin-left: 72.5%;
+    margin-top: 1%;
+}
+
+#aboutUs-footer {
+    margin-top: 2vw;
 }
 
 .footerButtonOne{
