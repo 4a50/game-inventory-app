@@ -16,5 +16,21 @@ input[type=text]{
 }
 
 .inventoryBody{
-    width: 70%;
+    width: 100%;
+}
+
+html, header, footer, #aboutUs-body{
+    background-color: rgb(60, 148, 248);
+}
+
+main{
+    padding: 20px 0px 20px 0;
+}
+header{
+    padding: 10px 0 20px 0;
+    /* position: absolute; */
+}
+footer{
+    padding-top: 30px;
+    /* position: absolute; */
 }

@@ -406,7 +406,7 @@ function resultToObj(superAgentData, type = 'search') {
   if (type === 'search') {
     data = superAgentData.body.results
     data.map((element) => {
-      array.push({ name: element.name, game_id: element.id })
+      array.push({ name: element.name, game_id: element.id, image_url: element.background_image})
     });
     //console.log('Array', array);
     return ({ searchResultsData: array });

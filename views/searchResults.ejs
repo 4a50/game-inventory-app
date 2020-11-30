@@ -13,7 +13,10 @@
     <main>
         <section><% searchResultsData.forEach( game=> { %>
             <div class="grid-container" class="viewInventoryForm">
-                <h2 class="grid-item" id="listText"><%= game.name %></h2>
+                <div class="grid-item">
+                    <h2 id="listText"><%= game.name %></h2>
+                    <img id="smallImage" src="<%= game.image_url %>"></img>
+                </div>
                 <div class="grid-item">
                     <form class="modal" method="GET" action="/details/<%=game.game_id%>"> 
                         <input type="hidden" name="game_id" value="<%=JSON.stringify(game.id)%>">

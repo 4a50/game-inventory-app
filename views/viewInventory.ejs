@@ -11,7 +11,10 @@
     </header>
     <main><% databaseDetails.forEach( game => { %>
         <section class="grid-container" class="viewInventoryForm">
-            <h2 class="grid-item" id="listText"><%= game.name %></h2>
+            <div class="grid-item">
+                <h2 id="listText"><%= game.name %></h2>
+                <img id="smallImage" src="<%= game.image_url %>"></img>
+            </div>
             <div class="grid-item">
                 <form action="/details/<%=JSON.stringify(game.game_id)%>" method="GET">
                     <input type="hidden" name="game_id" value=<%=game.game_id%>>

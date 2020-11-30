@@ -9,17 +9,22 @@
 
 
 #inventoryButton{
-    height: 30px;
+    height: 7.5vw;
     width: 100%;
     border-radius: 5px;
-    background-color: black;
+    background-color: blue;
     color: white;
     border: none;
     margin-bottom: 10px;
+    font-size: 1.8vw;
+}
+
+#inventoryButton:hover{
+    background-color: rgb(58, 137, 255);
 }
 
 .viewInventoryForm{
-    width: 80;
+    width: 80%;
     margin: 20px auto 20px auto;
     font-size: 3vw;
 }
@@ -27,24 +32,26 @@
 .indexButton{
     border-radius: 10px;
     width: 100%;
-    height: 50px;
-    font-size: 3vw;
+    height: 10vw;
+    font-size: 4vw;
 }
 
 #indexSearch{
-    width: 76%;
-    height: 50px;
+    width: 65%;
+    height: 8vw;
     border-radius: 10px;
 }
 #submitButton{
-    width: 20%;
-    height: 55px;
+    width: 25%;
+    height: 6vw;
+    font-size: 3vw;
 }
 
 #danger{
-    width: 76%;
-    height: 50px;
+    width: 75%;
+    height: 5vw;
     margin-top: 20px;
+    font-size: 3vw;
 }
 
 .danger:hover{
@@ -64,14 +71,20 @@
 .viewInventoryForm button{
     width: 30%;
     text-align: left;
+}
 
+#smallImage{
+    height: 8vw;
+    position: relative;
+    right: 10vw;
+    top: 3vw;
 }
 
 .grid-container{
     display: inline-grid;
     grid-template-columns: 60% 35%; 
     width: 70%;
-    height: 70px;
+    height: 16vw;
     margin: 20px auto 20px auto;
     padding: 15px;
     border: 2px rgb(3, 3, 129) solid;
@@ -111,11 +124,12 @@
     position: aboslute;
     display: inline-grid;
     grid-template-columns: 50% 50%;
-    width: 400px;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;
 }
+
 
 #teamButton{
     width: 90%;
@@ -158,10 +172,13 @@
     margin-top: 2%;
     margin-left: 3%;
     margin-bottom: 3%;
+    font-size: 2.5vw;
 }
 
 #inventoryMain{
-    border: 1px black solid;
+    /* border: 1px black solid; */
+    /* background-color: rgb(60, 148, 248); */
+    width: 97%;
 }
 
 #editGameButton{
@@ -179,16 +196,19 @@
     text-align: justify;
     margin-left: auto;
     margin-right: auto;
+    font-size: 1.8vw;
 }
 
 .updateFormItem input{
-    width: 250px;
+    width: 100%;
     margin-right: 0;
 }
 
 #updateFormButton{
-    width: 330%;
+    width: 220%;
     margin: 20px auto 20px auto;
+    position: relative;
+    left: 60%;
 }
 
 #backToDetails{
@@ -214,22 +234,24 @@
 /*  */
 /* This is the About us Style */
 #aboutUs-body {
-    max-width: 400px;
+    max-width: 60%;
     display: flex;
     flex-direction: column;
     justify-items: center;
 }
 
 #nintendo-switch {
-    width: 71vw;
+    /* width: 71vw; */
     margin-left: 1.5vw;
-    height: 159vw;
+    /* height: 159vw; */
     background-image: url(img/nintendo-switch-about-us-edit.jpeg);
     background-size: 70vw 158vw;
     background-repeat: no-repeat;
     border: 4px solid black;
     box-sizing: border-box;
     border-radius: 5vw;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .dev-team {
