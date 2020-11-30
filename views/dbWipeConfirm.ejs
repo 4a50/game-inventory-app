@@ -13,12 +13,23 @@
         <button id="cancel-button" type="submit">Cancel!!!</button>
       </form>
       <section>
-        <form id="delete-all-form" action="/hardDeleteDB/?_method=DELETE" method="POST">
+        <form id="delete-all-form" action='/hardDeleteDB/?_method=DELETE' method="POST">
           <p>Please submit the correct answer to the following math problem to confirm your intent to irrevocably delete all of your inventory data:</p>
           <p id="numTest-p"><%= numTest %></p>
           <input id="testAnswer-input" type="text" name="testAnswer">
           <button id="delete-all-button" type="submit"> Submit & Delete</button>
         </form>
       </section>
+      <section>
+        <div class="sprite-div">
+          <img id="explosion" src="explosion.png">
+        </div>
+      </section>
     </main>
+    <!-- <script>
+      $('#delete-all-button').click(function (){
+        console.log('showing explosion');
+        $('sprite-div').show();
+      })
+    </script> -->
   </body>

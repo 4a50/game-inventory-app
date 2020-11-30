@@ -335,12 +335,12 @@
     font-size: 1.5em;
     text-align: left;
     padding: 10vw;
-    max-width: 80vw;
-    height: 96.5vh;
+    max-width: 70vw;
+    height: 86vh;
 }
 
 #cancel-button {
-    width: 80vw;
+    width: 70vw;
     height: 20vw;
     font-size: 1em;
 }
@@ -354,9 +354,10 @@
 }
 
 #delete-all-form > p {
-    padding-top: 10vw;
-    padding-bottom: 3vw;
+    padding-top: 5vw;
+    padding-bottom: 1vw;
     text-align: left;
+    font-size: .85em;
 }
 
 #numTest-p {
@@ -369,10 +370,27 @@
 
 #delete-all-button {
     margin-top: 3vw;
-    width: 80vw;
+    width: 70vw;
     height: 20vw;
     font-size: 1em;
 }
 
+#explosion {
+    display: none;
+}
+
+.sprite-div{
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+    background: url('/img/scaledExplosion.png') no-repeat 0 0%;
+    animation: spriteH .75s steps(25) 1;
+    /* margin: -5% auto 0 auto;  */
+  }
+  
+  @keyframes spriteH { 
+    from { background-position: 0 0%; }
+    to { background-position: 104% 0%; }
+  } 
 
 /* delete-all page above  */

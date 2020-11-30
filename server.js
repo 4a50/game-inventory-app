@@ -49,11 +49,11 @@ app.post('/addGame', addGame);
 app.get('/details/:game_id', viewDetails);
 
 app.post('/update', updateGameButton);
-app.put('/update/:id', updateGameDetails)
+app.put('/update/:id', updateGameDetails);
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
-app.delete('/hardDeleteDB', eraseDBConfirmed)
+app.delete('/hardDeleteDB', eraseDBConfirmed);
 //app.post('/dbDetails', dbDetail);
 //app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
