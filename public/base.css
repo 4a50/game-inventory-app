@@ -18,3 +18,7 @@ img{
     width: 65%;
     height: auto;
 }
+
+input[type=checkbox]{
+    display: none;
+}
