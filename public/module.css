@@ -376,7 +376,6 @@
 #aboutUs-footer {
     margin-top: 2vw;
 }
-
 /* aboutUs page above */
 
 .footerButtonOne{
@@ -459,6 +458,10 @@
         padding: 0 10vw 10vw 10vw;
         max-width: 70vw;
         height: 100vh;
+    }
+
+    #delete-all-main{
+        padding: 20px 0px 20px 0;
     }
 
     #cancel-button {
