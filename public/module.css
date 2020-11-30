@@ -292,23 +292,27 @@
 .dev-team h2 {
     margin-top: 2vw;
     text-align: center;
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 .dev-team ul {
     color: black;
     /* border: 1px solid orange; */
-    font-size: 1.5em;
+    font-size: 3vw;
     width: 99%;
     height: 44%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    text-align: left;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: space-around; */
 }
 
 .dev-team li {
   list-style-type: circle;
   list-style-position: inside;
+  padding: 1vw 3vw 1vw 3vw;
+  
+  
 }
 
 #nintendo-button-section {
@@ -370,6 +374,8 @@
 #aboutUs-footer {
     margin-top: 2vw;
 }
+
+/* aboutUs page above */
 
 .footerButtonOne{
     width: 100%;
