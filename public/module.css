@@ -327,8 +327,8 @@
       background-color: black;
       cursor: pointer;
       color: white;
-      margin-left: 72.5%;
-      margin-top: 21.5%;
+      margin-left: 73%;
+      margin-top: 22.5%;
 }
 
 #t-button {
@@ -339,8 +339,8 @@
     background-color: black;
     cursor: pointer;
     color: white;
-    margin-left: 65%;
-    margin-top: 0%;
+    margin-left: 65.5%;
+    margin-top: 0.5%;
 }
 
 #s-button {
@@ -352,7 +352,7 @@
     cursor: pointer;
     color: white;
     margin-left: 80.5%;
-    margin-top: -7%;
+    margin-top: -7.5%;
 }
 
 #p-button {
@@ -363,7 +363,7 @@
     background-color: black;
     cursor: pointer;
     color: white;
-    margin-left: 72.5%;
+    margin-left: 73%;
     margin-top: 1%;
 }
 
