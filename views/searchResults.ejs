@@ -13,7 +13,7 @@
     <main>
         <section><% searchResultsData.forEach( game=> { %>
             <div class="grid-container" class="viewInventoryForm">
-                <div class="grid-item">
+                <div class="grid-item" id="leftItem">
                     <h2 id="listText"><%= game.name %></h2>
                     <img id="smallImage" src="<%= game.image_url %>"></img>
                 </div>

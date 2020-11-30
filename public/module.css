@@ -10,9 +10,9 @@
 
 #inventoryButton{
     height: 7.5vw;
-    width: 100%;
+    width: 108%;
     border-radius: 5px;
-    background-color: blue;
+    background-color: rgb(60, 148, 248);
     color: white;
     border: none;
     margin-bottom: 10px;
@@ -20,7 +20,9 @@
 }
 
 #inventoryButton:hover{
-    background-color: rgb(58, 137, 255);
+    background-color: rgb(209, 241, 252);
+    color: black;
+    border: 2px rgb(3, 3, 129) solid;
 }
 
 .viewInventoryForm{
@@ -32,19 +34,22 @@
 .indexButton{
     border-radius: 10px;
     width: 100%;
-    height: 10vw;
+    height: 8vw;
     font-size: 4vw;
 }
 
 #indexSearch{
     width: 65%;
-    height: 8vw;
+    height: 6vw;
     border-radius: 10px;
+    border: none;
     font-size: 3.7vw;
+    margin-right: 4%;
+
 }
 #submitButton{
     width: 25%;
-    height: 6vw;
+    height: 8.1vw;
     font-size: 3vw;
 }
 
@@ -61,12 +66,12 @@
 }
 
 .copyright{
-    /* margin: 20px 0 20px 0; */
-    width: 100%;
+    width: 200%;
+    margin-top: 15px;
 }
 
 #listText{
-    line-height: 25px;
+    height: 5.5vw;
     text-align: left;
 }
 
@@ -77,7 +82,6 @@
 
 #smallImage{
     height: 8vw;
-    position: relative;
     right: 10vw;
     top: 3vw;
 }
@@ -88,7 +92,7 @@
     width: 70%;
     height: 16vw;
     margin: 20px auto 20px auto;
-    padding: 15px;
+    padding: 20px 0 20px 30px;
     border: 2px rgb(3, 3, 129) solid;
     border-radius: 10px;
     background-color: white;
@@ -100,7 +104,7 @@
 
 .goBackButton{
     width: 75%;
-    height: 50px;
+    height: 4vw;
     margin-top: 10px;
     margin-bottom: 20px;
     font-size: 3vw;
@@ -116,7 +120,7 @@
 .footerButtons{
     display: grid;
     grid-template-columns: 50% 50%;
-    width: 50%;
+    width: 60%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 18px;
@@ -175,6 +179,11 @@
     margin-left: 3%;
     margin-bottom: 3%;
     font-size: 2.5vw;
+}
+
+#leftItem{
+    display: grid;
+    grid-template-rows: 30% 70%;
 }
 
 #inventoryMain{
@@ -391,10 +400,6 @@
     margin-bottom: 3%;
 }
 
-#inventoryMain{
-    border: 1px black solid;
-}
-
 #editGameButton{
     width: 89%;
     height: 30px;
@@ -418,15 +423,15 @@
 }
 
 #updateFormButton{
-    width: 273%;
+    width: 275%;
     margin: 20px auto 20px auto;
 }
 
-#backToDetails{
+/* #backToDetails{
     height: 4.4em;
     width: 73.5%;
     font-size: 78%;
-}
+} */
 
 
 #almostLastButton{
@@ -531,9 +536,9 @@
 .randomContainer{
     background-color: whitesmoke;
     margin:auto;
-    width: 90%;
-    border-radius: 5%;
-    border: .4em solid rgb(69, 69, 228);
+    width: 70%;
+    border-radius: 15px;
+    border: .4em solid rgb(60, 148, 248);
 
 }
 
@@ -543,16 +548,16 @@
     margin: 5vw 0vw;
 }
 .randomImage {
-    border: .4em solid black;
-    width: 60vw;
-    height: 25vh;
-    margin: 2vw 0vw 4vw 0vw;
-    border-radius: 5%;
+    border: .2em solid black;
+    width: 50%;
+    height: auto;
+    margin-bottom: 10%;
+    border-radius: 15px;
 }
 .randomHeader{
 
-    margin:7vw 0vw 5vw 0vw;
-    font-size: 4.2vw;
+    margin:3vw 0vw 3vw 0vw;
+    font-size: 3.7vw;
     text-align: center;
 }
 
@@ -562,4 +567,3 @@
     text-align: justify;
     padding: 0.3em 0.5em;
   
-/*  */
