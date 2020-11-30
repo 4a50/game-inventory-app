@@ -1,34 +1,57 @@
 
 .indexForm{
-    width: 400px;
-    font-size: 30px;
+    width: 80%;
+    font-size: 3vw;
     padding: 5px;
     margin: 20px auto 20px auto;
     /* border: 1px black solid; */
 }
+
+
+#inventoryButton{
+    height: 7.5vw;
+    width: 100%;
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+    border: none;
+    margin-bottom: 10px;
+    font-size: 1.8vw;
+}
+
+#inventoryButton:hover{
+    background-color: rgb(58, 137, 255);
+}
+
 .viewInventoryForm{
-    width: 400px;
+    width: 80%;
     margin: 20px auto 20px auto;
+    font-size: 3vw;
 }
 
 .indexButton{
     border-radius: 10px;
     width: 100%;
-    height: 50px;
+    height: 10vw;
+    font-size: 4vw;
 }
+
 #indexSearch{
-    width: 76%;
-    height: 50px;
+    width: 65%;
+    height: 8vw;
     border-radius: 10px;
 }
 #submitButton{
-    width: 20%;
-    height: 55px;
+    width: 25%;
+    height: 6vw;
+    font-size: 3vw;
 }
 
 #danger{
-    width: 400px;
-    height: 50px;
+    width: 75%;
+    height: 5vw;
+    margin-top: 20px;
+    font-size: 3vw;
 }
 
 .danger:hover{
@@ -36,22 +59,33 @@
     border: red 2px solid;
 }
 
+.copyright{
+    margin: 20px 0 20px 0;
+}
+
 #listText{
     line-height: 25px;
+    text-align: left;
 }
 
 .viewInventoryForm button{
-    width: 150px;
-    text-align: center;
+    width: 30%;
+    text-align: left;
+}
 
+#smallImage{
+    height: 8vw;
+    position: relative;
+    right: 10vw;
+    top: 3vw;
 }
 
 .grid-container, .inventoryItem{
     display: inline-grid;
     grid-template-columns: 60% 35%; 
-    width: 500px;
-    height: 70px;
-    margin: 5px auto 5px auto;
+    width: 70%;
+    height: 16vw;
+    margin: 20px auto 20px auto;
     padding: 15px;
     border: 2px rgb(3, 3, 129) solid;
     border-radius: 10px;
@@ -62,44 +96,56 @@
     margin-bottom: 10px;
 }
 
-#inventoryButton{
-    height: 30px;
-    width: 150px;
-    border-radius: 5px;
-    background-color: black;
-    color: white;
-    border: none;
-    margin-bottom: 10px;
-}
 .goBackButton{
-    width: 86%;
+    width: 75%;
     height: 50px;
     margin-top: 10px;
     margin-bottom: 20px;
-    font-size: 25px;
+    font-size: 3vw;
 }
 /* details.ejs css */
 .grid-containerTwo{
     display: inline-grid;
-    margin-top: 20px;
+    margin-top: 40px;
     grid-template-columns: 60% 40%;
     width: 95%;
 }
 
 .footerButtons{
-    position: aboslute;
-    display: inline-grid;
+    display: grid;
     grid-template-columns: 50% 50%;
-    width: 400px;
+    width: 50%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;
 }
 
+.footerButtonsTwo{
+    position: aboslute;
+    display: inline-grid;
+    grid-template-columns: 50% 50%;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+}
+
+
+#teamButton{
+    width: 90%;
+    margin-right: 10px;
+    height: 30px;
+}
+
+#theme-toggle{
+    width: 90%;
+    margin-left: 10px;
+}
+
 #grid-itemThree{
     border-radius: 5px;
-    width: 150px;
-    height: 40px;
+    width: 70%;
+    height: 2vw;
     margin-left: auto;
     margin-right: auto;
 }
@@ -111,27 +157,101 @@
 .detailItems{
     margin-top: 10px;
     text-align: left;
-
+    font-size: 1.5vw;
     margin-left: 10%;
 }
 
+.footerButtonOne{
+    width: 100%;
+    height: 50px;
+}
+
+#gameDescription{
+    width: 160%;
+    text-align: justify;
+    margin-top: 2%;
+    margin-left: 3%;
+    margin-bottom: 3%;
+    font-size: 2.5vw;
+}
+
+#inventoryMain{
+    /* border: 1px black solid; */
+    /* background-color: rgb(60, 148, 248); */
+    width: 97%;
+}
+
+#editGameButton{
+    width: 89%;
+    height: 30px;
+    text-align: center;
+    margin-right: 11%;
+    margin-top: 5px;
+}
+
+.updateForm{
+    width: 89%;
+    display: inline-grid;
+    grid-template-columns: 30% 70%;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.8vw;
+}
+
+.updateFormItem input{
+    width: 100%;
+    margin-right: 0;
+}
+
+#updateFormButton{
+    width: 220%;
+    margin: 20px auto 20px auto;
+    position: relative;
+    left: 60%;
+}
+
+#backToDetails{
+    height: 40px;
+    width: 40%;
+}
+
+
+#almostLastButton{
+    width: 60%;
+    height: 50px;
+}
+
+.inventoryItem{
+    margin: 15px auto 15px auto;
+
+}
+
+#teamButton{
+    width: 100%;
+}
+/*  */
+/*  */
+/* This is the About us Style */
 #aboutUs-body {
-    max-width: 400px;
+    max-width: 60%;
     display: flex;
     flex-direction: column;
     justify-items: center;
 }
 
 #nintendo-switch {
-    width: 71vw;
+    /* width: 71vw; */
     margin-left: 1.5vw;
-    height: 159vw;
-    background-image: url(nintendo-switch-about-us-edit.jpeg);
+    /* height: 159vw; */
+    background-image: url(img/nintendo-switch-about-us-edit.jpeg);
     background-size: 70vw 158vw;
     background-repeat: no-repeat;
     border: 4px solid black;
     box-sizing: border-box;
     border-radius: 5vw;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .dev-team {
@@ -319,3 +439,94 @@
 .inventoryItem-selected {
     background-color: rgb(69, 69, 228);
 }
+    margin: 15px auto 15px auto;
+
+}
+#aboutUs-form {
+    display: inline;
+}
+
+#aboutUs-button {
+    border: none;
+    text-decoration: underline;
+    color: blue;
+    background-color: inherit;
+    display: inline;
+}
+
+#copy-year {
+  display: inline;
+}
+
+/* delete-all page below */
+@media (max-width: 375px){
+    /* For iPhone X */
+
+    #delete-all-body {
+        
+        border: 5vw solid red;
+        font-size: 1.5em;
+        text-align: left;
+        padding: 0 10vw 10vw 10vw;
+        max-width: 70vw;
+        height: 91vh;
+    }
+
+    #cancel-button {
+        width: 70vw;
+        height: 20vw;
+        font-size: 1em;
+    }
+
+    #delete-all-h1 {
+        font-size: 1.15em;
+        background-color: yellow;
+        border: 2px solid black;
+        padding: 2vw;
+        margin-bottom: 5vw;
+    }
+
+    #delete-all-form > p {
+        padding-top: 5vw;
+        padding-bottom: 1vw;
+        text-align: left;
+        font-size: .85em;
+    }
+
+    #numTest-p {
+        display: inline-block;
+    }
+
+    #testAnswer-input {
+        height: 2em;
+    }
+
+    #delete-all-button {
+        margin-top: 3vw;
+        width: 70vw;
+        height: 20vw;
+        font-size: 1em;
+    }
+
+    #explosion {
+        display: none;
+    }
+
+    .sprite-div{
+        margin-top: -15vw;
+        margin-left: 7vw;
+        width: 200px;
+        height: 200px;
+        /* border: 1px solid black; */
+        background: url('/img/scaledExplosion.png') no-repeat 0 0%;
+        animation: spriteH .75s steps(25) infinite;
+        /* margin: -5% auto 0 auto;  */
+    }
+    
+    @keyframes spriteH { 
+        from { background-position: 0 0%; }
+        to { background-position: 104% 0%; }
+    } 
+}
+
+/* delete-all page above  */

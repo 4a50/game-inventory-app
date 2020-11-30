@@ -34,6 +34,8 @@
                 <label class="updateFormItem">Description</label>
                 <input class="updateFormItem" type="text" name="description"
                     value="<%= databaseDetails[0].description %>" />
+                <label class="updateFormItem">Video</label>
+                <input class="updateFormItem" type="text" name="video_url" value="<%= databaseDetails[0].video_url %>" />
                 <input type="hidden" name="game_id" value="<%=JSON.stringify(databaseDetails[0].game_id)%>">
                 <button id="updateFormButton" class="goBackButton" type="submit">Update Game</button>
             </form>
@@ -45,7 +47,7 @@
 
 
     </main>
-    <footer></footer>
+    <footer><%- include('./footerPartial') %></footer>
 </body>
 
 </html>

@@ -13,16 +13,18 @@
         <form action="/inventory/verify/results" method="POST">
             <br />
             <div><% databaseItems.forEach( game => { %>
+
                 <section id="<%= game.game_id %>" class="inventoryItem">
                     <input type="checkbox" name="game_id" value="<%= game.game_id %>">
                     <h2><%= game.name %></h2>
-                    </label>
+                   </label>
                 </section>
                 <% }) %>
                 <button id="almostLastButton" type="submit">Submit Results</button>
             </div>
         </form>
     </main>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
         $('.inventoryItem').click(e => {
@@ -40,7 +42,7 @@
             }
         });
     </script>
-    <script src="app.js"></script>
+
     <footer><% include('./footerPartial') %></footer>
 </body>
 

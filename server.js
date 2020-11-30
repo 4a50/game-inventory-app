@@ -49,11 +49,11 @@ app.post('/addGame', addGame);
 app.get('/details/:game_id', viewDetails);
 
 app.post('/update', updateGameButton);
-app.put('/update/:id', updateGameDetails)
+app.put('/update/:id', updateGameDetails);
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
-app.delete('/hardDeleteDB', eraseDBConfirmed)
+app.delete('/hardDeleteDB', eraseDBConfirmed);
 //app.post('/dbDetails', dbDetail);
 //app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
@@ -118,15 +118,15 @@ function getInventory(req, res) {
 
 function clearDatabase(req, res) {
   // console.log('clearDatabase FIRED!');
-  let randomNum1 = Math.floor(Math.random() * 1000);
-  let randomNum2 = Math.floor(Math.random() * 1000);
-  let randomProduct = randomNum1 * randomNum2;
+  let randomNum1 = Math.floor(Math.random() * 100);
+  let randomNum2 = Math.floor(Math.random() * 100);
+  let randomProduct = randomNum1 + randomNum2;
   // console.log('random nums', randomNum1, randomNum2);
   console.log('randomProduct', randomProduct);
   dbDeleteConfirmationKey = randomProduct;
   // let dbWipeConfirmData = { 'dbWipe': obj.detailData[0] };
   // console.log('custom', dbWipeConfirmData);
-  res.render('dbWipeConfirm', { 'numTest': `${randomNum1} X ${randomNum2} = ` });
+  res.render('dbWipeConfirm', { 'numTest': `${randomNum1} + ${randomNum2} = ` });
 }
 
 function eraseDBConfirmed(req, res) {
@@ -163,11 +163,14 @@ async function viewDetails(req, res) {
       }
     });
   if (isInDB) {
-    console.log('RESRENDERING FROM DATABASS');
+    // console.log('RESRENDERING FROM DATABASS');
     let dataObj = dataRows[0];
     dataObj.isInDB = isInDB;
-    console.log('isInDB should true:', dataObj);
-    res.render('details', { detailData: dataObj });
+    // console.log('isInDB should true: dataObj', dataObj);
+    // console.log('dataRows', dataRows);
+    let formattedDetailData = {detailData: (formatDbaseData(dataRows, 'detailData')).detailData[0]};
+    // console.log('tempvar', formattedDetailData);
+    res.render('details', formattedDetailData);
   }
   else {
     console.log('RESRENDERING FROM WEBPAGE');
@@ -406,7 +409,7 @@ function resultToObj(superAgentData, type = 'search') {
   if (type === 'search') {
     data = superAgentData.body.results
     data.map((element) => {
-      array.push({ name: element.name, game_id: element.id })
+      array.push({ name: element.name, game_id: element.id, image_url: element.background_image})
     });
     //console.log('Array', array);
     return ({ searchResultsData: array });
