@@ -12,11 +12,14 @@
   <main>
     <h2>The following Games are not accounted for:</h2>
     <% invResultsData.forEach( game => { %>
-    <input type="hidden" name="game_id" value=<%=game.game_id%>>
-    <h2><%= game.name %></h2>
-    <% }) %>
+      <section class="grid-container">
+      <input type="hidden" name="game_id" value="<%=game.game_id%>">
+      <h2 id="list-text"><%= game.name %></h2>
+      <img class="smallImage" src="<%=game.image_url%>"></img>
+    </section>
+      <% }) %>
   </main>
-  <footer><% include('./footerPartial') %></footer>
+  <footer><%- include('./footerPartial') %></footer>
 </body>
 
 </html>

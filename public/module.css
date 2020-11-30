@@ -1,34 +1,63 @@
 
 .indexForm{
-    width: 400px;
-    font-size: 30px;
+    width: 80%;
+    font-size: 3vw;
     padding: 5px;
     margin: 20px auto 20px auto;
     /* border: 1px black solid; */
 }
+
+
+#inventoryButton{
+    height: 7.5vw;
+    width: 108%;
+    border-radius: 5px;
+    background-color: rgb(60, 148, 248);
+    color: white;
+    border: none;
+    margin-bottom: 10px;
+    font-size: 1.8vw;
+}
+
+#inventoryButton:hover{
+    background-color: rgb(209, 241, 252);
+    color: black;
+    border: 2px rgb(3, 3, 129) solid;
+}
+
 .viewInventoryForm{
-    width: 400px;
+    width: 80%;
     margin: 20px auto 20px auto;
+    font-size: 3vw;
 }
 
 .indexButton{
     border-radius: 10px;
     width: 100%;
-    height: 50px;
+    height: 8vw;
+    font-size: 4vw;
 }
+
 #indexSearch{
-    width: 76%;
-    height: 50px;
+    width: 65%;
+    height: 6vw;
     border-radius: 10px;
+    border: none;
+    font-size: 3.7vw;
+    margin-right: 4%;
+
 }
 #submitButton{
-    width: 20%;
-    height: 55px;
+    width: 25%;
+    height: 8.1vw;
+    font-size: 3vw;
 }
 
 #danger{
-    width: 400px;
-    height: 50px;
+    width: 75%;
+    height: 5vw;
+    margin-top: 20px;
+    font-size: 3vw;
 }
 
 .danger:hover{
@@ -36,23 +65,34 @@
     border: red 2px solid;
 }
 
+.copyright{
+    width: 200%;
+    margin-top: 15px;
+}
+
 #listText{
-    line-height: 25px;
+    height: 5.5vw;
+    text-align: left;
 }
 
 .viewInventoryForm button{
-    width: 150px;
-    text-align: center;
-
+    width: 30%;
+    text-align: left;
 }
 
-.grid-container{
+#smallImage{
+    height: 8vw;
+    right: 10vw;
+    top: 3vw;
+}
+
+.grid-container, .inventoryItem{
     display: inline-grid;
     grid-template-columns: 60% 35%; 
-    width: 500px;
-    height: 70px;
-    margin: 5px auto 5px auto;
-    padding: 15px;
+    width: 70%;
+    height: 16vw;
+    margin: 20px auto 20px auto;
+    padding: 20px 0 20px 30px;
     border: 2px rgb(3, 3, 129) solid;
     border-radius: 10px;
     background-color: white;
@@ -62,44 +102,56 @@
     margin-bottom: 10px;
 }
 
-#inventoryButton{
-    height: 30px;
-    width: 150px;
-    border-radius: 5px;
-    background-color: black;
-    color: white;
-    border: none;
-    margin-bottom: 10px;
-}
 .goBackButton{
-    width: 86%;
-    height: 50px;
+    width: 75%;
+    height: 4vw;
     margin-top: 10px;
     margin-bottom: 20px;
-    font-size: 25px;
+    font-size: 3vw;
 }
 /* details.ejs css */
 .grid-containerTwo{
     display: inline-grid;
-    margin-top: 20px;
+    margin-top: 40px;
     grid-template-columns: 60% 40%;
     width: 95%;
 }
 
 .footerButtons{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 18px;
+}
+
+.footerButtonsTwo{
     position: aboslute;
     display: inline-grid;
     grid-template-columns: 50% 50%;
-    width: 400px;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;
 }
 
+
+#teamButton{
+    width: 90%;
+    margin-right: 10px;
+    height: 30px;
+}
+
+#theme-toggle{
+    width: 90%;
+    margin-left: 10px;
+}
+
 #grid-itemThree{
     border-radius: 5px;
-    width: 150px;
-    height: 40px;
+    width: 70%;
+    height: 2vw;
     margin-left: auto;
     margin-right: auto;
 }
@@ -111,33 +163,111 @@
 .detailItems{
     margin-top: 10px;
     text-align: left;
-
+    font-size: 1.5vw;
     margin-left: 10%;
 }
 
+.footerButtonOne{
+    width: 100%;
+    height: 50px;
+}
+
+#gameDescription{
+    width: 160%;
+    text-align: justify;
+    margin-top: 2%;
+    margin-left: 3%;
+    margin-bottom: 3%;
+    font-size: 2.5vw;
+}
+
+#leftItem{
+    display: grid;
+    grid-template-rows: 30% 70%;
+}
+
+#inventoryMain{
+    /* border: 1px black solid; */
+    /* background-color: rgb(60, 148, 248); */
+    width: 97%;
+}
+
+#editGameButton{
+    width: 89%;
+    height: 30px;
+    text-align: center;
+    margin-right: 11%;
+    margin-top: 5px;
+}
+
+.updateForm{
+    width: 89%;
+    display: inline-grid;
+    grid-template-columns: 30% 70%;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.8vw;
+}
+
+.updateFormItem input{
+    width: 100%;
+    margin-right: 0;
+}
+
+#updateFormButton{
+    width: 220%;
+    margin: 20px auto 20px auto;
+    position: relative;
+    left: 31%;
+}
+
+#backToDetails{
+    height: 40px;
+    width: 40%;
+}
+
+
+#almostLastButton{
+    width: 60%;
+    height: 50px;
+}
+
+.inventoryItem{
+    margin: 15px auto 15px auto;
+
+}
+
+#teamButton{
+    width: 100%;
+}
+/*  */
+/*  */
+/* This is the About us Style */
 #aboutUs-body {
-    max-width: 400px;
+    /* max-width: 70%; */
     display: flex;
     flex-direction: column;
     justify-items: center;
+    /* border: 1px solid yellow; */
 }
 
 #nintendo-switch {
-    width: 71vw;
-    margin-left: 1.5vw;
-    height: 159vw;
-    background-image: url(nintendo-switch-about-us-edit.jpeg);
+    width: 70vw;
+    height: 158vw;
+    background-image: url(img/nintendo-switch-about-us-edit.jpeg);
     background-size: 70vw 158vw;
     background-repeat: no-repeat;
     border: 4px solid black;
     box-sizing: border-box;
     border-radius: 5vw;
+    margin-left: calc(50% - 35vw);
 }
 
 .dev-team {
     color: black;
     border: 3px solid black;
-    width: 73%;
+    width: 74%;
     height: 89vw;
     margin-left: 13%;
     margin-top: 47%;
@@ -173,23 +303,27 @@
 .dev-team h2 {
     margin-top: 2vw;
     text-align: center;
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 .dev-team ul {
     color: black;
     /* border: 1px solid orange; */
-    font-size: 1.5em;
+    font-size: 3vw;
     width: 99%;
     height: 44%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    text-align: left;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: space-around; */
 }
 
 .dev-team li {
   list-style-type: circle;
   list-style-position: inside;
+  padding: 1vw 3vw 1vw 3vw;
+  
+  
 }
 
 #nintendo-button-section {
@@ -208,8 +342,8 @@
       background-color: black;
       cursor: pointer;
       color: white;
-      margin-left: 72.5%;
-      margin-top: 21.5%;
+      margin-left: 73%;
+      margin-top: 22.5%;
 }
 
 #t-button {
@@ -220,8 +354,8 @@
     background-color: black;
     cursor: pointer;
     color: white;
-    margin-left: 65%;
-    margin-top: 0%;
+    margin-left: 65.5%;
+    margin-top: 0.5%;
 }
 
 #s-button {
@@ -233,7 +367,7 @@
     cursor: pointer;
     color: white;
     margin-left: 80.5%;
-    margin-top: -7%;
+    margin-top: -7.5%;
 }
 
 #p-button {
@@ -244,13 +378,14 @@
     background-color: black;
     cursor: pointer;
     color: white;
-    margin-left: 72.5%;
+    margin-left: 73%;
     margin-top: 1%;
 }
 
 #aboutUs-footer {
     margin-top: 2vw;
 }
+/* aboutUs page above */
 
 .footerButtonOne{
     width: 100%;
@@ -263,10 +398,6 @@
     margin-top: 2%;
     margin-left: 3%;
     margin-bottom: 3%;
-}
-
-#inventoryMain{
-    border: 1px black solid;
 }
 
 #editGameButton{
@@ -292,22 +423,147 @@
 }
 
 #updateFormButton{
-    width: 330%;
+    width: 275%;
     margin: 20px auto 20px auto;
 }
 
-#backToDetails{
-    height: 40px;
-    width: 40%;
-}
+/* #backToDetails{
+    height: 4.4em;
+    width: 73.5%;
+    font-size: 78%;
+} */
 
 
 #almostLastButton{
     width: 60%;
     height: 50px;
 }
-
 .inventoryItem{
+    grid-template-columns: 100% 100%; 
+    margin: 12px auto 6px auto;
+    
+}
+.inventoryItem h2{    
+    
+    text-align: center;
+    font-size: 30px
+}
+.inventoryItem-selected {
+    background-color: rgb(69, 69, 228);
     margin: 15px auto 15px auto;
+}
+
+/* delete-all page below */
+
+    #delete-all-body {
+        
+        border: 5vw solid red;
+        font-size: 3vw;
+        text-align: left;
+        padding: 0 10vw 10vw 10vw;
+        max-width: 70vw;
+        height: 100vh;
+        display: block;
+    }
+
+    #delete-all-main{
+        padding: 20px 0px 20px 0;
+    }
+
+    #cancel-button {
+        width: 70vw;
+        height: 10vw;
+        font-size: 3vw;
+    }
+
+    #delete-all-h1 {
+        font-size: 3vw;
+        background-color: yellow;
+        border: 2px solid black;
+        padding: 2vw;
+        margin-bottom: 5vw;
+    }
+
+    #delete-all-form > p {
+        padding-top: 5vw;
+        padding-bottom: 1vw;
+        text-align: left;
+        font-size: .85em;
+    }
+
+    #numTest-p {
+        display: inline-block;
+        font-size: 3vw;
+    }
+
+    #testAnswer-input {
+        height: 5vw;
+    }
+
+    #delete-all-button {
+        margin-top: 3vw;
+        width: 70vw;
+        height: 10vw;
+        max-height: 100px;
+        font-size: 3vw;
+    }
+
+    #explosion {
+        display: none;
+    }
+
+    .sprite-div{
+        
+        margin-top: -5vw;
+        margin-left: calc(50% - 100px);
+        width: 200px;
+        height: 200px;
+        /* border: 1px solid black; */
+        background: url('/img/scaledExplosion.png') no-repeat 0 0%;
+        animation: spriteH .75s steps(25) infinite;
+        /* margin: -5% auto 0 auto;  */
+    }
+    
+    @keyframes spriteH { 
+        from { background-position: 0 0%; }
+        to { background-position: 104% 0%; }
+    } 
+
+
+/* delete-all page above  */
+
+/* JPJ INDEX STUFF */
+.randomContainer{
+    background-color: whitesmoke;
+    margin:auto;
+    width: 70%;
+    border-radius: 15px;
+    border: .4em solid rgb(60, 148, 248);
 
 }
+
+.randomName {
+    padding:0.5em 0em 0em 0em;
+    font-size: 5vw;
+    margin: 5vw 0vw;
+}
+.randomImage {
+    border: .2em solid black;
+    width: 50%;
+    height: auto;
+    margin-bottom: 10%;
+    border-radius: 15px;
+}
+.randomHeader{
+
+    margin:3vw 0vw 3vw 0vw;
+    font-size: 3.7vw;
+    text-align: center;
+}
+
+#descriptionField {
+    height: 20vh;
+    font-size:1.3em;
+    text-align: justify;
+    padding: 0.3em 0.5em;
+  

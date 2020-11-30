@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue&display=swap');
+
+html, header, footer, #aboutUs-body, #go-back-form{
+     background-color: rgba(54, 54, 54, 0.836)
+}
+
+body{
+    color: black;
+    background-color: rgb(151, 150, 150);
+}
+#inventoryButton{
+    background-color: lightgray;
+    color: black;
+}
+
+h1{
+    background-color: lightgrey;
+    color: black;
+    font-family: 'Epilogue', sans-serif;
+}
+/* #addToInv:hover{
+    border: rgb(2, 66, 2) 2px solid;
+    background-color: lightgreen;
+} */
+footer{
+    color: white;
+}

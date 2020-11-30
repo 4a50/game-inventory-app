@@ -3,6 +3,7 @@
 
 <head>
     <%- include('./headPartial') %>
+    <!-- <link href="modals.css" rel="stylesheet" type="text/css"> -->
 </head>
 
 <body>
@@ -12,13 +13,16 @@
     <main>
         <section><% searchResultsData.forEach( game=> { %>
             <div class="grid-container" class="viewInventoryForm">
-                <h2 class="grid-item" id="listText"><%= game.name %></h2>
+                <div class="grid-item" id="leftItem">
+                    <h2 id="listText"><%= game.name %></h2>
+                    <img id="smallImage" src="<%= game.image_url %>"></img>
+                </div>
                 <div class="grid-item">
-                    <form action="/details/<%=game.game_id%>" method="GET">
+                    <form class="modal" method="GET" action="/details/<%=game.game_id%>"> 
                         <input type="hidden" name="game_id" value="<%=JSON.stringify(game.id)%>">
                         <button id="inventoryButton">View Details</button>
                     </form>
-                    <form action="/addGame" method="POST">
+                    <form class="addToInv" action="/addGame" method="POST">
                         <input type="hidden" name="game_id" value="<%=JSON.stringify(game.game_id)%>">
                         <input type="hidden" name="parent_page" value="/search">
                         <button id="inventoryButton">Add to Inventory</button>
@@ -28,7 +32,22 @@
             <% }) %>
         </section>
     </main>
-    <footer><% include('./footerPartial') %></footer>
+    <footer><%- include('./footerPartial') %></footer>
+    <!-- <script src="../js/searchResults.js"></script> -->
+    <script>
+        if (<%= searchResultsData.isInDB %> === true) {
+    $('#editGameButton').prop('disabled', false);
+    $('#add-inv-button').prop('disabled', true);
+    $('#delete-button').prop('disabled', false);
+    // $('#go-back-form').attr('action', '/search/');
+    // $('#go-back').text('Back to Results');
+}
+    if (<%= searchResultsData.isInDB %> === false) {
+    $('#editGameButton').prop('disabled', true);
+    $('#add-inv-button').prop('disabled', false);
+    $('#delete-button').prop('disabled', true);
+}
+    </script>
 </body>
 
 </html>

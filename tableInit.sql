@@ -19,6 +19,13 @@ CREATE TABLE gameInventoryData (
   verified VARCHAR(5)
 );
   
+DROP TABLE IF EXISTS platforms;
+
+CREATE TABLE platforms (
+  id SERIAL PRIMARY KEY,
+  platform_id INT,
+  platform_name VARCHAR(255)
+);
 
 DROP TABLE IF EXISTS apiData;
 
@@ -40,10 +47,3 @@ CREATE TABLE apiData (
   developer VARCHAR(255)
 );
 
-DROP TABLE IF EXISTS platforms;
-
-CREATE TABLE platforms (
-  id SERIAL PRIMARY KEY,
-  platform_id INT,
-  platform_name VARCHAR(255)
-);

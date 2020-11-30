@@ -7,14 +7,33 @@
 }
 
 body{
-    background-color: lightgray;
+    /* background-color: lightgray; */
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    width: 600px;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 10% 80% 10%;
 }
-img{
-    min-width: 230px;
-    width: 65%;
+.imageLarge{
+    width: 80%;
     height: auto;
 }
+
+input[type=checkbox]{
+    display: none;
+}
+
+header h1{
+    font-family: 'Epilogue', sans-serif;
+    font-size: 5vw;
+    margin: 2.5% auto 0 auto;
+    width: 80%;
+    border-radius: 10px;
+    padding: 0 0 15px 0;
+}
+
+
+
+

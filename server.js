@@ -49,11 +49,11 @@ app.post('/addGame', addGame);
 app.get('/details/:game_id', viewDetails);
 
 app.post('/update', updateGameButton);
-app.put('/update/:id', updateGameDetails)
+app.put('/update/:id', updateGameDetails);
 app.delete('/delete/:id', deleteGame);
 app.get('/inventory', getInventory);
 
-app.delete('/hardDeleteDB', eraseDBConfirmed)
+app.delete('/hardDeleteDB', eraseDBConfirmed);
 //app.post('/dbDetails', dbDetail);
 //app.get('/dbDetails/routeback/:idGame', dbDetail);
 app.get('/wipeDB', clearDatabase);
@@ -89,7 +89,7 @@ client.connect()
 
 ///////////////////////////////FUNCTIONS - Page Drivers
 
-function aboutUs (req, res) {
+function aboutUs(req, res) {
   res.render('aboutUs');
 }
 
@@ -118,15 +118,15 @@ function getInventory(req, res) {
 
 function clearDatabase(req, res) {
   // console.log('clearDatabase FIRED!');
-  let randomNum1 = Math.floor(Math.random() * 1000);
-  let randomNum2 = Math.floor(Math.random() * 1000);
-  let randomProduct = randomNum1 * randomNum2;
+  let randomNum1 = Math.floor(Math.random() * 100);
+  let randomNum2 = Math.floor(Math.random() * 100);
+  let randomProduct = randomNum1 + randomNum2;
   // console.log('random nums', randomNum1, randomNum2);
   console.log('randomProduct', randomProduct);
   dbDeleteConfirmationKey = randomProduct;
   // let dbWipeConfirmData = { 'dbWipe': obj.detailData[0] };
   // console.log('custom', dbWipeConfirmData);
-  res.render('dbWipeConfirm', { 'numTest': `${randomNum1} X ${randomNum2} = ` });
+  res.render('dbWipeConfirm', { 'numTest': `${randomNum1} + ${randomNum2} = ` });
 }
 
 function eraseDBConfirmed(req, res) {
@@ -163,11 +163,14 @@ async function viewDetails(req, res) {
       }
     });
   if (isInDB) {
-    console.log('RESRENDERING FROM DATABASS');
+    // console.log('RESRENDERING FROM DATABASS');
     let dataObj = dataRows[0];
     dataObj.isInDB = isInDB;
-    console.log('isInDB should true:', dataObj);
-    res.render('details', { detailData: dataObj });
+    // console.log('isInDB should true: dataObj', dataObj);
+    // console.log('dataRows', dataRows);
+    let formattedDetailData = { detailData: (formatDbaseData(dataRows, 'detailData')).detailData[0] };
+    // console.log('tempvar', formattedDetailData);
+    res.render('details', formattedDetailData);
   }
   else {
     console.log('RESRENDERING FROM WEBPAGE');
@@ -299,8 +302,12 @@ async function addGame(req, res) {
 
 }
 
-function homePage(req, res) {
-  res.render('index');
+async function homePage(req, res) {
+  let gameData;
+  gameData = await randomGameSuggestion();
+  console.log('gameData', gameData);
+
+  res.render('index', { gameData: gameData });
 }
 
 function getSearchCriteria(req, res) {
@@ -338,27 +345,38 @@ function deleteGame(req, res) {
     .catch(err => console.log('Delete did not go according to plan...', err));
 }
 
-function inventoryVerify(req, res) {
-  let SQL = 'SELECT game_id, name FROM gameInventoryData';
-  client.query(SQL)
+async function inventoryVerify(req, res) {
+  let disableSubmit = false;
+  let SQL = 'SELECT game_id, name, image_url FROM gameInventoryData';
+  await client.query(SQL)
     .then(data => {
-      //console.log(data.rows);
-      res.render('inventory', { databaseItems: data.rows });//data.rows
 
-    });
+      let sortedData = data.rows.sort(function (a, b) {
+        if (a.name < b.name) { return -1; }
+        if (a.name > b.name) { return 1; }
+        return 0;
+      })
+      return sortedData;
+    })
+    .then(data => {
+      console.log('data to verifcation', data);
+      res.render('inventory', { databaseItems: data });
+    })
+    .catch(err => { console.log('error in verification', err) });
 }
 
 function inventoryVerifyResults(req, res) {
-  console.log('FIRED! inventoryVerifyResults', req.body, req.body.game_id.length, typeof (req.body.game_id));
+  // console.log('FIRED! inventoryVerifyResults', req.body, req.body.game_id.length, typeof (req.body.game_id));
   let isSingle = false;
   let arr = [];
   let SQL = '';
   resetInventoryVerification();
-  if (typeof (req.body.game_id) === 'string') { isSingle = true; }
+  if (typeof (req.body.game_id) === 'string') {
+    isSingle = true;
+    console.log('single ID', req.body.game_id);
+  }
   (isSingle ? arr.push(req.body.game_id) : arr = req.body.game_id);
   arr.map(element => {
-    // let SQL = `SELECT DISTINCT verified FROM gameInventoryData WHERE game_id=${element};`;
-    //UPDATE gameInventoryData SET name=$1
     SQL = `UPDATE gameInventoryData SET verified=$1 WHERE game_id=${element};`;
     console.log(SQL);
     client.query(SQL, [true])
@@ -368,11 +386,21 @@ function inventoryVerifyResults(req, res) {
   SQL = `SELECT name, game_id FROM gameInventoryData WHERE NOT (verified='true');`;
   client.query(SQL)
     .then(data => {
-      console.log('DATA ROW VALUE:', data.rows);
+      let sortedData = data.rows.sort(function (a, b) {
+        if (a.name < b.name) { return -1; }
+        if (a.name > b.name) { return 1; }
+        return 0;
+      });
+      return sortedData;
+
+    })
+    .then(data => {
+
+      console.log('DATA ROW VALUE:', data);
       return data;
     })
     .then(data => {
-      res.render('invResults', { invResultsData: data.rows });
+      res.render('invResults', { invResultsData: data });
 
     })
 
@@ -406,7 +434,7 @@ function resultToObj(superAgentData, type = 'search') {
   if (type === 'search') {
     data = superAgentData.body.results
     data.map((element) => {
-      array.push({ name: element.name, game_id: element.id })
+      array.push({ name: element.name, game_id: element.id, image_url: element.background_image })
     });
     //console.log('Array', array);
     return ({ searchResultsData: array });
@@ -483,7 +511,7 @@ function formatDbaseData(rowArray, objName) {
 
   rowArray.map(element => {
 
-    //console.log('element', element.platform_id);
+    console.log('element', element);
     //console.log('platform_name before formatDbData:', element.platform_name);
 
 
@@ -518,8 +546,9 @@ function textScrubber(str) {
 async function resetInventoryVerification(req, res) {
   let SQL = `UPDATE gameInventoryData SET verified='false';`;
   await client.query(SQL)
-    .then(() => {
+    .then((data) => {
       console.log(`SET ALL "VERIFIED" values to false`);
+      console.log('data', data);
       res.redirect('/inventory/verify');
     })
     .catch(err => console.log('Unable to set all VERIFIED to false', err));
@@ -576,14 +605,14 @@ async function randomGameSuggestion(req, res) {
       console.log('data Rows', data.rows);
       if (!data.rows[0]) {
         console.log('No Data in the database')
-        returnObj = { game_id: 0, name: 'No Game Found', image_url: '404' };
+        returnObj = { game_id: 0, name: 'Oh No! Nothing in your inventory', image_url: '404' };
       }
       else {
         returnObj = data.rows[0];
       }
     })
     .catch(err => console.log('Unable to access database for random entry:', err));
-  console.log('Return OBJ:', returnObj);
+  console.log(returnObj);
   return returnObj;
 
 }

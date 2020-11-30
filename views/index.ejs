@@ -6,8 +6,11 @@
 </head>
 
 <body>
-    <header></header>
+    <header>
+        <h1>Game Inventory App</h1>
+    </header>
     <main>
+
         <form class="indexForm" action="/inventory">
             <button class="indexButton">View Inventory</button>
         </form>
@@ -18,11 +21,29 @@
         </form>
         <form class="indexForm" action="/search" method="POST">
             <input type="hidden" name="searchArea" value="games">
-            <input  id="indexSearch" type="text" name="searchCriteria" placeholder="Search By Game Title" required />
+            <input id="indexSearch" type="text" name="searchCriteria" placeholder="Search By Game Title" required />
             <button id="submitButton" type="submit">Search</button>
         </form>
+        <h3 class="randomHeader">If you have nothing to play, may we suggest: </h3>
+        <div class="randomContainer">
+            <h3 class="randomName"><%= gameData.name %></h3>
+            <img class="randomImage" src="<%= gameData.image_url %>">
+        </div>
+
     </main>
     <footer><%- include('./footerPartial') %></footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        console.log('walk of life', <%= gameData.image_url %>);
+        if ('<%= gameData.image_url %>' === '404') {
+            console.log('No Image found');
+            $('.randomImage').attr('src', 'img/no_inv.png');
+        } else {
+            console.log('Couldn\'t find whatever you needed so go away.');
+        }
+
+    </script>
+
 </body>
 
 </html>
