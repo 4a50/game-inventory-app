@@ -234,30 +234,29 @@
 /*  */
 /* This is the About us Style */
 #aboutUs-body {
-    max-width: 60%;
+    /* max-width: 70%; */
     display: flex;
     flex-direction: column;
     justify-items: center;
+    /* border: 1px solid yellow; */
 }
 
 #nintendo-switch {
-    /* width: 71vw; */
-    margin-left: 1.5vw;
-    /* height: 159vw; */
+    width: 70vw;
+    height: 158vw;
     background-image: url(img/nintendo-switch-about-us-edit.jpeg);
     background-size: 70vw 158vw;
     background-repeat: no-repeat;
     border: 4px solid black;
     box-sizing: border-box;
     border-radius: 5vw;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: calc(50% - 35vw);
 }
 
 .dev-team {
     color: black;
     border: 3px solid black;
-    width: 73%;
+    width: 74%;
     height: 89vw;
     margin-left: 13%;
     margin-top: 47%;
@@ -293,23 +292,27 @@
 .dev-team h2 {
     margin-top: 2vw;
     text-align: center;
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 .dev-team ul {
     color: black;
     /* border: 1px solid orange; */
-    font-size: 1.5em;
+    font-size: 3vw;
     width: 99%;
     height: 44%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    text-align: left;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: space-around; */
 }
 
 .dev-team li {
   list-style-type: circle;
   list-style-position: inside;
+  padding: 1vw 3vw 1vw 3vw;
+  
+  
 }
 
 #nintendo-button-section {
@@ -328,8 +331,8 @@
       background-color: black;
       cursor: pointer;
       color: white;
-      margin-left: 72.5%;
-      margin-top: 21.5%;
+      margin-left: 73%;
+      margin-top: 22.5%;
 }
 
 #t-button {
@@ -340,8 +343,8 @@
     background-color: black;
     cursor: pointer;
     color: white;
-    margin-left: 65%;
-    margin-top: 0%;
+    margin-left: 65.5%;
+    margin-top: 0.5%;
 }
 
 #s-button {
@@ -353,7 +356,7 @@
     cursor: pointer;
     color: white;
     margin-left: 80.5%;
-    margin-top: -7%;
+    margin-top: -7.5%;
 }
 
 #p-button {
@@ -364,13 +367,15 @@
     background-color: black;
     cursor: pointer;
     color: white;
-    margin-left: 72.5%;
+    margin-left: 73%;
     margin-top: 1%;
 }
 
 #aboutUs-footer {
     margin-top: 2vw;
 }
+
+/* aboutUs page above */
 
 .footerButtonOne{
     width: 100%;
