@@ -89,7 +89,7 @@ client.connect()
 
 ///////////////////////////////FUNCTIONS - Page Drivers
 
-function aboutUs (req, res) {
+function aboutUs(req, res) {
   res.render('aboutUs');
 }
 
@@ -168,7 +168,7 @@ async function viewDetails(req, res) {
     dataObj.isInDB = isInDB;
     // console.log('isInDB should true: dataObj', dataObj);
     // console.log('dataRows', dataRows);
-    let formattedDetailData = {detailData: (formatDbaseData(dataRows, 'detailData')).detailData[0]};
+    let formattedDetailData = { detailData: (formatDbaseData(dataRows, 'detailData')).detailData[0] };
     // console.log('tempvar', formattedDetailData);
     res.render('details', formattedDetailData);
   }
@@ -341,27 +341,28 @@ function deleteGame(req, res) {
     .catch(err => console.log('Delete did not go according to plan...', err));
 }
 
-function inventoryVerify(req, res) {
+async function inventoryVerify(req, res) {
+  let disableSubmit = false;
   let SQL = 'SELECT game_id, name FROM gameInventoryData';
-  client.query(SQL)
+  await client.query(SQL)
     .then(data => {
-      //console.log(data.rows);
-      res.render('inventory', { databaseItems: data.rows });//data.rows
-
-    });
+      res.render('inventory', { databaseItems: data.rows });
+    })
+    .catch(err => { console.log('error in verification', err) });
 }
 
 function inventoryVerifyResults(req, res) {
-  console.log('FIRED! inventoryVerifyResults', req.body, req.body.game_id.length, typeof (req.body.game_id));
+  // console.log('FIRED! inventoryVerifyResults', req.body, req.body.game_id.length, typeof (req.body.game_id));
   let isSingle = false;
   let arr = [];
   let SQL = '';
   resetInventoryVerification();
-  if (typeof (req.body.game_id) === 'string') { isSingle = true; }
+  if (typeof (req.body.game_id) === 'string') {
+    isSingle = true;
+    console.log('single ID', req.body.game_id);
+  }
   (isSingle ? arr.push(req.body.game_id) : arr = req.body.game_id);
   arr.map(element => {
-    // let SQL = `SELECT DISTINCT verified FROM gameInventoryData WHERE game_id=${element};`;
-    //UPDATE gameInventoryData SET name=$1
     SQL = `UPDATE gameInventoryData SET verified=$1 WHERE game_id=${element};`;
     console.log(SQL);
     client.query(SQL, [true])
@@ -409,7 +410,7 @@ function resultToObj(superAgentData, type = 'search') {
   if (type === 'search') {
     data = superAgentData.body.results
     data.map((element) => {
-      array.push({ name: element.name, game_id: element.id, image_url: element.background_image})
+      array.push({ name: element.name, game_id: element.id, image_url: element.background_image })
     });
     //console.log('Array', array);
     return ({ searchResultsData: array });
@@ -486,7 +487,7 @@ function formatDbaseData(rowArray, objName) {
 
   rowArray.map(element => {
 
-    //console.log('element', element.platform_id);
+    console.log('element', element);
     //console.log('platform_name before formatDbData:', element.platform_name);
 
 
@@ -521,8 +522,9 @@ function textScrubber(str) {
 async function resetInventoryVerification(req, res) {
   let SQL = `UPDATE gameInventoryData SET verified='false';`;
   await client.query(SQL)
-    .then(() => {
+    .then((data) => {
       console.log(`SET ALL "VERIFIED" values to false`);
+      console.log('data', data);
       res.redirect('/inventory/verify');
     })
     .catch(err => console.log('Unable to set all VERIFIED to false', err));
