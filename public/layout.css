@@ -1,5 +1,6 @@
 button{
     border-radius: 10px;
+    border: 1px black solid;
 }
 button:hover{
     background-color: darkgray;
@@ -7,7 +8,7 @@ button:hover{
 }
 
 h2{
-    font-size: 2.8vw;
+    font-size: 2.4vw;
     text-align: left;
 }
 
@@ -39,9 +40,8 @@ main{
 } */
 header{
     padding: 10px 0 20px 0;
-    /* position: absolute; */
 }
 footer{
-    /* padding-top: 30px; */
-    /* position: absolute; */
+    padding-top: 30px;
+    margin-top: 30px;
 }
