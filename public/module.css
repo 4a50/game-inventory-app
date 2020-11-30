@@ -80,7 +80,7 @@
     top: 3vw;
 }
 
-.grid-container{
+.grid-container, .inventoryItem{
     display: inline-grid;
     grid-template-columns: 60% 35%; 
     width: 70%;
@@ -426,8 +426,19 @@
     width: 60%;
     height: 50px;
 }
-
 .inventoryItem{
+    grid-template-columns: 100% 100%; 
+    margin: 12px auto 6px auto;
+    
+}
+.inventoryItem h2{    
+    
+    text-align: center;
+    font-size: 30px
+}
+.inventoryItem-selected {
+    background-color: rgb(69, 69, 228);
+}
     margin: 15px auto 15px auto;
 
 }
@@ -519,5 +530,3 @@
 }
 
 /* delete-all page above  */
-
-
