@@ -328,69 +328,74 @@
 }
 
 /* delete-all page below */
+@media (max-width: 375px){
+    /* For iPhone X */
 
-#delete-all-body {
+    #delete-all-body {
+        
+        border: 5vw solid red;
+        font-size: 1.5em;
+        text-align: left;
+        padding: 0 10vw 10vw 10vw;
+        max-width: 70vw;
+        height: 91vh;
+    }
+
+    #cancel-button {
+        width: 70vw;
+        height: 20vw;
+        font-size: 1em;
+    }
+
+    #delete-all-h1 {
+        font-size: 1.15em;
+        background-color: yellow;
+        border: 2px solid black;
+        padding: 2vw;
+        margin-bottom: 5vw;
+    }
+
+    #delete-all-form > p {
+        padding-top: 5vw;
+        padding-bottom: 1vw;
+        text-align: left;
+        font-size: .85em;
+    }
+
+    #numTest-p {
+        display: inline-block;
+    }
+
+    #testAnswer-input {
+        height: 2em;
+    }
+
+    #delete-all-button {
+        margin-top: 3vw;
+        width: 70vw;
+        height: 20vw;
+        font-size: 1em;
+    }
+
+    #explosion {
+        display: none;
+    }
+
+    .sprite-div{
+        margin-top: -15vw;
+        margin-left: 7vw;
+        width: 200px;
+        height: 200px;
+        /* border: 1px solid black; */
+        background: url('/img/scaledExplosion.png') no-repeat 0 0%;
+        animation: spriteH .75s steps(25) infinite;
+        /* margin: -5% auto 0 auto;  */
+    }
     
-    border: 5vw solid red;
-    font-size: 1.5em;
-    text-align: left;
-    padding: 10vw;
-    max-width: 70vw;
-    height: 86vh;
+    @keyframes spriteH { 
+        from { background-position: 0 0%; }
+        to { background-position: 104% 0%; }
+    } 
 }
-
-#cancel-button {
-    width: 70vw;
-    height: 20vw;
-    font-size: 1em;
-}
-
-#delete-all-h1 {
-    font-size: 1.5em;
-    background-color: yellow;
-    border: 2px solid black;
-    padding: 2vw;
-    margin-bottom: 5vw;
-}
-
-#delete-all-form > p {
-    padding-top: 5vw;
-    padding-bottom: 1vw;
-    text-align: left;
-    font-size: .85em;
-}
-
-#numTest-p {
-    display: inline-block;
-}
-
-#testAnswer-input {
-    height: 2em;
-}
-
-#delete-all-button {
-    margin-top: 3vw;
-    width: 70vw;
-    height: 20vw;
-    font-size: 1em;
-}
-
-#explosion {
-    display: none;
-}
-
-.sprite-div{
-    width: 200px;
-    height: 200px;
-    border: 1px solid black;
-    background: url('/img/scaledExplosion.png') no-repeat 0 0%;
-    animation: spriteH .75s steps(25) 1;
-    /* margin: -5% auto 0 auto;  */
-  }
-  
-  @keyframes spriteH { 
-    from { background-position: 0 0%; }
-    to { background-position: 104% 0%; }
-  } 
 
 /* delete-all page above  */

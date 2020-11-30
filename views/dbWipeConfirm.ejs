@@ -5,10 +5,13 @@
 
   </head>
   <body id="delete-all-body">
-    <header>
+    <main></main>
+      <section>
+        <div class="sprite-div">
+          <img id="explosion" src="explosion.png">
+        </div>
+      </section>
       <h1 id="delete-all-h1">Are you sure that you want to completely erase your inventory? This action cannot be undone!</h1>
-    </header>
-    <main>
       <form action="/inventory" method="GET">
         <button id="cancel-button" type="submit">Cancel!!!</button>
       </form>
@@ -19,11 +22,6 @@
           <input id="testAnswer-input" type="text" name="testAnswer">
           <button id="delete-all-button" type="submit"> Submit & Delete</button>
         </form>
-      </section>
-      <section>
-        <div class="sprite-div">
-          <img id="explosion" src="explosion.png">
-        </div>
       </section>
     </main>
     <!-- <script>
