@@ -25,12 +25,13 @@ html, header, footer, #aboutUs-body{
 
 main{
     padding: 20px 0px 20px 0;
+    overflow: scroll;
 }
 header{
     padding: 10px 0 20px 0;
     /* position: absolute; */
 }
 footer{
-    padding-top: 30px;
+    /* padding-top: 30px; */
     /* position: absolute; */
 }
