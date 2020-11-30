@@ -86,6 +86,12 @@
     top: 3vw;
 }
 
+#smallImage-results{
+    height: 13vw;
+    margin-top: 2vw;
+    border: 1px solid black;
+}
+
 .grid-container, .inventoryItem{
     display: inline-grid;
     grid-template-columns: 60% 35%; 
@@ -128,7 +134,7 @@
 }
 
 .footerButtonsTwo{
-    position: aboslute;
+    position: absolute;
     display: inline-grid;
     grid-template-columns: 50% 50%;
     width: 100%;
@@ -567,4 +573,39 @@
     font-size:1.3em;
     text-align: justify;
     padding: 0.3em 0.5em;
-  
+}
+
+/* Inventory Verification Results below  */
+
+.grid-container-results {
+    display: inline-grid;
+    grid-template-columns: 50% 35%;
+    width: 70%;
+    height: 16vw;
+    margin: 20px auto 20px auto;
+    padding: 20px 0 20px 30px;
+    border: 2px rgb(3, 3, 129) solid;
+    border-radius: 10px;
+    background-color: white;
+}
+
+
+#inventoryVerResults-h2 {
+    font-size: 3.5vw;
+    text-align: center;
+}
+
+#smallImage-results{
+    height: 16vw;
+    margin-top: 0px;
+    border: 1px solid black;
+}
+
+#h2-results{
+    font-size: 3vw;
+    text-align: left;
+    padding-right: 1vw;
+    /* border: 1px solid green; */
+}
+
+/* Inventory Verification Results above  */

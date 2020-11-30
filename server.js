@@ -383,7 +383,7 @@ function inventoryVerifyResults(req, res) {
       .then(data => console.log(data))
       .catch(err => console.log('ERROR UPDATING VERIFICATION: ', err));
   })
-  SQL = `SELECT name, game_id FROM gameInventoryData WHERE NOT (verified='true');`;
+  SQL = `SELECT name, game_id, image_url FROM gameInventoryData WHERE NOT (verified='true');`;
   client.query(SQL)
     .then(data => {
       let sortedData = data.rows.sort(function (a, b) {
