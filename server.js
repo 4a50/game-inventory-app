@@ -347,7 +347,7 @@ function deleteGame(req, res) {
 
 async function inventoryVerify(req, res) {
   let disableSubmit = false;
-  let SQL = 'SELECT game_id, name FROM gameInventoryData';
+  let SQL = 'SELECT game_id, name, image_url FROM gameInventoryData';
   await client.query(SQL)
     .then(data => {
 
@@ -359,6 +359,7 @@ async function inventoryVerify(req, res) {
       return sortedData;
     })
     .then(data => {
+      console.log('data to verifcation', data);
       res.render('inventory', { databaseItems: data });
     })
     .catch(err => { console.log('error in verification', err) });
