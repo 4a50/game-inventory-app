@@ -326,3 +326,53 @@
 #copy-year {
   display: inline;
 }
+
+/* delete-all page below */
+
+#delete-all-body {
+    
+    border: 5vw solid red;
+    font-size: 1.5em;
+    text-align: left;
+    padding: 10vw;
+    max-width: 80vw;
+    height: 96.5vh;
+}
+
+#cancel-button {
+    width: 80vw;
+    height: 20vw;
+    font-size: 1em;
+}
+
+#delete-all-h1 {
+    font-size: 1.5em;
+    background-color: yellow;
+    border: 2px solid black;
+    padding: 2vw;
+    margin-bottom: 5vw;
+}
+
+#delete-all-form > p {
+    padding-top: 10vw;
+    padding-bottom: 3vw;
+    text-align: left;
+}
+
+#numTest-p {
+    display: inline-block;
+}
+
+#testAnswer-input {
+    height: 2em;
+}
+
+#delete-all-button {
+    margin-top: 3vw;
+    width: 80vw;
+    height: 20vw;
+    font-size: 1em;
+}
+
+
+/* delete-all page above  */
