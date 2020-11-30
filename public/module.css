@@ -458,6 +458,7 @@
         padding: 0 10vw 10vw 10vw;
         max-width: 70vw;
         height: 100vh;
+        display: block;
     }
 
     #delete-all-main{
