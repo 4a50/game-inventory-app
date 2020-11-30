@@ -250,6 +250,7 @@
     flex-direction: column;
     justify-items: center;
     /* border: 1px solid yellow; */
+    background-color: rgb(209, 241, 252);
 }
 
 #nintendo-switch {
@@ -456,7 +457,6 @@
 /* delete-all page below */
 
     #delete-all-body {
-        
         border: 5vw solid red;
         font-size: 3vw;
         text-align: left;
