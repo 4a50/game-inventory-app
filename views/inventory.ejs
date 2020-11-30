@@ -16,7 +16,8 @@
 
                 <section id="<%= game.game_id %>" class="inventoryItem">
                     <input type="checkbox" name="game_id" value="<%= game.game_id %>">
-                    <h2><%= game.name %></h2>
+                    <h2 id="listText"><%= game.name %></h2>
+                    <img id="smallImage" src="<%= game.image_url%>" class=>
                     </label>
                 </section>
                 <% }) %>
@@ -48,15 +49,16 @@
         });
         function checkForChecks() {
             let arr = [];
+            let isThereTruth = false;
             $('.inventoryItem input').each(function () {
                 arr.push(this.checked);
             });
             arr.forEach(element => {
                 console.log('scan checkboxes', element);
-
-                if (!element) { $('#almostLastButton').prop('disabled', true); }
-                else { $('#almostLastButton').prop('disabled', false); }
+                if (element === true) { isThereTruth = true; }
             });
+            if (!isThereTruth) { $('#almostLastButton').prop('disabled', true); }
+            else { $('#almostLastButton').prop('disabled', false); }
         }
     </script>
 

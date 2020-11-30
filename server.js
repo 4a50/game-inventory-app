@@ -347,10 +347,20 @@ function deleteGame(req, res) {
 
 async function inventoryVerify(req, res) {
   let disableSubmit = false;
-  let SQL = 'SELECT game_id, name FROM gameInventoryData';
+  let SQL = 'SELECT game_id, name, image_url FROM gameInventoryData';
   await client.query(SQL)
     .then(data => {
-      res.render('inventory', { databaseItems: data.rows });
+
+      let sortedData = data.rows.sort(function (a, b) {
+        if (a.name < b.name) { return -1; }
+        if (a.name > b.name) { return 1; }
+        return 0;
+      })
+      return sortedData;
+    })
+    .then(data => {
+      console.log('data to verifcation', data);
+      res.render('inventory', { databaseItems: data });
     })
     .catch(err => { console.log('error in verification', err) });
 }
@@ -376,11 +386,21 @@ function inventoryVerifyResults(req, res) {
   SQL = `SELECT name, game_id FROM gameInventoryData WHERE NOT (verified='true');`;
   client.query(SQL)
     .then(data => {
-      console.log('DATA ROW VALUE:', data.rows);
+      let sortedData = data.rows.sort(function (a, b) {
+        if (a.name < b.name) { return -1; }
+        if (a.name > b.name) { return 1; }
+        return 0;
+      });
+      return sortedData;
+
+    })
+    .then(data => {
+
+      console.log('DATA ROW VALUE:', data);
       return data;
     })
     .then(data => {
-      res.render('invResults', { invResultsData: data.rows });
+      res.render('invResults', { invResultsData: data });
 
     })
 
@@ -585,7 +605,7 @@ async function randomGameSuggestion(req, res) {
       console.log('data Rows', data.rows);
       if (!data.rows[0]) {
         console.log('No Data in the database')
-        returnObj = { game_id: 0, name: 'No Game Found', image_url: '404' };
+        returnObj = { game_id: 0, name: 'Oh No! Nothing in your inventory', image_url: '404' };
       }
       else {
         returnObj = data.rows[0];

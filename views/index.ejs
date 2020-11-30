@@ -32,6 +32,18 @@
 
     </main>
     <footer><%- include('./footerPartial') %></footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        console.log('walk of life', <%= gameData.image_url %>);
+        if ('<%= gameData.image_url %>' === '404') {
+            console.log('No Image found');
+            $('.randomImage').attr('src', 'img/no_inv.png');
+        } else {
+            console.log('Couldn\'t find whatever you needed so go away.');
+        }
+
+    </script>
+
 </body>
 
 </html>
