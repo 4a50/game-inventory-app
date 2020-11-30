@@ -28,7 +28,14 @@ html, header, footer, #aboutUs-body{
 main{
     padding: 20px 0px 20px 0;
     overflow: scroll;
+    -ms-overflow-style: none;  /*hide scroll bars*/
+    scrollbar-width: none;  /*hide scroll bars*/
 }
+
+main::-webkit-scrollbar { /*hide scroll bars*/
+    display: none;
+}
+
 
 header{
     padding: 10px 0 20px 0;
