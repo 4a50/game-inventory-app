@@ -604,7 +604,7 @@ async function randomGameSuggestion(req, res) {
       console.log('data Rows', data.rows);
       if (!data.rows[0]) {
         console.log('No Data in the database')
-        returnObj = { game_id: 0, name: 'No Game Found', image_url: '404' };
+        returnObj = { game_id: 0, name: 'Oh No! Nothing in your inventory', image_url: '404' };
       }
       else {
         returnObj = data.rows[0];
