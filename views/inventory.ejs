@@ -48,15 +48,16 @@
         });
         function checkForChecks() {
             let arr = [];
+            let isThereTruth = false;
             $('.inventoryItem input').each(function () {
                 arr.push(this.checked);
             });
             arr.forEach(element => {
                 console.log('scan checkboxes', element);
-
-                if (!element) { $('#almostLastButton').prop('disabled', true); }
-                else { $('#almostLastButton').prop('disabled', false); }
+                if (element === true) { isThereTruth = true; }
             });
+            if (!isThereTruth) { $('#almostLastButton').prop('disabled', true); }
+            else { $('#almostLastButton').prop('disabled', false); }
         }
     </script>
 
