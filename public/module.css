@@ -438,48 +438,29 @@
 }
 .inventoryItem-selected {
     background-color: rgb(69, 69, 228);
-}
     margin: 15px auto 15px auto;
-
-}
-#aboutUs-form {
-    display: inline;
-}
-
-#aboutUs-button {
-    border: none;
-    text-decoration: underline;
-    color: blue;
-    background-color: inherit;
-    display: inline;
-}
-
-#copy-year {
-  display: inline;
 }
 
 /* delete-all page below */
-@media (max-width: 375px){
-    /* For iPhone X */
 
     #delete-all-body {
         
         border: 5vw solid red;
-        font-size: 1.5em;
+        font-size: 3vw;
         text-align: left;
         padding: 0 10vw 10vw 10vw;
         max-width: 70vw;
-        height: 91vh;
+        height: 100vh;
     }
 
     #cancel-button {
         width: 70vw;
-        height: 20vw;
-        font-size: 1em;
+        height: 10vw;
+        font-size: 3vw;
     }
 
     #delete-all-h1 {
-        font-size: 1.15em;
+        font-size: 3vw;
         background-color: yellow;
         border: 2px solid black;
         padding: 2vw;
@@ -495,17 +476,19 @@
 
     #numTest-p {
         display: inline-block;
+        font-size: 3vw;
     }
 
     #testAnswer-input {
-        height: 2em;
+        height: 5vw;
     }
 
     #delete-all-button {
         margin-top: 3vw;
         width: 70vw;
-        height: 20vw;
-        font-size: 1em;
+        height: 10vw;
+        max-height: 100px;
+        font-size: 3vw;
     }
 
     #explosion {
@@ -513,8 +496,9 @@
     }
 
     .sprite-div{
-        margin-top: -15vw;
-        margin-left: 7vw;
+        
+        margin-top: -5vw;
+        margin-left: calc(50% - 100px);
         width: 200px;
         height: 200px;
         /* border: 1px solid black; */
@@ -527,6 +511,6 @@
         from { background-position: 0 0%; }
         to { background-position: 104% 0%; }
     } 
-}
+
 
 /* delete-all page above  */
