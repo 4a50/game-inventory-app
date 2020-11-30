@@ -12,7 +12,9 @@ h2{
 }
 
 input[type=text]{
-    text-align: center;
+    text-align: left;
+    font-size: 2.4vw;
+    padding: .3em .5em;
 }
 
 .inventoryBody{
@@ -25,12 +27,21 @@ html, header, footer, #aboutUs-body{
 
 main{
     padding: 20px 0px 20px 0;
+    overflow: scroll;
 }
+main{
+    padding: 20px 0px 20px 0;
+    overflow: scroll;
+}
+/* Save for delete page fix
+main{
+    padding: 20px 0px 20px 0;
+} */
 header{
     padding: 10px 0 20px 0;
     /* position: absolute; */
 }
 footer{
-    padding-top: 30px;
+    /* padding-top: 30px; */
     /* position: absolute; */
 }

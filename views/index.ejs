@@ -6,9 +6,11 @@
 </head>
 
 <body>
-    <header><h1>Game Inventory App</h1></header>
+    <header>
+        <h1>Game Inventory App</h1>
+    </header>
     <main>
-        
+
         <form class="indexForm" action="/inventory">
             <button class="indexButton">View Inventory</button>
         </form>
@@ -19,9 +21,15 @@
         </form>
         <form class="indexForm" action="/search" method="POST">
             <input type="hidden" name="searchArea" value="games">
-            <input  id="indexSearch" type="text" name="searchCriteria" placeholder="Search By Game Title" required />
+            <input id="indexSearch" type="text" name="searchCriteria" placeholder="Search By Game Title" required />
             <button id="submitButton" type="submit">Search</button>
         </form>
+        <h3 class="randomHeader">If you have nothing to play, may we suggest: </h3>
+        <div class="randomContainer">
+            <h3 class="randomName"><%= gameData.name %></h3>
+            <img class="randomImage" src="<%= gameData.image_url %>">
+        </div>
+
     </main>
     <footer><%- include('./footerPartial') %></footer>
 </body>
