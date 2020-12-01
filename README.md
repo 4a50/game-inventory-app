@@ -48,6 +48,8 @@ Access the app hosted on [Heroku](https://game-inv-app.herokuapp.com/)
 
 ### Nintendo Switch Image: Photo by [Ahmad Mohammed](https://unsplash.com/@amed10?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on Unsplash
 
+### W3 Schools: https://www.w3schools.com/w3css/w3css_modal.asp
+
 ## Wireframe
 
 ![Wireframe Image](./readme_img/Game-inv-App-Wireframe.png)

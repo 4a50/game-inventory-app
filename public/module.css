@@ -118,12 +118,12 @@
 }
 
 #indexSearch{
-    width: 65%;
+    width: 64%;
     height: 6vw;
     border-radius: 10px;
     border: none;
     font-size: 3.7vw;
-    margin-right: 4%;
+    margin-right: 3%;
 
 }
 #submitButton{
@@ -213,7 +213,7 @@
 }
 
 .footerButtonsTwo{
-    position: absolute;
+    /* position: absolute; */
     display: inline-grid;
     grid-template-columns: 50% 50%;
     width: 100%;
@@ -265,6 +265,12 @@
     margin-left: 3%;
     margin-bottom: 3%;
     font-size: 2.5vw;
+}
+
+#gamesisImg{
+    width: 80%;
+    height: 80%;
+    margin-top: 1%;
 }
 
 #leftItem{
@@ -623,7 +629,7 @@
 .randomContainer{
     background-color: whitesmoke;
     margin:auto;
-    width: 70%;
+    width: 65%;
     border-radius: 15px;
     border: .4em solid rgb(60, 148, 248);
 
@@ -632,7 +638,7 @@
 .randomName {
     padding:0.5em 0em 0em 0em;
     font-size: 5vw;
-    margin: 5vw 0vw;
+    margin: 3vw 0vw;
 }
 .randomImage {
     border: .2em solid black;
@@ -710,8 +716,6 @@
 
 /* Inventory Verification & Results above  */
 
-  
-}
 
 #inventoryButton:disabled, #inventory-button[disabled] {
     background-color: lightgray;
