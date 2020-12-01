@@ -146,7 +146,7 @@
 
 .copyright{
     width: 200%;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 #listText{
@@ -163,6 +163,12 @@
     height: 8vw;
     right: 10vw;
     top: 3vw;
+}
+
+#smallImage-results{
+    height: 13vw;
+    margin-top: 2vw;
+    border: 1px solid black;
 }
 
 .grid-container, .inventoryItem{
@@ -203,10 +209,11 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 18px;
+    margin-top: 3vw;
 }
 
 .footerButtonsTwo{
-    position: aboslute;
+    position: absolute;
     display: inline-grid;
     grid-template-columns: 50% 50%;
     width: 100%;
@@ -329,6 +336,7 @@
     flex-direction: column;
     justify-items: center;
     /* border: 1px solid yellow; */
+    background-color: rgb(209, 241, 252);
 }
 
 #nintendo-switch {
@@ -518,11 +526,11 @@
     width: 60%;
     height: 50px;
 }
-.inventoryItem{
+/* .inventoryItem{
     grid-template-columns: 100% 100%; 
     margin: 12px auto 6px auto;
-    
-}
+} */
+
 .inventoryItem h2{    
     
     text-align: center;
@@ -536,7 +544,6 @@
 /* delete-all page below */
 
     #delete-all-body {
-        
         border: 5vw solid red;
         font-size: 3vw;
         text-align: left;
@@ -646,6 +653,63 @@
     font-size:1.3em;
     text-align: justify;
     padding: 0.3em 0.5em;
+}
+
+/* Inventory Verification & Results below  */
+
+.grid-container-results {
+    display: inline-grid;
+    grid-template-columns: 55% 35%;
+    width: 70%;
+    height: 8vw;
+    margin: 10px auto 10px auto;
+    padding: 10px 0 10px 10px;
+    border: 2px rgb(3, 3, 129) solid;
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+#inventoryVerResults-h2 {
+    font-size: 3.5vw;
+    text-align: center;
+}
+
+#smallImage-results {
+    height: 8vw;
+    margin-top: 0px;
+    border: 1px solid black;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}
+
+#h2-results {
+    font-size: 3vw;
+    text-align: left;
+    padding-right: 1vw;
+    line-height: 3.125vw;
+    /* border: 1px solid green; */
+}
+
+.inventoryItem{
+    display: inline-grid;
+    grid-template-columns: 55% 35%;
+    width: 70%;
+    height: 8vw;
+    margin: 10px auto 10px auto;
+    padding: 10px 0 10px 10px;
+    border: 2px rgb(3, 3, 129) solid;
+    border-radius: 10px; 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* Inventory Verification & Results above  */
+
   
 }
 
@@ -653,3 +717,4 @@
     background-color: lightgray;
 
 }
+

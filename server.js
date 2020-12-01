@@ -399,7 +399,7 @@ function inventoryVerifyResults(req, res) {
   let isSingle = false;
   let arr = [];
   let SQL = '';
-  resetInventoryVerification();
+  resetInventoryVerification(); //this resets all inventory verification checkboxes
   if (typeof (req.body.game_id) === 'string') {
     isSingle = true;
     console.log('single ID', req.body.game_id);
@@ -412,7 +412,7 @@ function inventoryVerifyResults(req, res) {
       .then(data => console.log(data))
       .catch(err => console.log('ERROR UPDATING VERIFICATION: ', err));
   })
-  SQL = `SELECT name, game_id FROM gameInventoryData WHERE NOT (verified='true');`;
+  SQL = `SELECT name, game_id, image_url FROM gameInventoryData WHERE NOT (verified='true');`;
   client.query(SQL)
     .then(data => {
       let sortedData = data.rows.sort(function (a, b) {

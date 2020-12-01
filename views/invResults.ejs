@@ -10,12 +10,12 @@
     <%- include('./goBackPartial') %>
   </header>
   <main>
-    <h2>The following Games are not accounted for:</h2>
+    <h2 id="inventoryVerResults-h2">The following Games are not accounted for:</h2>
     <% invResultsData.forEach( game => { %>
-      <section class="grid-container">
+      <section class="grid-container-results">
       <input type="hidden" name="game_id" value="<%=game.game_id%>">
-      <h2 id="list-text"><%= game.name %></h2>
-      <img class="smallImage" src="<%=game.image_url%>"></img>
+      <h2 id="h2-results"><%= game.name %></h2>
+      <img id="smallImage-results" src="<%=game.image_url%>"></img>
     </section>
       <% }) %>
   </main>
