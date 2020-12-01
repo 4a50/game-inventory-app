@@ -555,7 +555,7 @@
         text-align: left;
         padding: 0 10vw 10vw 10vw;
         max-width: 70vw;
-        height: 100vh;
+        height: 82.5vh;
         display: block;
     }
 
@@ -637,7 +637,7 @@
 
 .randomName {
     padding:0.5em 0em 0em 0em;
-    font-size: 5vw;
+    font-size: 3vw;
     margin: 3vw 0vw;
 }
 .randomImage {
