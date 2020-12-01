@@ -43,9 +43,21 @@
                 <input type="hidden" name="game_id" value="<%=JSON.stringify(detailData.game_id)%>">
                 <button id="add-inv-button" class="footerButtonOne">Add to Inventory</button>
             </form>
-            <form id="grid-itemThree" action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
-                <button id="delete-button" class="footerButtonOne" type="submit">Delete from Inventory</button>
-            </form>
+            <div id="grid-itemThree">
+                <button onclick="document.getElementById('id01Two').style.display='block'" class="footerButtonOne" id="delete-button" type="submit">Delete from Inventory</button>
+                <div id="id01Two" class="modalTwo">
+                    <div class="modal-contentTwo" id="animate-zoomTwo">
+                        <div class="containerTwo">
+                            <form action="/delete/<%= detailData.game_id %>?_method=DELETE" method="POST">
+                                <span onclick="document.getElementById('id01Two').style.display='none'" class="buttonTwoTwo display-toprightTwo">&times;</span>
+                                <p id="areYouSureTwo">Are you sure you want to delete?</p>
+                                <button class="buttonThree" type="submit">Yes</button>
+                                <!-- <button id="delete-button" class="footerButtonOne" type="submit">Delete from Inventory</button> -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </main>
