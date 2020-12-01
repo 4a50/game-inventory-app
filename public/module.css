@@ -648,3 +648,8 @@
     padding: 0.3em 0.5em;
   
 }
+
+#inventoryButton:disabled, #inventory-button[disabled] {
+    background-color: lightgray;
+
+}
