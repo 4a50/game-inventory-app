@@ -15,6 +15,10 @@ body{
     height: 100vh;
     display: grid;
     grid-template-rows: 10% 80% 10%;
+    max-width: 1024px;
+    max-height: 1366px;
+    min-width: 375px;
+    min-height: 812px;
 }
 .imageLarge{
     width: 80%;

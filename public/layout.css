@@ -31,6 +31,7 @@ main{
     overflow: scroll;
     -ms-overflow-style: none;  /*hide scroll bars*/
     scrollbar-width: none;  /*hide scroll bars*/
+    min-width: 375px;
 }
 
 main::-webkit-scrollbar { /*hide scroll bars*/
