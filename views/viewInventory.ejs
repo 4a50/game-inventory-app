@@ -20,14 +20,26 @@
                     <input type="hidden" name="game_id" value=<%=game.game_id%>>
                     <button id="inventoryButton" type="submit">View Details</button>
                 </form>
-                <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST">
-                    <button class="danger" id="inventoryButton" type="submit">Delete from Inventory</button>
-                </form>
+                <!-- <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST"> -->
+                <button onclick="document.getElementById('id01').style.display='block'" class="button" id="inventoryButton" type="submit">Delete from Inventory</button>
+                <!-- </form> -->
+                <!-- Modal: -->
+                <div id="id01" class="modal">
+                    <div class="modal-content" id="animate-zoom">
+                        <div class="container">
+                            <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST">
+                                <span onclick="document.getElementById('id01').style.display='none'" class="buttonTwo display-topright">&times;</span>
+                                <p id="areYouSure">Are you sure you want to delete?</p>
+                                <button class="button" type="submit">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
         <% }) %>
         <form action="/wipeDB" method="GET">
-            <button class="danger" id="danger" class="indexButton" type="submit">DELETE ALL INVENTORY DATA -
+            <button  class="danger" id="danger" class="indexButton" type="submit">DELETE ALL INVENTORY DATA -
                 DANGER!</button>
         </form>
     </main>
