@@ -310,28 +310,57 @@ async function homePage(req, res) {
   res.render('index', { gameData: gameData });
 }
 
-function getSearchCriteria(req, res) {
+async function getSearchCriteria(req, res) {
+  let inDbResults;
+  let createComp;
   console.log('original URL', req.body);
   console.log('getSearchCriteria - hasVisited:', hasVisited);
   if (hasVisited) {
     console.log('Loading Previous Search Results', prevSearch);
     console.log('Setting hasVisited to FALSE');
     hasVisited = false;
+    let prevSearchFinal = prevSearch;
+    console.log('prevSearch', prevSearch);
+    createComp = await createCompare(prevSearch)
+      .then(data => { return data });
+
+    console.log('OLDDATA createCompare:', createComp);
+    prevSearchFinal.resultsCompare = createComp;
     res.render('searchResults.ejs', prevSearch);
   } else {
     console.log('Loading API Search Results');
     let sURL = '';
     sURL = setURL(req.body.searchArea, req.body.searchCriteria);
     console.log('searchURL', sURL);
-    superagent(sURL)
+    let renderPageObj = await superagent(sURL)
       .then(data => {
         let finalObj = resultToObj(data, 'search');
         prevSearch = finalObj;
-        return finalObj
+        return finalObj;
       })
-      .then(obj => res.render('searchResults.ejs', obj))
+      .then(finalObject => {
+        return finalObject;
+      })
       .catch(err => console.error('Unable to access RAWG games database. Or reached end of pages, you decide.', err));
+    let compareArray = await createCompare(prevSearch)
+      .then(data => { return data })
+      .catch(err => console.log('WEB ERROR', err));
+
+    console.log('compareArrayWEBDATA', compareArray);
+    renderPageObj.resultsCompare = compareArray;
+
+    console.log('renderPageObj', renderPageObj);
+    res.render('searchResults.ejs', renderPageObj);
   }
+}
+function createCompare(objToUse) {
+  console.log(objToUse);
+  let compareArray = resultsCompareDb(objToUse)
+    .then(data => {
+      return data;
+    })
+    .catch(err => console.log('compareArrayError', err));
+  return compareArray;
 }
 
 function deleteGame(req, res) {
@@ -370,7 +399,7 @@ function inventoryVerifyResults(req, res) {
   let isSingle = false;
   let arr = [];
   let SQL = '';
-  resetInventoryVerification();
+  resetInventoryVerification(); //this resets all inventory verification checkboxes
   if (typeof (req.body.game_id) === 'string') {
     isSingle = true;
     console.log('single ID', req.body.game_id);
@@ -383,7 +412,7 @@ function inventoryVerifyResults(req, res) {
       .then(data => console.log(data))
       .catch(err => console.log('ERROR UPDATING VERIFICATION: ', err));
   })
-  SQL = `SELECT name, game_id FROM gameInventoryData WHERE NOT (verified='true');`;
+  SQL = `SELECT name, game_id, image_url FROM gameInventoryData WHERE NOT (verified='true');`;
   client.query(SQL)
     .then(data => {
       let sortedData = data.rows.sort(function (a, b) {
@@ -407,11 +436,11 @@ function inventoryVerifyResults(req, res) {
 
 
 }
-//Helper Functions
+// Helper Functions
 
-//All games for platform search: (platforms, id <= API console unique id.  Can pull from database)
-//Specific Game Title: (games, <name of game>)
-//Search for games release on a specific date.
+// All games for platform search: (platforms, id <= API console unique id.  Can pull from database)
+// Specific Game Title: (games, <name of game>)
+// Search for games release on a specific date.
 function setURL(searchArea, searchCriteria, searchDate = '0000-00-00') {
   let urlSearchCritera = searchCriteria.replace(/\s/g, '%20');
   //console.log(`searchCriteria: ${searchCriteria}  Modded: ${urlSearchCritera}`);
@@ -527,8 +556,6 @@ function formatDbaseData(rowArray, objName) {
 
   return { [objName]: rowArray };
 }
-
-
 function textScrubber(str) {
   console.log('Type of parameter in textScrubber', typeof (str));
   console.log('String to scub:\n', str);
@@ -541,8 +568,6 @@ function textScrubber(str) {
   finalString = finalString.replace(regex2, ''); //Removes web addresses
   return finalString;
 }
-
-
 async function resetInventoryVerification(req, res) {
   let SQL = `UPDATE gameInventoryData SET verified='false';`;
   await client.query(SQL)
@@ -553,7 +578,6 @@ async function resetInventoryVerification(req, res) {
     })
     .catch(err => console.log('Unable to set all VERIFIED to false', err));
 }
-
 async function getLongplayVideo(req, res) {
   console.log('RandomParam', req.params.game_name);
   let gameToGet = req.params.game_name.replace(/\s/g, '+');
@@ -614,5 +638,38 @@ async function randomGameSuggestion(req, res) {
     .catch(err => console.log('Unable to access database for random entry:', err));
   console.log(returnObj);
   return returnObj;
-
 }
+
+async function resultsCompareDb(resultsArr) {
+  console.log('resultsArr', resultsArr);
+  let game_idArray = [];
+  let numOfValuesSQL = '';
+  let returnIdArray;
+  resultsArr.searchResultsData.map(elem => { game_idArray.push(elem.game_id); });
+  console.log('game_idArray Length:', game_idArray.length);
+  //generate sql number of values to test
+  game_idArray.map((elem, idx) => {
+    if (idx + 1 === game_idArray.length) {
+      numOfValuesSQL += `game_id=$${idx + 1}`;
+    } else {
+      numOfValuesSQL += `game_id=$${idx + 1} OR `;
+    }
+  });
+  console.log('numOfValuesSQL', numOfValuesSQL);
+  console.log('valueArray', game_idArray, game_idArray.length);
+  let SQL = `SELECT game_id FROM gameInventoryData WHERE ${numOfValuesSQL};`
+  console.log('\n\n\n\nsql entry\n\n\n', SQL);
+  await client.query(SQL, game_idArray)
+    .then(data => {
+      console.log('dataRows', data.rows);
+      returnIdArray = data.rows
+    })
+    .catch(err => console.log('ERROR retrieveing DB game_ids for compare', err));
+  let returnArrayOnly = []
+  returnIdArray.map(elem => {
+    returnArrayOnly.push(elem.game_id);
+  });
+  console.log('arrayOnly', returnArrayOnly);
+  return returnArrayOnly;
+}
+
