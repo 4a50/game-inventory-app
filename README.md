@@ -2,7 +2,12 @@
 
 ## Version
 
-1.0.0
+1.1.0
+
+## Change Log
+
+### 1.1.0:
+  - Fixed - Deleting an item from inventory, the 1st entry would be deleted.
 
 ## Description
 
