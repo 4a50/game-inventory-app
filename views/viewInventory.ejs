@@ -18,19 +18,25 @@
             <div class="grid-item">
                 <form action="/details/<%=JSON.stringify(game.game_id)%>" method="GET">
                     <input type="hidden" name="game_id" value=<%=game.game_id%>>
-                    <button id="inventoryButton" type="submit">View Details</button>
+                    <button class="inventoryButton" type="submit">View Details
+                    </button>
                 </form>
                 <!-- <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST"> -->
-                <button onclick="document.getElementById('id01').style.display='block'" class="button" id="inventoryButton" type="submit">Delete from Inventory</button>
+                <button id="btn-<%= game.game_id %>" data-game_id="<%=game.game_id%>" onclick="
+                    document.getElementById('id01').style.display='block'" class=" button inventoryButton del-game"
+                    type="submit">Delete from Inventory
+                </button>
                 <!-- </form> -->
                 <!-- Modal: -->
-                <div id="id01" class="modal">
+                <div id="id01" class="modal" data-game_id="<%=game.game_id%>">
                     <div class="modal-content" id="animate-zoom">
                         <div class="container">
-                            <form action="/delete/<%= game.game_id %>?_method=DELETE" method="POST">
-                                <span onclick="document.getElementById('id01').style.display='none'" class="buttonTwo display-topright">&times;</span>
+                            <form id="del-form-<%= game.game_id%>" action="/delete/<%= game.game_id %>?_method=DELETE"
+                                method="POST">
+                                <span onclick="document.getElementById('id01').style.display='none'"
+                                    class="buttonTwo display-topright">&times;</span>
                                 <p id="areYouSure">Are you sure you want to delete?</p>
-                                <button class="button" type="submit">Yes</button>
+                                <button id="btn-del-<%=game.game_id%>" class="button" type="submit">Yes</button>
                             </form>
                         </div>
                     </div>
@@ -39,11 +45,22 @@
         </section>
         <% }) %>
         <form action="/wipeDB" method="GET">
-            <button  class="danger" id="danger" class="indexButton" type="submit">DELETE ALL INVENTORY DATA -
+            <button class="danger" id="danger" class="indexButton" type="submit">DELETE ALL INVENTORY DATA -
                 DANGER!</button>
         </form>
     </main>
     <footer><%- include('./footerPartial') %></footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        let game_id;
+        $('.del-game').click(e => {
+            game_id = $(e.target).attr('data-game_id');
+        });
+        $('.modal').click(e => {
+            let modal_form = $('.modal div div form');
+            modal_form.attr('action', `/delete/${game_id}?_method=DELETE`);
+        });
+    </script>
 </body>
 
 </html>

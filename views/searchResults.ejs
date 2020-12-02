@@ -20,12 +20,13 @@
                 <div class="grid-item">
                     <form class="modal" method="GET" action="/details/<%=game.game_id%>">
                         <input type="hidden" name="game_id" value="<%=JSON.stringify(game.id)%>">
-                        <button id="inventoryButton">View Details</button>
+                        <button class="inventoryButton">View Details</button>
                     </form>
                     <form class="addToInv" action="/addGame" method="POST">
                         <input type="hidden" name="game_id" value="<%=JSON.stringify(game.game_id)%>">
                         <input type="hidden" name="parent_page" value="/search">
-                        <button id="inventoryButton" class="inventoryButton-<%=game.game_id%>">Add to Inventory</button>
+                        <button id="add-inv-btn" class="inventoryButton inventoryButton-<%=game.game_id%>">Add to
+                            Inventory</button>
                     </form>
                 </div>
             </div>
@@ -34,20 +35,15 @@
             <% resultsCompare.map(elem => { %>
                 if (<%= elem %> === <%=game.game_id %>) {
                     $('.inventoryButton-<%=game.game_id%>').prop('disabled', true);
-                    console.log($('.inventoryButton-<%=game.game_id%>').text());
-
-
-                    console.log('BAM!', 'inventoryButton-<%=game.game_id%>');
+                    console.log('Duplicate: <%= game.name%> - <%=game.game_id%>');
                 }
             <% }) %>
-                    console.log('Running');
+
             </script>
             <% }) %>
         </section>
     </main>
     <footer><%- include('./footerPartial') %></footer>
-    <!-- < script src = "../js/searchResults.js" ></script > -->
-
 </body>
 
 </html>
