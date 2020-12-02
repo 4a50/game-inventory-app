@@ -87,7 +87,7 @@
 }
 
 
-#inventoryButton{
+.inventoryButton{
     height: 7.5vw;
     width: 108%;
     border-radius: 5px;
@@ -98,7 +98,7 @@
     font-size: 1.8vw;
 }
 
-#inventoryButton:hover{
+.inventoryButton:hover{
     background-color: rgb(209, 241, 252);
     color: black;
     border: 2px rgb(3, 3, 129) solid;
@@ -717,6 +717,6 @@
 /* Inventory Verification & Results above  */
 
 
-#inventoryButton:disabled, #inventory-button[disabled] {
+.inventoryButton:disabled, #inventory-button[disabled] {
     background-color: lightgray;
 
